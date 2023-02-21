@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron')
 const electron = require('electron');
 const fs = require('fs').promises;
+const ipc = require('electron').ipcRenderer
 
 var studentsExcel = '[]'; var uniqTasksExcel = '[]';
 var tasksExcel = '[]'; var systemConfig = '{"title":"ברקוד","date":"2025-02-01","position":"","color":"1"}'
@@ -66,6 +67,9 @@ contextBridge.exposeInMainWorld('expose', {
                 console.error(err);
             }
         });
+    },
+    appClose:()=>{
+        ipc.send('close')
     }
 });
 

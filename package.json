@@ -9,15 +9,15 @@
     "reset": "git reset --hard",
     "build": "electron-builder --help"
   },
-  "repository": "https://github.com/stackacademytv/master-electron",
+  "repository": "https://github.com/EfratVardi/ElectronBarcode.git",
   "keywords": [
     "Electron",
-    "Master Electron",
-    "demo"
+    "barcode"
   ],
-  "author": "GitHub, Stackacademytv",
+  "author": "Efrat Malka",
   "license": "CC0-1.0",
   "devDependencies": {
+    "electron": "^9.0.0", 
     "electron-builder": "^22.8.0",
     "nodemon": "^2.0.0"
   },

@@ -5,7 +5,7 @@ let mainWindow
 function createWindow() {
 
   mainWindow = new BrowserWindow({
-    width: 800, height: 600, fullscreen: true,
+    width: 800, height: 600,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -13,7 +13,7 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('User.html')
-  mainWindow.menuBarVisible = false
+  mainWindow.menuBarVisible = true
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -31,6 +31,9 @@ ipcMain.on("toMain", (event, args) => {
   });
 });
 
+ipcMain.on('close', () => {
+  app.quit()
+})
 // Quit when all windows are closed - (Not macOS - Darwin)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
