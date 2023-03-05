@@ -1,1 +1,1 @@
-{"title":"ברקוד","date":"2025-01-29","position":"","color":"2"}
+{"title":"ברקוד","date":"2025-01-29","position":"","color":"1"}
