@@ -6,7 +6,7 @@ const ipc = require('electron').ipcRenderer
 var studentsExcel = '[]';
 var uniqTasksExcel = '[]';
 var tasksExcel = '[]';
-var systemConfig = '{"title":"ברקוד","date":"2025-02-01","position":"","color":"1"}'
+var systemConfig 
 fs.readFile('studentsExcel.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {

@@ -32,28 +32,28 @@ ipcMain.on("toMain", (event, args) => {
 });
 
 ipcMain.on("sendReadExcel", (event, args) => {
-  console.log("efrat error1!!");
+  console.log("hi");
   fs.readFile(args + '.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
       if (err)
-        console.log(err + "error!!");
+        console.log(err);
       else {
-        console.log("error2");
-        mainWindow.webContents.send("receiveReadExcel", data);
+        console.log("sucsses");
+        mainWindow.webContents.send("receiveReadExcel"+args, data);
       }
     });
 });
 
 ipcMain.on("sendWriteExcel", (event, args) => {
-  console.log(args);
-  fs.writeFile('studentsExcel' + '.txt', content, err => {
+  console.log('hi');
+  fs.writeFile(args[0] + '.txt', args[1], err => {
     if (err) {
       console.error(err);
     }
     else {
-      console.log("error2");
-      mainWindow.webContents.send("receiveWriteExcel", 1);
+      console.log("sucsses");
+      mainWindow.webContents.send("receiveWriteExcel"+args[0], 1);
     }
   });
 });

@@ -1,1 +1,1 @@
-{"title":"","date":"","position":"","color":"2"}
+{"title":"","date":"","position":"","color":"1"}
