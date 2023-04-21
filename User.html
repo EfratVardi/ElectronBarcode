@@ -31,7 +31,6 @@
   <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <script src="js/ag-grid-community.min.js"></script>
-  <script src="js/ag-grid.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
 
@@ -41,7 +40,7 @@
     var studentsExcel = JSON.parse(expose.studentsExcel())
     var uniqTasksExcel = JSON.parse(expose.uniqTasksExcel())
     var tasksExcel = JSON.parse(expose.tasksExcel())
-    var systemConfig = JSON.parse(expose.systemConfig())
+    var systemConfig
     var productsExcel = [{}];
     var searchVal
     var counter = 0;
@@ -55,7 +54,7 @@
         if (!localStorage.getItem("log")) {
           localStorage.setItem("log", "[]")
         }
-        if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {   
+        if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {
           window.location.href = 'Expired.html';
         }
         if (studentsExcel.length == 0 || (tasksExcel.length == 0 && uniqTasksExcel.length == 0)) {
@@ -68,13 +67,13 @@
           document.getElementById("position").style.display = "none";
         }
         document.getElementById("title").innerHTML = systemConfig.title
-        if (systemConfig.color == "1") {
-          document.getElementById("position").style.backgroundColor = "aquamarine";
-          document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
-        }
-        else {
+        if (systemConfig.color == "2") {
           document.getElementById("position").style.backgroundColor = "yellow";
           document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
+        }
+        else {
+          document.getElementById("position").style.backgroundColor = "aquamarine";
+          document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
         }
         if (!localStorage.getItem("downloadDate")) {
           localStorage.setItem("downloadDate", currentDate)

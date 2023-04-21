@@ -3,39 +3,40 @@ const electron = require('electron');
 const fs = require('fs').promises;
 const ipc = require('electron').ipcRenderer
 
+
 var studentsExcel = '[]';
 var uniqTasksExcel = '[]';
 var tasksExcel = '[]';
 var systemConfig 
-fs.readFile('studentsExcel.txt',
-    { encoding: 'utf8', flag: 'r' },
-    function (err, data) {
-        if (err)
-            console.log(err);
-        else {
-            studentsExcel = data
-        }
-    });
+// fs.readFile('studentsExcel.txt',
+//     { encoding: 'utf8', flag: 'r' },
+//     function (err, data) {
+//         if (err)
+//             console.log(err);
+//         else {
+//             studentsExcel = data
+//         }
+//     });
 
-fs.readFile('uniqTasksExcel.txt',
-    { encoding: 'utf8', flag: 'r' },
-    function (err, data) {
-        if (err)
-            console.log(err);
-        else {
-            uniqTasksExcel = data
-        }
-    });
+// fs.readFile('uniqTasksExcel.txt',
+//     { encoding: 'utf8', flag: 'r' },
+//     function (err, data) {
+//         if (err)
+//             console.log(err);
+//         else {
+//             uniqTasksExcel = data
+//         }
+//     });
 
-fs.readFile('systemConfig.txt',
-    { encoding: 'utf8', flag: 'r' },
-    function (err, data) {
-        if (err)
-            console.log(err);
-        else {
-            systemConfig = data
-        }
-    });
+// fs.readFile('systemConfig.txt',
+//     { encoding: 'utf8', flag: 'r' },
+//     function (err, data) {
+//         if (err)
+//             console.log(err);
+//         else {
+//             systemConfig = data
+//         }
+//     });
 
 // fs.readFile('tasksExcel.txt',
 //     { encoding: 'utf8', flag: 'r' },
@@ -46,6 +47,7 @@ fs.readFile('systemConfig.txt',
 //             tasksExcel = data
 //         }
 //     });
+
 contextBridge.exposeInMainWorld('expose', {
     send: (channel, data) => {
         let validChannels = ["toMain"];

@@ -18,11 +18,12 @@
         var counter = 0;
         var systemConfig = [];
         var students = [];
-         var gridOptions
+        var fileName
+        var gridOptions
         var columnDefs = [
             { headerName: "כיתה", field: "grade", editable: true },
-            { headerName: "תעודת זהות", field: "tz" },
             { headerName: "שם", field: "name", editable: true },
+            { headerName: "תעודת זהות", field: "tz" },
             { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
             { headerName: "סך נקודות", field: "points" },
             { headerName: "שמות המשימות", field: "tasks" },
@@ -30,22 +31,21 @@
         ];
 
         function onLoad() {
-            console.log('manage: load config')
-            var fileName = 'systemConfig'
+            fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 systemConfig = JSON.parse(data)
-                systemConfig.color == "1" ?
-                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" :
-                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')"
+                systemConfig.color == "2" ?
+                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
+                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')"
             })
-            console.log('manage: new students')
-            fileName = 'studentsExcel'
+            fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 students = JSON.parse(data)
                 gridOptions = {
                     columnDefs: columnDefs,
+                    rowData: students,
                     defaultColDef: {
                         filter: 'agTextColumnFilter',
                         filterParams: {
@@ -54,7 +54,6 @@
                         sortable: true,
                         resizable: true,
                     },
-                    rowData: students,
                     onFirstDataRendered: onFirstDataRendered,
                     onCellEditingStopped: onCellEditingStopped
                 };
@@ -97,10 +96,9 @@
                     grade: '------', name: '------', tz: tz, barcode: '',
                     points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
                 })
-                fileName = 'studentsExcel'
-                window.expose.SendExcel("sendWriteExcel", [fileName,JSON.stringify(students)]);
-                window.expose.ReceiveExcel("receiveWriteExcel"+fileName, (data) => {
-                if (data == 1)
+                fileName = 'students'
+                window.expose.SendExcel("sendWriteExcel", [fileName,students]);
+                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     location.reload()
                 });
             }
@@ -114,7 +112,11 @@
         }
 
         function onCellEditingStopped(params) {
-            expose.writeToFile("studentsExcel", JSON.stringify(gridOptions.rowData))
+            fileName = 'students'
+            window.expose.SendExcel("sendWriteExcel", [fileName, students]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                location.reload()
+            });
         }
 
         function Export(name) {

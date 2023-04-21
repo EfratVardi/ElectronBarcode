@@ -12,7 +12,7 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('User.html')
+  mainWindow.loadFile('System.html')
   mainWindow.menuBarVisible = true
 
   mainWindow.on('closed', () => {
@@ -32,28 +32,25 @@ ipcMain.on("toMain", (event, args) => {
 });
 
 ipcMain.on("sendReadExcel", (event, args) => {
-  console.log("hi");
   fs.readFile(args + '.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
       if (err)
         console.log(err);
       else {
-        console.log("sucsses");
-        mainWindow.webContents.send("receiveReadExcel"+args, data);
+        mainWindow.webContents.send("receiveReadExcel" + args, data);
       }
     });
 });
 
 ipcMain.on("sendWriteExcel", (event, args) => {
-  console.log('hi');
+  console.log('main')
   fs.writeFile(args[0] + '.txt', args[1], err => {
     if (err) {
       console.error(err);
     }
     else {
-      console.log("sucsses");
-      mainWindow.webContents.send("receiveWriteExcel"+args[0], 1);
+      mainWindow.webContents.send("receiveWriteExcel" + args[0], 1);
     }
   });
 });

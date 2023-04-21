@@ -13,24 +13,44 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/ag-grid-community.min.js"></script>
     <script src="js/log-ag-grid.js"></script>
-    <script src="js/tasks-ag-grid.js"></script>
+    <script src="js/uniqTasks-ag-grid.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/xlsx.full.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    
+
     <script>
         var counter = 0;
-        var studentsExcel = JSON.parse(expose.studentsExcel())
-        var uniqTasksExcel = JSON.parse(expose.uniqTasksExcel())
-        var tasksExcel = JSON.parse(expose.tasksExcel())
-        var systemConfig = JSON.parse(expose.systemConfig())
+        var students
+        var uniqTasks
+        var tasks
+        var systemConfig
         function onLoad() {
-            Object.entries(systemConfig).forEach(x => {
-                document.getElementById(x[0]).value = x[1]
+            fileName = 'systemConfig'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                systemConfig = JSON.parse(data)
+                Object.entries(systemConfig).forEach(x => {
+                    document.getElementById(x[0]).value = x[1]
+                })
+                systemConfig.color == "2" ?
+                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
+                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
             })
+
+            fileName = 'students'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                students = data;
+            })
+
+            fileName = 'uniqTasks'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                uniqTasks = data;
+            })
+
             if (!localStorage.getItem("log"))
                 window.localStorage.setItem("log", '[]')
-            systemConfig.color == "1" ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
         }
 
         document.addEventListener("keypress", function (e) {
@@ -66,18 +86,13 @@
                     workbook.SheetNames.forEach(function (sheetName) {
                         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
                         json_object = JSON.stringify(XL_row_object);
-
-                        if (file.name.startsWith("students")) {
-                            expose.writeToFile("studentsExcel", json_object)
-                          document.getElementById("line3").innerHTML = "הועלה בהצלחה! "+ XL_row_object[0].name
-                        }
-                        else if (file.name.startsWith("tasks")) {
-                            expose.writeToFile("tasksExcel", json_object)
-                            document.getElementById("line3").innerHTML = "הועלה בהצלחה! "+ XL_row_object[0].name
-                        }
-                        else if (file.name.startsWith("uniqTasks")) {
-                            expose.writeToFile("uniqTasksExcel", json_object)
-                            document.getElementById("line3").innerHTML = "הועלה בהצלחה! "+ XL_row_object[0].name
+                        if (file.name == "students.xlsx" || file.name == "uniqTasks.xlsx" || file.name == "tasks.xlsx") {
+                            fileName = file.name.split('.')[0]
+                            window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
+                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                                alert("!הקובץ הועלה בהצלחה")
+                                location.reload()
+                            });
                         }
                     })
                 };
@@ -93,32 +108,45 @@
             var xl2json = new ExcelToJSON();
             xl2json.parseExcel(files[0]);
         }
+
+        function resetExcel() {
+            for (var i = 0; i < students.length; i++) {
+                students[i].points = 0
+                students[i].tasksNumber = ','
+                students[i].tasks = ','
+                students[i].dates = '[]'
+            }
+            for (var i = 0; i < uniqTasks.length; i++) {
+                uniqTasks[i].used = 0
+            }
+            fileName = "students"
+            window.expose.SendExcel("sendWriteExcel", [fileName, students]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                fileName = "uniqTasks"
+                window.expose.SendExcel("sendWriteExcel", [fileName, uniqTasks]);
+                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                    alert("!הקבצים אופסו בהצלחה")
+                    location.reload()
+                });
+            });
+        }
         function update() {
             Object.entries(systemConfig).forEach(x => {
                 var key = x[0]
                 systemConfig[key] = document.getElementById(x[0]).value
             })
-            expose.writeToFile("systemConfig", JSON.stringify(systemConfig))
+            fileName = "systemConfig"
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(systemConfig)]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                location.reload()
+            });
         }
 
-        function resetExcel() {
-            for (var i = 0; i < studentsExcel.length; i++) {
-                studentsExcel[i].points = 0
-                studentsExcel[i].tasksNumber = ','
-                studentsExcel[i].tasks = ','
-                studentsExcel[i].dates = '[]'
-            }
-            for (var i = 0; i < uniqTasksExcel.length; i++) {
-                uniqTasksExcel[i].used = 0
-            }
-            expose.writeToFile("studentsExcel", JSON.stringify(studentsExcel))
-            expose.writeToFile("uniqTasksExcel", JSON.stringify(uniqTasksExcel))
-        }
         function exportLog() {
             ExportLog()
         }
-        function exportTasks() {
-            ExportTasks()
+        function exportUniqTasks() {
+            ExportUniqTasks()
         }
     </script>
 
@@ -151,7 +179,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-label">.</label>
-                        <button onclick="exportTasks()" class="form-control"> משימות</button>
+                        <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
                     </div>
                 </div>
                 <div class="form-row">
@@ -185,9 +213,9 @@
             <div id="tasksGrid"></div>
             <div>
                 התקנת דרייבר למדפסת |
-                למחוק את קובץ ההתקנה |      
+                למחוק את קובץ ההתקנה |
                 לכוון שעון במחשב |
-                הגדרת מחשב ללא חלון נעילה 
+                הגדרת מחשב ללא חלון נעילה
             </div>
         </div>
         <input type="text" class="my-input" id="barcode">
@@ -195,7 +223,7 @@
 
     <script>
         document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
+        // document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
