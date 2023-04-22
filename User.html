@@ -37,9 +37,9 @@
   <script>
     var currentDate = new Date().toLocaleString().split(',')[0]
     var currentDateTime = new Date().toLocaleString()
-    var studentsExcel = JSON.parse(expose.studentsExcel())
-    var uniqTasksExcel = JSON.parse(expose.uniqTasksExcel())
-    var tasksExcel = JSON.parse(expose.tasksExcel())
+    var students
+    var uniqTasks
+    var tasks
     var systemConfig
     var productsExcel = [{}];
     var searchVal
@@ -51,30 +51,39 @@
 
     function onLoad() {
       try {
-        if (!localStorage.getItem("log")) {
-          localStorage.setItem("log", "[]")
-        }
-        if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {
-          window.location.href = 'Expired.html';
-        }
-        if (studentsExcel.length == 0 || (tasksExcel.length == 0 && uniqTasksExcel.length == 0)) {
-          document.getElementById("line3").innerHTML = 'לא הועלו כל הקבצים'
-        }
-        if (systemConfig.position.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.position
-        }
-        else {
-          document.getElementById("position").style.display = "none";
-        }
-        document.getElementById("title").innerHTML = systemConfig.title
-        if (systemConfig.color == "2") {
-          document.getElementById("position").style.backgroundColor = "yellow";
-          document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
-        }
-        else {
-          document.getElementById("position").style.backgroundColor = "aquamarine";
-          document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
-        }
+        fileName = 'systemConfig'
+        window.expose.SendExcel("sendReadExcel", fileName);
+        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          systemConfig = JSON.parse(data)
+          if (systemConfig.color == "2") {
+            document.getElementById("position").style.backgroundColor = "yellow";
+            document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
+          }
+          else {
+            document.getElementById("position").style.backgroundColor = "aquamarine";
+            document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
+          }
+          if (systemConfig.position.length > 0) {
+            document.getElementById("position").innerHTML += ' ' + systemConfig.position
+          }
+          else {
+            document.getElementById("position").style.display = "none";
+          }
+          document.getElementById("title").innerHTML = systemConfig.title
+          if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {
+            window.location.href = 'Expired.html';
+          }
+        })
+        fileName = 'students'
+        window.expose.SendExcel("sendReadExcel", fileName);
+        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          students = JSON.parse(data)
+          fileName = 'uniqTasks'
+          window.expose.SendExcel("sendReadExcel", fileName);
+          window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+            uniqTasks = JSON.parse(data)
+          });
+        });
         if (!localStorage.getItem("downloadDate")) {
           localStorage.setItem("downloadDate", currentDate)
         }
@@ -83,6 +92,9 @@
             localStorage.setItem("downloadDate", currentDate)
             Export('הורדה אוטומטית')
           }
+        }
+        if (!localStorage.getItem("log")) {
+          localStorage.setItem("log", "[]")
         }
       }
       catch (err) {
@@ -152,9 +164,9 @@
     function searchInExcel() {
       try {
         state = 2
-        for (var i = 0; i < studentsExcel.length; i++) {
-          if (studentsExcel[i]["tz"] == searchVal) {
-            studentResult = studentsExcel[i];
+        for (var i = 0; i < students.length; i++) {
+          if (students[i]["tz"] == searchVal) {
+            studentResult = students[i];
             break;
           }
         }
@@ -162,7 +174,9 @@
           showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
           return;
         }
-        systemConfig.color == 1 ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground2.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground2.gif')";
+        systemConfig.color == 1 ?
+          document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground2.gif')" :
+          document.getElementById("background").style.backgroundImage = "url('resources/greenBackground2.gif')";
         document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
         document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
         document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
@@ -183,9 +197,9 @@
     function updateTask() {
       try {
         state = 3;
-        for (var i = 0; i < tasksExcel.length; i++) {
-          if (tasksExcel[i]["code"] == searchVal) {
-            result = tasksExcel[i]
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i]["code"] == searchVal) {
+            result = tasks[i]
             break;
           }
         }
@@ -209,14 +223,17 @@
           return;
         }
 
-        for (var i = 0; i < studentsExcel.length; i++) {
-          if (studentsExcel[i]["tz"] == studentResult.tz) {
-            studentsExcel[i].tasks += result.name + ',';
-            studentsExcel[i].tasksNumber += result.code + ',';
+        for (var i = 0; i < students.length; i++) {
+          if (students[i]["tz"] == studentResult.tz) {
+            students[i].tasks += result.name + ',';
+            students[i].tasksNumber += result.code + ',';
             break;
           }
         }
-        expose.writeToFile("tasksExcel", JSON.stringify(tasksExcel))
+        fileName = 'tasks'
+        window.expose.SendExcel("sendWriteExcel", [fileName, students]);
+        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+        });
       }
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
@@ -235,9 +252,9 @@
     function updateUniqTask() {
       try {
         state = 3;
-        for (var i = 0; i < uniqTasksExcel.length; i++) {
-          if (uniqTasksExcel[i]["code"] == searchVal) {
-            result = uniqTasksExcel[i]
+        for (var i = 0; i < uniqTasks.length; i++) {
+          if (uniqTasks[i]["code"] == searchVal) {
+            result = uniqTasks[i]
             break;
           }
         }
@@ -261,21 +278,21 @@
           return;
         }
 
-        for (var i = 0; i < studentsExcel.length; i++) {
-          if (studentsExcel[i]["tz"] == studentResult.tz) {
-            studentsExcel[i].tasks += result.name + ',';
-            studentsExcel[i].tasksNumber += result.code + ',';
+        for (var i = 0; i < students.length; i++) {
+          if (students[i]["tz"] == studentResult.tz) {
+            students[i].tasks += result.name + ',';
+            students[i].tasksNumber += result.code + ',';
             let dates = JSON.parse(studentResult.dates)
             dates.push({
               code: result.code, date: currentDateTime
             });
-            studentsExcel[i].dates = JSON.stringify(dates);
+            students[i].dates = JSON.stringify(dates);
             break;
           }
         }
-        for (var i = 0; i < uniqTasksExcel.length; i++) {
-          if (uniqTasksExcel[i]["code"] == result.code) {
-            uniqTasksExcel[i].used = 1
+        for (var i = 0; i < uniqTasks.length; i++) {
+          if (uniqTasks[i]["code"] == result.code) {
+            uniqTasks[i].used = 1
             break;
           }
         }
@@ -362,15 +379,16 @@
 
     function savePoints(points) {
       try {
-        studentResult.points = parseInt(points) + parseInt(studentResult.points);
+        studentResult.points = parseInt(points) +
+          parseInt(studentResult.points);
         if (studentResult.points < 0) {
           returnval = 1;
           showAlert("אין לך מספיק נקודות בחשבון !")
           return;
         }
-        for (var i = 0; i < studentsExcel.length; i++) {
-          if (studentsExcel[i]["tz"] == studentResult.tz) {
-            studentsExcel[i].points = studentResult.points;
+        for (var i = 0; i < students.length; i++) {
+          if (students[i]["tz"] == studentResult.tz) {
+            students[i].points = studentResult.points;
             break;
           }
         }
@@ -387,8 +405,14 @@
         localStorage.setItem("log", JSON.stringify(log));
       }
       try {
-        expose.writeToFile("studentsExcel", JSON.stringify(studentsExcel))
-        expose.writeToFile("uniqTasksExcel", JSON.stringify(uniqTasksExcel))
+        fileName = 'uniqTasks'
+        window.expose.SendExcel("sendWriteExcel", [fileName,  JSON.stringify(uniqTasks)]);
+        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+          fileName = 'students'
+          window.expose.SendExcel("sendWriteExcel", [fileName,  JSON.stringify(students)]);
+          window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+          });
+        });
       }
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
@@ -418,16 +442,16 @@
           var printContents = document.getElementById(divName).innerHTML;
           var originalContents = document.body.innerHTML;
           document.body.innerHTML = printContents;
-          window.expose.receive("fromMain", (data) => {
+          setTimeout(function () {
+            window.expose.send("sendPrint", "");
+          }, 1000)
+          window.expose.receive("receivePrint", (data) => {
             document.body.innerHTML = originalContents;
             systemConfig.color == 1 ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground3.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground3.gif')";
             document.getElementById("line1").innerHTML = "! יש בחשבונך " + studentResult.points + " נקודות ";
             document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
             reset(1800);
           });
-          setTimeout(function () {
-            window.expose.send("toMain", "");
-          }, 1000)
         }, 2000);
       }
       catch (err) {

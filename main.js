@@ -3,7 +3,6 @@ const fs = require('fs')
 let mainWindow
 
 function createWindow() {
-
   mainWindow = new BrowserWindow({
     width: 800, height: 600,
     webPreferences: {
@@ -12,7 +11,7 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('System.html')
+  mainWindow.loadFile('User.html')
   mainWindow.menuBarVisible = true
 
   mainWindow.on('closed', () => {
@@ -22,12 +21,12 @@ function createWindow() {
 
 app.on('ready', createWindow)
 
-ipcMain.on("toMain", (event, args) => {
+ipcMain.on("sendPrint", (event, args) => {
   var options = {
     silent: true
   }
   mainWindow.webContents.print(options, (success, failureReason) => {
-    mainWindow.webContents.send("fromMain", success);
+    mainWindow.webContents.send("receivePrint", success);
   });
 });
 
@@ -36,7 +35,8 @@ ipcMain.on("sendReadExcel", (event, args) => {
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
       if (err)
-        console.log(err);
+        console.log(err)
+      // mainWindow.loadFile('Expired.html')
       else {
         mainWindow.webContents.send("receiveReadExcel" + args, data);
       }
@@ -44,7 +44,6 @@ ipcMain.on("sendReadExcel", (event, args) => {
 });
 
 ipcMain.on("sendWriteExcel", (event, args) => {
-  console.log('main')
   fs.writeFile(args[0] + '.txt', args[1], err => {
     if (err) {
       console.error(err);

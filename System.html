@@ -23,20 +23,19 @@
         var students
         var uniqTasks
         var tasks
-        var systemConfig
+        var systemConfig = { "title": "ברקוד", "date": "2025-01-29", "position": "", "color": "1" }
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                systemConfig = JSON.parse(data)
-                Object.entries(systemConfig).forEach(x => {
-                    document.getElementById(x[0]).value = x[1]
-                })
-                systemConfig.color == "2" ?
-                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
-                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
+                    systemConfig = JSON.parse(data)
+                    Object.entries(systemConfig).forEach(x => {
+                        document.getElementById(x[0]).value = x[1]
+                    })
+                    systemConfig.color == "2" ?
+                        document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
+                        document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
             })
-
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -48,7 +47,6 @@
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 uniqTasks = data;
             })
-
             if (!localStorage.getItem("log"))
                 window.localStorage.setItem("log", '[]')
         }
@@ -223,8 +221,8 @@
 
     <script>
         document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
-        // document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
+        // document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 
