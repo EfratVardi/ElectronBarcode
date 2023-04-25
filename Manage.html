@@ -97,7 +97,7 @@
                     points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
                 })
                 fileName = 'students'
-                window.expose.SendExcel("sendWriteExcel", [fileName,students]);
+                window.expose.SendExcel("sendWriteExcel", [fileName,JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     location.reload()
                 });
@@ -113,7 +113,7 @@
 
         function onCellEditingStopped(params) {
             fileName = 'students'
-            window.expose.SendExcel("sendWriteExcel", [fileName, students]);
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                 location.reload()
             });

@@ -28,24 +28,24 @@
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                    systemConfig = JSON.parse(data)
-                    Object.entries(systemConfig).forEach(x => {
-                        document.getElementById(x[0]).value = x[1]
-                    })
-                    systemConfig.color == "2" ?
-                        document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
-                        document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
+                systemConfig = JSON.parse(data)
+                Object.entries(systemConfig).forEach(x => {
+                    document.getElementById(x[0]).value = x[1]
+                })
+                systemConfig.color == "2" ?
+                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
+                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                students = data;
+                students = JSON.parse(data);
             })
 
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                uniqTasks = data;
+                uniqTasks = JSON.parse(data);
             })
             if (!localStorage.getItem("log"))
                 window.localStorage.setItem("log", '[]')
@@ -118,10 +118,10 @@
                 uniqTasks[i].used = 0
             }
             fileName = "students"
-            window.expose.SendExcel("sendWriteExcel", [fileName, students]);
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                 fileName = "uniqTasks"
-                window.expose.SendExcel("sendWriteExcel", [fileName, uniqTasks]);
+                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     alert("!הקבצים אופסו בהצלחה")
                     location.reload()

@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <title>פג תוקף</title>
@@ -13,8 +14,12 @@
         var systemConfig;
         var counter = 0;
         function onLoad() {
-            systemConfig = JSON.parse(expose.systemConfig())
-            systemConfig.color == "1" ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+            fileName = 'systemConfig'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                systemConfig = JSON.parse(data)
+                systemConfig.color == "1" ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+            })
         }
         document.addEventListener("keypress", function (e) {
             if (e.target.tagName !== "INPUT") {
@@ -31,12 +36,10 @@
                     login("Manage")
             }
         });
-
         function login(page) {
             counter = 0;
             window.location.href = page + '.html';
-        }       
-
+        }
     </script>
     <div class="background" id="background">
         <div class="text">
