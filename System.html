@@ -123,7 +123,7 @@
                 fileName = "uniqTasks"
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    alert("!הקבצים אופסו בהצלחה")
+                    // alert("!הקבצים אופסו בהצלחה")
                     location.reload()
                 });
             });
