@@ -64,6 +64,7 @@
         fileName = 'systemConfig'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          console.log('system')
           systemConfig = JSON.parse(data)
           if (systemConfig.color == "2") {
             document.getElementById("position").style.backgroundColor = "yellow";
@@ -87,6 +88,7 @@
         fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          console.log('students')
           students = JSON.parse(data)
           gridOptions = {
             columnDefs: columnDefs,
@@ -106,6 +108,7 @@
           fileName = 'uniqTasks'
           window.expose.SendExcel("sendReadExcel", fileName);
           window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+            console.log('tasks')
             uniqTasks = JSON.parse(data)
           });
         });

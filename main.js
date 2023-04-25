@@ -36,7 +36,6 @@ ipcMain.on("sendReadExcel", (event, args) => {
     function (err, data) {
       if (err)
         console.log(err)
-      // mainWindow.loadFile('Expired.html')
       else {
         mainWindow.webContents.send("receiveReadExcel" + args, data);
       }
