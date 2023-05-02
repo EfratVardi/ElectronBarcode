@@ -20,9 +20,9 @@
 
     <script>
         var counter = 0;
-        var students
-        var uniqTasks
-        var tasks
+        var students = ""
+        var uniqTasks = ""
+        var tasks = ""
         var systemConfig = { "title": "ברקוד", "date": "2025-01-29", "position": "", "color": "1" }
         function onLoad() {
             fileName = 'systemConfig'
@@ -108,25 +108,27 @@
         }
 
         function resetExcel() {
-            for (var i = 0; i < students.length; i++) {
-                students[i].points = 0
-                students[i].tasksNumber = ','
-                students[i].tasks = ','
-                students[i].dates = '[]'
-            }
-            for (var i = 0; i < uniqTasks.length; i++) {
-                uniqTasks[i].used = 0
-            }
-            fileName = "students"
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                fileName = "uniqTasks"
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+            if (students.length > 0 && uniqTasks.length > 0) {
+                for (var i = 0; i < students.length; i++) {
+                    students[i].points = 0
+                    students[i].tasksNumber = ','
+                    students[i].tasks = ','
+                    students[i].dates = '[]'
+                }
+                for (var i = 0; i < uniqTasks.length; i++) {
+                    uniqTasks[i].used = 0
+                }
+                fileName = "students"
+                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    // alert("!הקבצים אופסו בהצלחה")
-                    location.reload()
+                    fileName = "uniqTasks"
+                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                        // alert("!הקבצים אופסו בהצלחה")
+                        location.reload()
+                    });
                 });
-            });
+            }
         }
         function update() {
             Object.entries(systemConfig).forEach(x => {
