@@ -37,10 +37,10 @@
   <script>
     var currentDate = new Date().toLocaleString().split(',')[0]
     var currentDateTime = new Date().toLocaleString()
-    var students
-    var uniqTasks
+    var students=""
+    var uniqTasks=""
     var tasks
-    var systemConfig
+    var systemConfig=""
     var productsExcel = [{}];
     var searchVal
     var counter = 0;
@@ -88,7 +88,6 @@
         fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          console.log('students')
           students = JSON.parse(data)
           gridOptions = {
             columnDefs: columnDefs,
@@ -108,7 +107,7 @@
           fileName = 'uniqTasks'
           window.expose.SendExcel("sendReadExcel", fileName);
           window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-            console.log('tasks')
+            console.log("yess!!!")
             uniqTasks = JSON.parse(data)
           });
         });
@@ -316,6 +315,7 @@
             break;
           }
         }
+        finishSession()
       }
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
@@ -328,7 +328,6 @@
         })
         localStorage.setItem("log", JSON.stringify(log));
       }
-      finishSession()
     }
 
     function buyProduct() {

@@ -12,7 +12,8 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('User.html')
-  mainWindow.menuBarVisible = true
+  // mainWindow.menuBarVisible = false
+  // mainWindow.fullScreen = true;
 
   mainWindow.on('closed', () => {
     mainWindow = null
