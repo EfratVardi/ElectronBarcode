@@ -25,7 +25,7 @@
             { headerName: "שם", field: "name", editable: true },
             { headerName: "תעודת זהות", field: "tz" },
             { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
-            { headerName: "סך נקודות", field: "points" },
+            { headerName: "סך נקודות", field: "points", editable: true },
             { headerName: "שמות המשימות", field: "tasks" },
             { headerName: "תאריכי עדכון", field: "dates" }
         ];
@@ -40,7 +40,7 @@
                     document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')"
             })
             fileName = 'students'
-            // window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 students = JSON.parse(data)
                 gridOptions = {
@@ -97,7 +97,7 @@
                     points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
                 })
                 fileName = 'students'
-                window.expose.SendExcel("sendWriteExcel", [fileName,JSON.stringify(students)]);
+                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     location.reload()
                 });
