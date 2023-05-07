@@ -20,9 +20,13 @@
         var systemConfig;
 
         function onLoad() {
-            systemConfig = JSON.parse(expose.systemConfig())
-            systemConfig.color == "1" ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+            window.expose.SendReadExcel("sendReadExcel", "systemConfig");
+            window.expose.ReceiveReadExcel("receiveReadExcel", (data) => {
+                systemConfig = JSON.parse(data)
+                systemConfig.color == "1" ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+            })
         }
+
         document.addEventListener("keypress", function (e) {
             if (e.target.tagName !== "INPUT") {
                 var input = document.querySelector(".my-input");
@@ -42,15 +46,39 @@
         function login(page) {
             counter = 0;
             window.location.href = page + '.html';
-        }  
+        }
+        function New() {
+            window.expose.SendExcel("sendReadExcel", "studentsExcel");
+            window.expose.ReceiveExcel("receiveReadExcel", (data) => {
+                var students = JSON.parse(data)
+                var tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
+                for (var i = 0; i < students.length; i++) {
+                    while (students[i]["tz"] == tz) {
+                        tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
+                        i = 0
+                    }
+                }
+                students.unshift({
+                    grade: '------', name: '------', tz: tz, barcode: '',
+                    points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
+                })
+                window.expose.SendExcel("sendWriteExcel", JSON.stringify(students));
+                window.expose.ReceiveExcel("receiveWriteExcel", (data) => {
+                    // expose.writeToFile("studentsExcel",JSON.stringify(students) )
+                    if(data==1)
+                        location.reload()
+                });
+            });
+        }
+
     </script>
     <div class="background" id="background">
         <div class="text">
             <div id="line1">ברוכה הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <img style="margin-left: 10px;" onclick="Export()" src="resources/file-earmark-excel.svg" />
+            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')" src="resources/file-earmark-excel.svg" />
             <img style="margin-left: 10px;" onclick="New()" src="resources/person-plus.svg" />
-            <img  onclick="expose.appClose()" src="resources/box-arrow-left.svg" />
+            <img onclick="expose.appClose()" src="resources/box-arrow-left.svg" />
             <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
         </div>
         <input type="text" class="my-input" id="barcode">

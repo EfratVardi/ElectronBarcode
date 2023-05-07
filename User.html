@@ -36,7 +36,8 @@
   <script src="js/bootstrap.min.js"></script>
 
   <script>
-    var Today = new Date().toISOString().split('T')[0];
+    var currentDate = new Date().toLocaleString().split(',')[0]
+    var currentDateTime = new Date().toLocaleString()
     var studentsExcel = JSON.parse(expose.studentsExcel())
     var uniqTasksExcel = JSON.parse(expose.uniqTasksExcel())
     var tasksExcel = JSON.parse(expose.tasksExcel())
@@ -54,7 +55,7 @@
         if (!localStorage.getItem("log")) {
           localStorage.setItem("log", "[]")
         }
-        if (Today >= systemConfig.date) {
+        if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {   
           window.location.href = 'Expired.html';
         }
         if (studentsExcel.length == 0 || (tasksExcel.length == 0 && uniqTasksExcel.length == 0)) {
@@ -76,19 +77,19 @@
           document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
         }
         if (!localStorage.getItem("downloadDate")) {
-          localStorage.setItem("downloadDate", Today)
+          localStorage.setItem("downloadDate", currentDate)
         }
         else {
-          if (localStorage.getItem("downloadDate") != Today) {
-            Export()
-            localStorage.setItem("downloadDate", Today)
+          if (localStorage.getItem("downloadDate") != currentDate) {
+            localStorage.setItem("downloadDate", currentDate)
+            Export('הורדה אוטומטית')
           }
         }
       }
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -135,7 +136,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -170,7 +171,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -221,7 +222,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -267,7 +268,7 @@
             studentsExcel[i].tasksNumber += result.code + ',';
             let dates = JSON.parse(studentResult.dates)
             dates.push({
-              code: result.code, date: new Date().toLocaleString()
+              code: result.code, date: currentDateTime
             });
             studentsExcel[i].dates = JSON.stringify(dates);
             break;
@@ -283,7 +284,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -322,7 +323,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -349,7 +350,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -378,7 +379,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -393,7 +394,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),
@@ -433,7 +434,7 @@
       catch (err) {
         var log = JSON.parse(localStorage.getItem("log"))
         log.push({
-          date: new Date().toLocaleString(),
+          date: currentDate,
           function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
           error: err.message,
           studentResult: JSON.stringify(studentResult),

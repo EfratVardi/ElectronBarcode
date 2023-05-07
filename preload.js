@@ -3,8 +3,10 @@ const electron = require('electron');
 const fs = require('fs').promises;
 const ipc = require('electron').ipcRenderer
 
-var studentsExcel = '[]'; var uniqTasksExcel = '[]';
-var tasksExcel = '[]'; var systemConfig = '{"title":"ברקוד","date":"2025-02-01","position":"","color":"1"}'
+var studentsExcel = '[]';
+var uniqTasksExcel = '[]';
+var tasksExcel = '[]';
+var systemConfig = '{"title":"ברקוד","date":"2025-02-01","position":"","color":"1"}'
 fs.readFile('studentsExcel.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
@@ -25,15 +27,6 @@ fs.readFile('uniqTasksExcel.txt',
         }
     });
 
-// fs.readFile('tasksExcel.txt',
-//     { encoding: 'utf8', flag: 'r' },
-//     function (err, data) {
-//         if (err)
-//             console.log(err);
-//         else {
-//             tasksExcel = data
-//         }
-//     });
 fs.readFile('systemConfig.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
@@ -44,6 +37,15 @@ fs.readFile('systemConfig.txt',
         }
     });
 
+// fs.readFile('tasksExcel.txt',
+//     { encoding: 'utf8', flag: 'r' },
+//     function (err, data) {
+//         if (err)
+//             console.log(err);
+//         else {
+//             tasksExcel = data
+//         }
+//     });
 contextBridge.exposeInMainWorld('expose', {
     send: (channel, data) => {
         let validChannels = ["toMain"];
@@ -57,6 +59,13 @@ contextBridge.exposeInMainWorld('expose', {
             ipcRenderer.on(channel, (event, ...args) => func(...args));
         }
     },
+    SendExcel: (channel, data) => {
+        ipcRenderer.send(channel, data);
+    },
+    ReceiveExcel: (channel, func) => {
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
+    },
+    
     studentsExcel: () => studentsExcel,
     uniqTasksExcel: () => uniqTasksExcel,
     tasksExcel: () => tasksExcel,
@@ -68,7 +77,7 @@ contextBridge.exposeInMainWorld('expose', {
             }
         });
     },
-    appClose:()=>{
+    appClose: () => {
         ipc.send('close')
     }
 });

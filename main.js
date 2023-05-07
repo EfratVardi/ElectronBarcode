@@ -31,12 +31,39 @@ ipcMain.on("toMain", (event, args) => {
   });
 });
 
+ipcMain.on("sendReadExcel", (event, args) => {
+  console.log("efrat error1!!");
+  fs.readFile(args + '.txt',
+    { encoding: 'utf8', flag: 'r' },
+    function (err, data) {
+      if (err)
+        console.log(err + "error!!");
+      else {
+        console.log("error2");
+        mainWindow.webContents.send("receiveReadExcel", data);
+      }
+    });
+});
+
+ipcMain.on("sendWriteExcel", (event, args) => {
+  console.log(args);
+  fs.writeFile('studentsExcel' + '.txt', content, err => {
+    if (err) {
+      console.error(err);
+    }
+    else {
+      console.log("error2");
+      mainWindow.webContents.send("receiveWriteExcel", 1);
+    }
+  });
+});
+
 ipcMain.on('close', () => {
   app.quit()
 })
-// Quit when all windows are closed - (Not macOS - Darwin)
+
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
 })
 
 // When app icon is clicked and app is running, (macOS) recreate the BrowserWindow

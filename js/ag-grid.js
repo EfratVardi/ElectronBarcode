@@ -38,26 +38,9 @@ function onCellEditingStopped(params) {
     expose.writeToFile("studentsExcel", JSON.stringify(gridOptions.rowData))
 }
 
-function New() {
-    var students = JSON.parse(expose.studentsExcel())
-    var tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
-    for (var i = 0; i < students.length; i++) {
-        while (students[i]["tz"] == tz) {
-            tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
-            i = 0
-        }
-    }
-    students.unshift({
-        grade: '------', name: '------', tz: tz, barcode: '',
-        points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
-    })
-    expose.writeToFile("studentsExcel", JSON.stringify(students))
-    location.reload()
-}
-
-function Export() {
+function Export(name) {
     var params = {
-        fileName: new Date().toISOString().split('T')[0] + ' students',
+        fileName: new Date().toISOString().split('T')[0] + ' '+name,
     };
     gridOptions.api.exportDataAsCsv(params);
 }
