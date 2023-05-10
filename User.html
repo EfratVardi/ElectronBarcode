@@ -35,7 +35,7 @@
   <script src="js/bootstrap.min.js"></script>
 
   <script>
-    var currentDate = new Date().toLocaleString().split(',')[0]
+    var currentDate = new Date().toISOString().split('T')[0];
     var currentDateTime = new Date().toLocaleString()
     var students = ""
     var uniqTasks = ""
@@ -64,7 +64,6 @@
         fileName = 'systemConfig'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          console.log('system')
           systemConfig = JSON.parse(data)
           if (systemConfig.color == "2") {
             document.getElementById("position").style.backgroundColor = "yellow";
@@ -81,7 +80,7 @@
             document.getElementById("position").style.display = "none";
           }
           document.getElementById("title").innerHTML = systemConfig.title
-          if (currentDate > new Date(systemConfig.date).toLocaleDateString()) {
+          if (currentDate > systemConfig.date) {
             window.location.href = 'Expired.html';
           }
         })
@@ -107,7 +106,6 @@
           fileName = 'uniqTasks'
           window.expose.SendExcel("sendReadExcel", fileName);
           window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-            console.log("yess!!!")
             uniqTasks = JSON.parse(data)
           });
         });
