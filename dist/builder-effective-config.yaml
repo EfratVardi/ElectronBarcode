@@ -1,5 +1,4 @@
 directories:
   output: dist
   buildResources: build
-files: []
 electronVersion: 9.4.4
