@@ -1,5 +1,8 @@
 directories:
   output: dist
   buildResources: build
+extraResources:
+  - filter:
+      - ./extraResources/**
 files: []
 electronVersion: 9.4.4
