@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
   - url: barcode-Setup-1.0.0.exe
-    sha512: 2bFOMyRgmEaK3dvLLzeaHxEsj6z24jw6sCq4Q3BUztoRV+MLCYybqRKO+Nee8jKlZhAGnAc/+PZLSTicDdAusw==
-    size: 56888994
+    sha512: 5POJuA69U4nNjtU7YQAEkLyvvG7daEjiyuakHtf7S7b0IlCtYDzLlyGT0KCJV4zR+E5+4hePShvRarCKchEWSQ==
+    size: 56870286
 path: barcode-Setup-1.0.0.exe
-sha512: 2bFOMyRgmEaK3dvLLzeaHxEsj6z24jw6sCq4Q3BUztoRV+MLCYybqRKO+Nee8jKlZhAGnAc/+PZLSTicDdAusw==
-releaseDate: '2023-06-07T19:17:01.599Z'
+sha512: 5POJuA69U4nNjtU7YQAEkLyvvG7daEjiyuakHtf7S7b0IlCtYDzLlyGT0KCJV4zR+E5+4hePShvRarCKchEWSQ==
+releaseDate: '2023-06-19T20:43:33.366Z'

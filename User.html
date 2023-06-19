@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title id="title"></title>
+  <title>ברקוד</title>
   <style>
     @font-face {
       font-family: printFont;
@@ -79,7 +79,6 @@
           else {
             document.getElementById("position").style.display = "none";
           }
-          document.getElementById("title").innerHTML = systemConfig.title
           if (currentDate > systemConfig.date) {
             window.location.href = 'Expired.html';
           }
@@ -146,9 +145,9 @@
             login('System')
           else if (state == 1)//כיתה או בת
             searchInExcel();
-          else if (searchVal.startsWith('4') && state == 2)//משימה רגילה
+          else if (systemConfig.type == 2 && state == 2)//משימה רגילה
             updateTask();
-          else if (searchVal.startsWith('5') && state == 2)//משימה חד פעמית
+          else if (systemConfig.type == 1 && state == 2)//משימה חד פעמית
             updateUniqTask();
           else if (searchVal.startsWith('6') && state == 2)//מוצר
             buyProduct();
@@ -214,9 +213,9 @@
     function updateTask() {
       try {
         state = 3;
-        for (var i = 0; i < tasks.length; i++) {
-          if (tasks[i]["code"] == searchVal) {
-            result = tasks[i]
+        for (var i = 0; i < uniqTasks.length; i++) {
+          if (uniqTasks[i]["code"] == searchVal) {
+            result = uniqTasks[i]
             break;
           }
         }
@@ -235,7 +234,7 @@
           return;
         }
 
-        if (studentResult.tasksNumber.includes(result.code)) {
+        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
           showAlert("הי, אסור להגיש משימה פעמיים!");
           return;
         }
@@ -244,13 +243,14 @@
           if (students[i]["tz"] == studentResult.tz) {
             students[i].tasks += result.name + ',';
             students[i].tasksNumber += result.code + ',';
+            let dates = JSON.parse(studentResult.dates)
+            dates.push({
+              code: result.code, date: currentDateTime
+            });
+            students[i].dates = JSON.stringify(dates);
             break;
           }
         }
-        fileName = 'tasks'
-        window.expose.SendExcel("sendWriteExcel", [fileName, students]);
-        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        });
         finishSession()
       }
       catch (err) {

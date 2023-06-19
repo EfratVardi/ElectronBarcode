@@ -23,7 +23,7 @@
         var students = ""
         var uniqTasks = ""
         var tasks = ""
-        var systemConfig = { "title": "ברקוד", "date": "2025-01-29", "position": "", "color": "1" }
+        var systemConfig = { "type": "1", "date": "2025-01-29", "position": "", "color": "1" }
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -115,9 +115,12 @@
                     students[i].tasks = ','
                     students[i].dates = '[]'
                 }
-                for (var i = 0; i < uniqTasks.length; i++) {
-                    uniqTasks[i].used = 0
+                if (systemConfig.type == 1) {
+                    for (var i = 0; i < uniqTasks.length; i++) {
+                        uniqTasks[i].used = 0
+                    }
                 }
+
                 fileName = "students"
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
@@ -145,6 +148,7 @@
         function exportLog() {
             ExportLog()
         }
+
         function exportUniqTasks() {
             ExportUniqTasks()
         }
@@ -161,12 +165,8 @@
                         <label for="uploadStudents" class="form-label">תלמידות</label>
                         <input type=file class="form-control" id="uploadStudents" name="files[]">
                     </div>
-                    <!-- <div class="form-group col-md-3">
-                        <label for="uploadTasks" class="form-label">משימות</label>
-                        <input type=file class="form-control" id="uploadTasks" name="files[]">
-                    </div> -->
                     <div class="form-group col-md-3">
-                        <label for="uploaduniqTasks" class="form-label">משימות אישיות</label>
+                        <label for="uploaduniqTasks" class="form-label">משימות </label>
                         <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
                     </div>
                     <div class="form-group col-md-2">
@@ -184,11 +184,14 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-2">
-                        <label for="title" class="form-label">כותרת</label>
-                        <input type="text" class="form-control" id="title">
+                        <label for="type" class="form-label">סוג משחק</label>
+                        <select class="form-control" id="type">
+                            <option value="1">אישי</option>
+                            <option value="2">כללי</option>
+                        </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="date" class="form-label">יום פעילות אחרון</label>
+                        <label for="date" class="form-label">תאריך הפסקת התוכנה</label>
                         <input type="date" class="form-control" id="date">
                     </div>
                     <div class="form-group col-md-2">
@@ -224,7 +227,6 @@
     <script>
         document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
-        // document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 
