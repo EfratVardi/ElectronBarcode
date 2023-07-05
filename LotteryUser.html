@@ -6,13 +6,45 @@
 </head>
 
 <body>
-    <h1>Lottery Number Generator</h1>
-    <p>Click the button below to generate a new lottery number:</p>
-    <button onclick="generateLotteryNumber({min: 10000, max: 99999, canGenerateAgain: false})">Generate Number</button>
-    <p id="lotteryNumber"></p>
+    <h1>Gift Lottery</h1>
+    <label for="gifts-dropdown">Select a gift:</label>
+    <select id="gifts-dropdown" onchange="displaySelectedGift()">
+    </select>
+    <button id="lottery-btn" onclick="generateLotteryNumber()">Generate Number</button>
     <script>
-        // Define an array to hold the generated lottery numbers
-        var lotteryNumbers = [];
+        // Define an array of gifts
+        var gifts = [
+            {
+                "name": "Gift 1",
+                "description": "This is a description of Gift 1",
+                "lotteryNumber": null
+            },
+            {
+                "name": "Gift 2",
+                "description": "This is a description of Gift 2",
+                "lotteryNumber": null
+            },
+            {
+                "name": "Gift 3",
+                "description": "This is a description of Gift 3",
+                "lotteryNumber": null
+            },
+            {
+                "name": "Gift 4",
+                "description": "This is a description of Gift 4",
+                "lotteryNumber": null
+            },
+            {
+                "name": "Gift 5",
+                "description": "This is a description of Gift 5",
+                "lotteryNumber": null
+            },
+            {
+                "name": "Gift 6",
+                "description": "This is a description of Gift 6",
+                "lotteryNumber": null
+            }
+        ];
 
         // Define a function to generate a random integer between min (inclusive) and max (inclusive)
         function getRandomInt(min, max) {
@@ -20,24 +52,96 @@
         }
 
         // Define a function to generate a random lottery number with 5 digits between min and max
-        function generateLotteryNumber(options) {
-            var min = options.min || 10000;
-            var max = options.max || 99999;
-            var canGenerateAgain = options.canGenerateAgain || false;
+        function generateLotteryNumber() {
+            var selectedGiftIndex = document.querySelector("#gifts-dropdown").value;
+            var selectedGift = gifts[selectedGiftIndex];
+
+            var min = 10000;
+            var max = 99999;
+            var canGenerateAgain = false;
             var lotteryNumber;
 
             do {
                 // Generate a random number between min and max (inclusive)
                 lotteryNumber = getRandomInt(min, max);
-            } while (!canGenerateAgain && lotteryNumbers.includes(lotteryNumber));
+            } while (!canGenerateAgain && gifts.some(gift => gift.lotteryNumber === lotteryNumber));
 
-            // Add the generated lottery number to the array
-            lotteryNumbers.push(lotteryNumber);
+            // Update the lottery number of the current gift
+            selectedGift.lotteryNumber = lotteryNumber;
+            gifts[selectedGiftIndex].lotteryNumber = lotteryNumber;
 
             // Display the generated lottery number on the page
-            document.getElementById("lotteryNumber").innerHTML = "Lottery Number: " + lotteryNumber;
+            var lotteryNumberInputs = document.querySelectorAll(".lottery-number-input");
+            var digits = lotteryNumber.toString().split("");
+            lotteryNumberInputs.forEach(function (input, index) {
+                input.value = digits[index];
+            });
+
+            // Change the button text to "Lottery Again"
+            var lotteryBtn = document.querySelector("#lottery-btn");
+            lotteryBtn.textContent = "Lottery Again";
+
+            // Enable the button if the selected gift has already been won
+            // if (selectedGift.lotteryNumber !== null) {
+            //     lotteryBtn.disabled = false;
+            // } else {
+            //     lotteryBtn.disabled = true;
+            // }
         }
+
+        // Define a function to display the selected gift
+        function displaySelectedGift() {
+            var selectedIndex = document.querySelector("#gifts-dropdown").value;
+            var selectedGift = gifts[selectedIndex];
+
+            // Set the description of the selected gift
+            var description = document.querySelector("#gift-description");
+            description.textContent = selectedGift.description;
+
+            // Display the lottery number if the gift has already been won
+            var lotteryNumberInputs = document.querySelectorAll(".lottery-number-input");
+            if (selectedGift.lotteryNumber !== null) {
+                var digits = selectedGift.lotteryNumber.toString().split("");
+                lotteryNumberInputs.forEach(function (input, index) {
+                    input.value = digits[index];
+                });
+            } else {
+                lotteryNumberInputs.forEach(function (input) {
+                    input.value = "";
+                });
+            }
+
+            // Change the button text to "Lottery Again" if the selected gift has already been won
+            var lotteryBtn = document.querySelector("#lottery-btn");
+            if (selectedGift.lotteryNumber !== null) {
+                lotteryBtn.textContent = "Lottery Again";
+                // lotteryBtn.disabled = false;
+            } else {
+                lotteryBtn.textContent = "Generate Number";
+                // lotteryBtn.disabled = true;
+            }
+        }
+
+        // Populate the gifts dropdown
+        var giftsDropdown = document.querySelector("#gifts-dropdown");
+        gifts.forEach(function (gift, index) {
+            var option = document.createElement("option");
+            option.value = index;
+            option.textContent = gift.name;
+            giftsDropdown.appendChild(option);
+        });
     </script>
+    <div>
+        <p id="gift-description">Select a gift to view its description</p>
+        <p>
+            <label>Lottery Number:</label>
+            <input class="lottery-number-input" type="text" size="1" readonly>
+            <input class="lottery-number-input" type="text" size="1" readonly>
+            <input class="lottery-number-input" type="text" size="1" readonly>
+            <input class="lottery-number-input" type="text" size="1" readonly>
+            <input class="lottery-number-input" type="text" size="1" readonly>
+        </p>
+    </div>
 </body>
 
 </html>
