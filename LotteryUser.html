@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Lottery Number Generator</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>Lottery Number Generator</h1>
     <p>Click the button below to generate a new lottery number:</p>
     <button onclick="generateLotteryNumber({min: 10000, max: 99999, canGenerateAgain: false})">Generate Number</button>
     <p id="lotteryNumber"></p>
     <script>
-      // Define an array to hold the generated lottery numbers
-      var lotteryNumbers = [];
+        // Define an array to hold the generated lottery numbers
+        var lotteryNumbers = [];
 
-      // Define a function to generate a random integer between min (inclusive) and max (inclusive)
-      function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
+        // Define a function to generate a random integer between min (inclusive) and max (inclusive)
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
-      // Define a function to generate a random lottery number with 5 digits between min and max
-      function generateLotteryNumber(options) {
-        var min = options.min || 10000;
-        var max = options.max || 99999;
-        var canGenerateAgain = options.canGenerateAgain || false;
-        var lotteryNumber;
+        // Define a function to generate a random lottery number with 5 digits between min and max
+        function generateLotteryNumber(options) {
+            var min = options.min || 10000;
+            var max = options.max || 99999;
+            var canGenerateAgain = options.canGenerateAgain || false;
+            var lotteryNumber;
 
-        do {
-          // Generate a random number between min and max (inclusive)
-          lotteryNumber = getRandomInt(min, max);
-        } while (!canGenerateAgain && lotteryNumbers.includes(lotteryNumber));
+            do {
+                // Generate a random number between min and max (inclusive)
+                lotteryNumber = getRandomInt(min, max);
+            } while (!canGenerateAgain && lotteryNumbers.includes(lotteryNumber));
 
-        // Add the generated lottery number to the array
-        lotteryNumbers.push(lotteryNumber);
+            // Add the generated lottery number to the array
+            lotteryNumbers.push(lotteryNumber);
 
-        // Display the generated lottery number on the page
-        document.getElementById("lotteryNumber").innerHTML = "Lottery Number: " + lotteryNumber;
-      }
+            // Display the generated lottery number on the page
+            document.getElementById("lotteryNumber").innerHTML = "Lottery Number: " + lotteryNumber;
+        }
     </script>
-  </body>
+</body>
+
 </html>
