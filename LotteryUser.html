@@ -80,13 +80,6 @@
             // Change the button text to "Lottery Again"
             var lotteryBtn = document.querySelector("#lottery-btn");
             lotteryBtn.textContent = "Lottery Again";
-
-            // Enable the button if the selected gift has already been won
-            // if (selectedGift.lotteryNumber !== null) {
-            //     lotteryBtn.disabled = false;
-            // } else {
-            //     lotteryBtn.disabled = true;
-            // }
         }
 
         // Define a function to display the selected gift
@@ -115,10 +108,8 @@
             var lotteryBtn = document.querySelector("#lottery-btn");
             if (selectedGift.lotteryNumber !== null) {
                 lotteryBtn.textContent = "Lottery Again";
-                // lotteryBtn.disabled = false;
             } else {
                 lotteryBtn.textContent = "Generate Number";
-                // lotteryBtn.disabled = true;
             }
         }
 
