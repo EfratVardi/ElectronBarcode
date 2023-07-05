@@ -11,9 +11,9 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('LotteryManage.html')
-  // mainWindow.menuBarVisible = false
-  // mainWindow.fullScreen = true;
+  mainWindow.loadFile('User.html')
+  mainWindow.menuBarVisible = false
+  mainWindow.fullScreen = true;
 
   mainWindow.on('closed', () => {
     mainWindow = null
