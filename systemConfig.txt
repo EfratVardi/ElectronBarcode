@@ -1,1 +1,6 @@
-{"type":"2","date":"2023-06-20","position":"1","color":"2"}
+{
+  "type": "2",
+  "date": "2023-07-30",
+  "position": "1",
+  "color": "3"
+}

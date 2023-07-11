@@ -12,6 +12,9 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('LotteryUser.html')
+   //mainWindow.loadFile('User.html')
+
+  //mainWindow.setKiosk(true);
   // mainWindow.menuBarVisible = false
   // mainWindow.fullScreen = true;
 
