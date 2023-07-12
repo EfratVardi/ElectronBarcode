@@ -18,7 +18,7 @@
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 systemConfig = JSON.parse(data)
                 if (systemConfig.color == "3") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/lottery1.png')";
+                    document.getElementById("background").style.backgroundImage = "url('resources/lottery1.gif')";
                 }
                 fileName = 'manageLotteryConfig'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -124,7 +124,7 @@
         <input type="text" class="my-input" id="barcode">
         <div id="studentsGrid"></div>
       </div>
-    <label for="gifts-dropdown">Select a gift:</label>
+    <!-- <label for="gifts-dropdown">Select a gift:</label>
     <select id="gifts-dropdown" onchange="displaySelectedGift()">
     </select>
     <button id="lottery-btn" onclick="generateLotteryNumber()">Generate Number</button>
@@ -138,7 +138,7 @@
             <input class="lottery-number-input" type="text" size="1" readonly>
             <input class="lottery-number-input" type="text" size="1" readonly>
         </p>
-    </div>
+    </div> -->
 </body>
 
 </html>
