@@ -1,4 +1,7 @@
-﻿
+@font-face {
+    font-family: "printFont";
+    src:url("../fonts/FbMagnolia-Regular.otf");
+}
 .text {
     position: absolute;
     left: 10%;
@@ -14,20 +17,6 @@
     color: white;
 }
 
-#line1 {
+#gift-description {
     font-size: 5.5vw;
-}
-
-#line2 {
-    font-size: 3.5vw;
-}
-
-#line3 {
-    font-size: 2vw;
-}
-
-#position {
-    font-size: 4vw;
-    width: 18vw;
-    border-radius: 0px 50px 50px 0px;
 }
