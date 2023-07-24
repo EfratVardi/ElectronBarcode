@@ -15,8 +15,8 @@ function createWindow() {
   //  mainWindow.loadFile('User.html')
 
   //mainWindow.setKiosk(true);
-  mainWindow.menuBarVisible = false
-  mainWindow.fullScreen = true;
+  // mainWindow.menuBarVisible = false
+  // mainWindow.fullScreen = true;
 
   mainWindow.on('closed', () => {
     mainWindow = null
