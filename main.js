@@ -11,8 +11,8 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('LotteryUser.html')
-   //mainWindow.loadFile('User.html')
+ mainWindow.loadFile('LotteryUser.html')
+  //  mainWindow.loadFile('User.html')
 
   //mainWindow.setKiosk(true);
   mainWindow.menuBarVisible = false
