@@ -20,3 +20,30 @@
 #gift-description {
     font-size: 5.5vw;
 }
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .lottery-number-input {
+    background-color: #ccc;
+    height: 200px;
+    flex-basis: calc(20% - 10px);
+    margin-bottom: 20px;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .lottery-number-input {
+      flex-basis: calc(33.33% - 10px);
+    }
+  }
+  
+  @media only screen and (max-width: 480px) {
+    .lottery-number-input {
+      flex-basis: calc(50% - 10px);
+    }
+  }

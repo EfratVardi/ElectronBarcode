@@ -112,8 +112,7 @@
             }
         }
 
-        function start()
-        {
+        function start() {
             document.getElementById("start").style.display = "none";
             document.getElementById("lottery").style.display = "block";
             displaySelectedGift()
@@ -132,14 +131,13 @@
                 <button id="lottery-btn" onclick="start()">start</button>
             </div>
             <br><br>
-            <div>
-                <p>
-                    <input class="lottery-number-input" type="text" size="1" readonly>
-                    <input class="lottery-number-input" type="text" size="1" readonly>
-                    <input class="lottery-number-input" type="text" size="1" readonly>
-                    <input class="lottery-number-input" type="text" size="1" readonly>
-                    <input class="lottery-number-input" type="text" size="1" readonly>
-                </p>
+
+            <div class="container">
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
             </div>
         </div>
         <input type="text" class="my-input" id="barcode">
