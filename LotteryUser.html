@@ -2,14 +2,17 @@
 <html>
 
 <head>
-    <title>Lottery Number Generator</title>
+    <title>Lottery</title>
 </head>
 
 <body onload="onLoad()">
-    <link href="StyleSheets/LotteryUserStyleSheet.css" rel="stylesheet" />
+    <link href="styleSheets/MainStyleSheet.css" rel="stylesheet" />
+    <link href="styleSheets/Lottery/UserStyleSheet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
     <script>
         var manageLotteryConfig = ""
-        var gifts = ""
+        var gifts
         var systemConfig = ""
 
         function onLoad() {
@@ -18,7 +21,7 @@
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 systemConfig = JSON.parse(data)
                 if (systemConfig.color == "3") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/lottery1.gif')";
+                    document.getElementById("background").style.backgroundImage = "url('resources/lottery/lottery1.png')";
                 }
                 fileName = 'manageLotteryConfig'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -27,13 +30,13 @@
                     gifts = manageLotteryConfig.gifts;
                     // Populate the gifts dropdown
                     var giftsDropdown = document.querySelector("#gifts-dropdown");
-                    gifts.forEach(function (gift, index) {
+
+                    gifts.forEach(function (gift) {
                         var option = document.createElement("option");
-                        option.value = index;
+                        option.value = gift.id;
                         option.textContent = gift.name;
                         giftsDropdown.appendChild(option);
                     });
-                    displaySelectedGift()
                 })
             })
         }
@@ -46,7 +49,7 @@
         // Define a function to generate a random lottery number with 5 digits between min and max
         function generateLotteryNumber() {
             var selectedGiftIndex = document.querySelector("#gifts-dropdown").value;
-            var selectedGift = gifts[selectedGiftIndex];
+            var selectedGift = gifts.find(x => x.id == selectedGiftIndex)
 
             var min = manageLotteryConfig.minNumber;
             var max = manageLotteryConfig.maxNumber;
@@ -60,8 +63,7 @@
 
             // Update the lottery number of the current gift
             selectedGift.lotteryNumber = lotteryNumber;
-            gifts[selectedGiftIndex].lotteryNumber = lotteryNumber;
-
+            gifts.find(x => x.id == selectedGiftIndex).lotteryNumber = lotteryNumber
             // Display the generated lottery number on the page
             var lotteryNumberInputs = document.querySelectorAll(".lottery-number-input");
             var digits = lotteryNumber.toString().split("");
@@ -83,12 +85,10 @@
 
         // Define a function to display the selected gift
         function displaySelectedGift() {
-            var selectedIndex = document.querySelector("#gifts-dropdown").value;
-            var selectedGift = gifts[selectedIndex];
-
-            // Set the description of the selected gift
             var description = document.querySelector("#gift-description");
-            description.textContent = selectedGift.description;
+            var selectedIndex = document.querySelector("#gifts-dropdown").value;
+            var selectedGift = gifts.find(x => x.id == selectedIndex)
+            description.textContent = selectedGift.name;
 
             // Display the lottery number if the gift has already been won
             var lotteryNumberInputs = document.querySelectorAll(".lottery-number-input");
@@ -112,34 +112,36 @@
             }
         }
 
+        function start() {
+            document.getElementById("start").style.display = "none";
+            document.getElementById("lottery").style.display = "block";
+            displaySelectedGift()
+        }
+
     </script>
-    <div class="background" id="background" style="height: 1000px;width: 1000
-    px;">
-        <!-- <div class="text">
-          <div id="line1">!...שלום</div>
-          <div id="line2">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
-          <div id="line3"></div>
-          <br><br>
-        </div> -->
-        <!-- <div id="position">עמדה</div> -->
-        <!-- <input type="text" class="my-input" id="barcode"> -->
-        <!-- <div id="studentsGrid"></div> -->
-      </div>
-    <!-- <label for="gifts-dropdown">Select a gift:</label>
-    <select id="gifts-dropdown" onchange="displaySelectedGift()">
-    </select>
-    <button id="lottery-btn" onclick="generateLotteryNumber()">Generate Number</button>
-    <div>
-        <p id="gift-description"></p>
-        <p>
-            <label>Lottery Number:</label>
-            <input class="lottery-number-input" type="text" size="1" readonly>
-            <input class="lottery-number-input" type="text" size="1" readonly>
-            <input class="lottery-number-input" type="text" size="1" readonly>
-            <input class="lottery-number-input" type="text" size="1" readonly>
-            <input class="lottery-number-input" type="text" size="1" readonly>
-        </p>
-    </div> -->
+    <div class="background" id="background">
+        <div class="text">
+            <div id="gift-description">ברוכות הבאות להגרלה</div>
+            <div id="lottery" style="display: none;">
+                <select id="gifts-dropdown" onchange="displaySelectedGift()">
+                </select>
+                <button id="lottery-btn" onclick="generateLotteryNumber()">Generate Number</button>
+            </div>
+            <div id="start" style="display: block;">
+                <button id="lottery-btn" onclick="start()">start</button>
+            </div>
+            <br><br>
+
+            <div class="container">
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+                <input class="lottery-number-input" type="text" readonly>
+            </div>
+        </div>
+        <input type="text" class="my-input" id="barcode">
+    </div>
 </body>
 
 </html>
