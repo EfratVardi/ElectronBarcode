@@ -11,7 +11,7 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('User.html')
+  mainWindow.loadFile('LotteryUser.html')
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
 
