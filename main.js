@@ -3,6 +3,7 @@ const fs = require('fs')
 let mainWindow
 
 function createWindow() {
+  debugger
   mainWindow = new BrowserWindow({
     width: 800, height: 600,
     webPreferences: {
@@ -11,9 +12,11 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('LotteryUser.html')
+  mainWindow.loadFile('User.html')
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
+  // mainWindow.webContents.openDevTools();
+
 
   mainWindow.on('closed', () => {
     mainWindow = null
