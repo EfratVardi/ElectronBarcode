@@ -1,1 +1,1 @@
-{"type":"1","date":"2023-11-11","position":"","color":"2"}
+{"date":"2023-11-01","position":"","color":"1"}

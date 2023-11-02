@@ -17,18 +17,26 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/xlsx.full.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/shared.js"></script>
+
 
     <script>
         var counter = 0;
         var students = ""
         var uniqTasks = ""
         var tasks = ""
-        var systemConfig = { "type": "1", "date": "2025-01-29", "position": "", "color": "1" }
+        var systemConfig = ""
+        var yesterday = getYesterdayDate()
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                systemConfig = JSON.parse(data)
+                if (data == 0) {
+                    systemConfig = {"date": yesterday, "position": "", "color": "1" }
+                }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
                 Object.entries(systemConfig).forEach(x => {
                     document.getElementById(x[0]).value = x[1]
                 })
@@ -231,4 +239,5 @@
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
+
 </html>

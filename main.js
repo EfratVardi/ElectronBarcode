@@ -15,7 +15,7 @@ function createWindow() {
   mainWindow.loadFile('User.html')
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
 
   mainWindow.on('closed', () => {
@@ -39,7 +39,9 @@ ipcMain.on("sendReadExcel", (event, args) => {
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
       if (err)
-        console.log(err)
+      {
+        mainWindow.webContents.send("receiveReadExcel" + args, 0);
+      }
       else {
         mainWindow.webContents.send("receiveReadExcel" + args, data);
       }
