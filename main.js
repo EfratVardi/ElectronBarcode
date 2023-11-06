@@ -17,8 +17,8 @@ function createWindow() {
   })
   mainWindow.loadFile('User.html')
   mainWindow.menuBarVisible = false
-  mainWindow.fullScreen = true;
-  // mainWindow.webContents.openDevTools();
+  // mainWindow.fullScreen = true;
+  mainWindow.webContents.openDevTools();
 
   ses.on('will-download', (e, downloadItem, webContents) => {
 

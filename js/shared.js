@@ -1,5 +1,4 @@
 
-
 function getYesterdayDate() {
     var x = new Date();
     x.setDate((new Date().getDate() - 1))
@@ -9,11 +8,13 @@ function getYesterdayDate() {
 function getTodayDate() {
     return new Date().toISOString().split('T')[0];
 }
-
 function getTodayDateTime() {
     return new Date().toLocaleString();
 }
 
+function getDefaultConfig() {
+    return {"date": getYesterdayDate(), "position": "", "color": "1" };
+}
 // function mainLoad() {
 //     fileName = 'systemConfig'
 //     window.expose.SendExcel("sendReadExcel", fileName);

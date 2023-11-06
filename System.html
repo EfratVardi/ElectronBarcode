@@ -26,13 +26,12 @@
         var uniqTasks = ""
         var tasks = ""
         var systemConfig = ""
-        var yesterday = getYesterdayDate()
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 if (data == 0) {
-                    systemConfig = {"date": yesterday, "position": "", "color": "1" }
+                    systemConfig = getDefaultConfig()
                 }
                 else {
                     systemConfig = JSON.parse(data)
