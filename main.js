@@ -1,8 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, session, dialog } = require('electron')
 const fs = require('fs')
 let mainWindow
 
 function createWindow() {
+  let ses = session.defaultSession
+
   mainWindow = new BrowserWindow({
     width: 800, height: 600,
     webPreferences: {
@@ -12,8 +14,39 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('User.html')
-  mainWindow.menuBarVisible = false
-  mainWindow.fullScreen = true;
+  // mainWindow.menuBarVisible = false
+  // mainWindow.fullScreen = true;
+
+  ses.on('will-download', (e, downloadItem, webContents) => {
+
+    let name = downloadItem.getFilename()
+    const existingFilePath = app.getPath('desktop') + `\\ברקוד- לא למחוק` + `/${name}`
+
+    if (fs.existsSync(existingFilePath)) {
+      fs.unlink(existingFilePath, (err) => {
+        if (err) {
+          console.error('Error removing the file:', err);
+        } else {
+          downloadItem.setSavePath(existingFilePath)
+        }
+      });
+    }
+    else {
+      downloadItem.setSavePath(existingFilePath)
+    }
+
+    downloadItem.once('done', (event, state) => {
+      if (state === 'completed') {
+        dialog.showMessageBox({
+          type: 'info',
+          title: 'הודעת מערכת',
+          message: 'הקובץ נשמר בהצלחה!'
+        })
+      } else {
+        dialog.showErrorBox('הודעת מערכת', 'הקובץ לא נשמר')
+      }
+    })
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -35,8 +68,9 @@ ipcMain.on("sendReadExcel", (event, args) => {
   fs.readFile(args + '.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
-      if (err)
-        console.log(err)
+      if (err) {
+        mainWindow.webContents.send("receiveReadExcel" + args, 0);
+      }
       else {
         mainWindow.webContents.send("receiveReadExcel" + args, data);
       }

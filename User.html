@@ -33,10 +33,11 @@
   <script src="js/ag-grid-community.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <script src="js/shared.js"></script>
 
   <script>
-    var currentDate = new Date().toISOString().split('T')[0];
-    var currentDateTime = new Date().toLocaleString()
+    var currentDate = getTodayDate();
+    var currentDateTime = getTodayDateTime();
     var students = ""
     var uniqTasks = ""
     var tasks = ""
@@ -64,14 +65,19 @@
         fileName = 'systemConfig'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          systemConfig = JSON.parse(data)
-          if (systemConfig.color == "2") {
-            document.getElementById("position").style.backgroundColor = "yellow";
-            document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
+          if (data == 0) {
+            systemConfig = getDefaultConfig()
           }
           else {
+            systemConfig = JSON.parse(data)
+          }
+          if (systemConfig.color == "1") {
             document.getElementById("position").style.backgroundColor = "aquamarine";
             document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
+          }
+          else if (systemConfig.color == "2") {
+            document.getElementById("position").style.backgroundColor = "yellow";
+            document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
           }
           if (systemConfig.position.length > 0) {
             document.getElementById("position").innerHTML += ' ' + systemConfig.position
@@ -86,27 +92,31 @@
         fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          students = JSON.parse(data)
-          gridOptions = {
-            columnDefs: columnDefs,
-            rowData: students,
-          };
-          var gridDiv = document.querySelector('#studentsGrid');
-          new agGrid.Grid(gridDiv, gridOptions);
-          if (!localStorage.getItem("downloadDate")) {
-            localStorage.setItem("downloadDate", currentDate)
-          }
-          else {
-            if (localStorage.getItem("downloadDate") != currentDate) {
+          if (data != 0) {
+            students = JSON.parse(data)
+            gridOptions = {
+              columnDefs: columnDefs,
+              rowData: students,
+            };
+            var gridDiv = document.querySelector('#studentsGrid');
+            new agGrid.Grid(gridDiv, gridOptions);
+            if (!localStorage.getItem("downloadDate")) {
               localStorage.setItem("downloadDate", currentDate)
-              Export('הורדה אוטומטית')
             }
-          }
-          fileName = 'uniqTasks'
-          window.expose.SendExcel("sendReadExcel", fileName);
-          window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-            uniqTasks = JSON.parse(data)
-          });
+            else {
+              if (localStorage.getItem("downloadDate") != currentDate) {
+                localStorage.setItem("downloadDate", currentDate)
+                Export('הורדה אוטומטית')
+              }
+            }
+            fileName = 'uniqTasks'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+              if (data != 0) {
+                uniqTasks = JSON.parse(data)
+              }
+            })
+          };
         });
 
         if (!localStorage.getItem("log")) {

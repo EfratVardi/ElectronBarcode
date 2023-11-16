@@ -17,35 +17,48 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/xlsx.full.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/shared.js"></script>
 
     <script>
         var counter = 0;
         var students = ""
         var uniqTasks = ""
         var tasks = ""
-        var systemConfig = { "type": "1", "date": "2025-01-29", "position": "", "color": "1" }
+        var systemConfig = ""
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                systemConfig = JSON.parse(data)
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
+                }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
                 Object.entries(systemConfig).forEach(x => {
                     document.getElementById(x[0]).value = x[1]
                 })
-                systemConfig.color == "2" ?
-                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')" :
-                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')";
+                if (systemConfig.color == "1") {
+                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')"
+                }
+                else if (systemConfig.color == "2") {
+                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+                }
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                students = JSON.parse(data);
+                if (data != 0) {
+                    students = JSON.parse(data);
+                }
             })
 
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                uniqTasks = JSON.parse(data);
+                if (data != 0) {
+                    uniqTasks = JSON.parse(data)
+                }
             })
             if (!localStorage.getItem("log"))
                 window.localStorage.setItem("log", '[]')
@@ -188,7 +201,6 @@
                         <select class="form-control" id="type">
                             <option value="1">אישי</option>
                             <option value="2">כללי</option>
-                            <option value="3">הגרלה</option>
                         </select>
                     </div>
                     <div class="form-group col-md-4">
@@ -204,7 +216,6 @@
                         <select class="form-control" id="color">
                             <option value="1">ורוד</option>
                             <option value="2">ירוק</option>
-                            <option value="3">הגרלה</option>
                         </select>
                     </div>
                     <div class="form-group col-md-2">
@@ -231,4 +242,5 @@
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
+
 </html>
