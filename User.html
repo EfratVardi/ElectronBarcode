@@ -455,12 +455,6 @@
         localStorage.setItem("log", JSON.stringify(log));
       }
     }
-    function Export(name) {
-      var params = {
-        fileName: new Date().toISOString().split('T')[0] + ' ' + name,
-      };
-      gridOptions.api.exportDataAsCsv(params);
-    }
 
     function reset(time = 0) {
       setTimeout(function () {
