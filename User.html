@@ -30,7 +30,6 @@
   <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
   <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <script src="js/ag-grid-community.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/shared.js"></script>
@@ -49,16 +48,6 @@
     var studentResult = ""
     var result = "";
     var returnval = 0;
-    var gridOptions
-    var columnDefs = [
-      { headerName: "כיתה", field: "grade", editable: true },
-      { headerName: "שם", field: "name", editable: true },
-      { headerName: "תעודת זהות", field: "tz" },
-      { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
-      { headerName: "סך נקודות", field: "points" },
-      { headerName: "שמות המשימות", field: "tasks" },
-      { headerName: "תאריכי עדכון", field: "dates" }
-    ];
 
     function onLoad() {
       try {
@@ -94,12 +83,6 @@
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
           if (data != 0) {
             students = JSON.parse(data)
-            gridOptions = {
-              columnDefs: columnDefs,
-              rowData: students,
-            };
-            var gridDiv = document.querySelector('#studentsGrid');
-            new agGrid.Grid(gridDiv, gridOptions);
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -242,11 +225,6 @@
           if (students[i]["tz"] == studentResult.tz) {
             students[i].tasks += result.name + ',';
             students[i].tasksNumber += result.code + ',';
-            let dates = JSON.parse(studentResult.dates)
-            dates.push({
-              code: result.code, date: currentDateTime
-            });
-            students[i].dates = JSON.stringify(dates);
             break;
           }
         }
@@ -298,11 +276,6 @@
           if (students[i]["tz"] == studentResult.tz) {
             students[i].tasks += result.name + ',';
             students[i].tasksNumber += result.code + ',';
-            let dates = JSON.parse(studentResult.dates)
-            dates.push({
-              code: result.code, date: currentDateTime
-            });
-            students[i].dates = JSON.stringify(dates);
             break;
           }
         }
@@ -531,7 +504,6 @@
     </div>
     <div id="position">עמדה</div>
     <input type="text" class="my-input" id="barcode">
-    <div id="studentsGrid"></div>
   </div>
   <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
     aria-hidden="true">

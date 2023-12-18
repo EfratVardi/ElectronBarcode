@@ -28,9 +28,7 @@
             { headerName: "תעודת זהות", field: "tz" },
             { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
             { headerName: "סך נקודות", field: "points", editable: true },
-            { headerName: "שמות המשימות", field: "tasks" },
-            { headerName: "תאריכי עדכון", field: "dates" }
-        ];
+            { headerName: "שמות המשימות", field: "tasks" }];
 
         function onLoad() {
             fileName = 'systemConfig'
@@ -57,6 +55,7 @@
                     gridOptions = {
                         columnDefs: columnDefs,
                         rowData: students,
+                        enableRtl: true,
                         defaultColDef: {
                             filter: 'agTextColumnFilter',
                             filterParams: {
@@ -101,7 +100,7 @@
                 }
                 students.unshift({
                     grade: '------', name: '------', tz: tz, barcode: '',
-                    points: 0, tasks: ",", tasksNumber: ",", dates: '[]'
+                    points: 0, tasks: ",", tasksNumber: ","
                 })
                 fileName = 'students'
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
@@ -113,8 +112,8 @@
 
         function onFirstDataRendered(params) {
             gridOptions.api.sizeColumnsToFit({
-                defaultMinWidth: 150,
-                columnLimits: [{ key: 'tasks', minWidth: 800 }],
+                defaultMinWidth: 100,
+                columnLimits: [{ key: 'tasks', minWidth: 600 }],
             });
         }
 
@@ -138,7 +137,8 @@
         <div class="text">
             <div id="line1">ברוכה הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')" src="resources/barcode/download-simple-light.svg" />
+            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')"
+                src="resources/barcode/download-simple-light.svg" />
             <img style="margin-left: 10px;" onclick="New()" src="resources/barcode/plus-light.svg" />
             <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
             <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
