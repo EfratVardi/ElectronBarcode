@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>ברקוד</title>
+  <title>תוכנית הברקודים</title>
   <style>
     @font-face {
       font-family: printFont;
@@ -73,11 +73,11 @@
           }
           if (systemConfig.color == "1") {
             document.getElementById("position").style.backgroundColor = "aquamarine";
-            document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground1.gif')"
+            document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground1.gif')"
           }
           else if (systemConfig.color == "2") {
             document.getElementById("position").style.backgroundColor = "yellow";
-            document.getElementById("background").style.backgroundImage = "url('resources/greenBackground1.gif')";
+            document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
           }
           if (systemConfig.position.length > 0) {
             document.getElementById("position").innerHTML += ' ' + systemConfig.position
@@ -144,6 +144,8 @@
             login('Manage')
           else if (searchVal == '011429519')
             login('System')
+          else if (searchVal == '207594581')
+            login('ParentsMeeting')
           else if (state == 1)//כיתה או בת
             searchInExcel();
           else if (systemConfig.type == 2 && state == 2)//משימה רגילה
@@ -174,10 +176,6 @@
       }
     });
 
-    function login(page) {
-      window.location.href = page + '.html';
-    }
-
     function searchInExcel() {
       try {
         state = 2
@@ -192,8 +190,8 @@
           return;
         }
         systemConfig.color == 1 ?
-          document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground2.gif')" :
-          document.getElementById("background").style.backgroundImage = "url('resources/greenBackground2.gif')";
+          document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground2.gif')" :
+          document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground2.gif')";
         document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
         document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
         document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
@@ -465,7 +463,7 @@
           }, 1000)
           window.expose.receive("receivePrint", (data) => {
             document.body.innerHTML = originalContents;
-            systemConfig.color == 1 ? document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground3.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/greenBackground3.gif')";
+            systemConfig.color == 1 ? document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground3.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground3.gif')";
             document.getElementById("line1").innerHTML = "! יש בחשבונך " + studentResult.points + " נקודות ";
             document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
             reset(1800);

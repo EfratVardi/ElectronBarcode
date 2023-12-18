@@ -43,10 +43,10 @@
                     systemConfig = JSON.parse(data)
                 }
                 if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')"
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
                 }
                 else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
                 }
             });
             fileName = 'students'
@@ -89,11 +89,6 @@
                     login("System")
             }
         });
-
-        function login(page) {
-            counter = 0;
-            window.location.href = page + '.html';
-        }
 
         function New() {
             if (students.length > 0) {
@@ -143,9 +138,9 @@
         <div class="text">
             <div id="line1">ברוכה הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')" src="resources/download-simple-light.svg" />
-            <img style="margin-left: 10px;" onclick="New()" src="resources/plus-light.svg" />
-            <img onclick="expose.appClose()" src="resources/x-light.svg" />
+            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')" src="resources/barcode/download-simple-light.svg" />
+            <img style="margin-left: 10px;" onclick="New()" src="resources/barcode/plus-light.svg" />
+            <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
             <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
         </div>
         <input type="text" class="my-input" id="barcode">

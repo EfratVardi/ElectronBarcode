@@ -1,0 +1,43 @@
+﻿@font-face {
+    font-family: "printFont";
+    src: url("../fonts/FbMagnolia-Regular.otf");
+}
+
+.text {
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    bottom: 20%;
+    width: 80%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    font-style: normal;
+    font-variant: normal;
+    line-height: 4vw;
+    color: white;
+}
+
+#line1 {
+    font-size: 4.5vw;
+}
+
+#line2 {
+    font-size: 2.5vw;
+}
+
+#line3 {
+    font-size: 2vw;
+}
+
+#content {
+    background-color: #3196BD;
+    font-size: 2vw;
+    font-family: "printFont";
+    color: white
+}
+
+#btnPrint {
+    background-color: #75DDB4;
+    color: white;
+}

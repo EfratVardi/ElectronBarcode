@@ -26,10 +26,10 @@
                     systemConfig = JSON.parse(data)
                 }
                 if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/pinkBackground4.gif')"
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
                 }
                 else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/greenBackground4.gif')";
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
                 }
             })
         }
@@ -48,10 +48,7 @@
                     login("Manage")
             }
         });
-        function login(page) {
-            counter = 0;
-            window.location.href = page + '.html';
-        }
+       
     </script>
     <div class="background" id="background">
         <div class="text">

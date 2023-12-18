@@ -15,3 +15,7 @@ function getTodayDateTime() {
 function getDefaultConfig() {
     return { "type": "1", "date": getYesterdayDate(), "position": "", "color": "1" };
 }
+
+function login(page) {
+    window.location.href = page + '.html';
+}
