@@ -14,11 +14,14 @@ function createWindow() {
     }
   })
   mainWindow.loadFile('User.html')
-  // mainWindow.menuBarVisible = false
-  // mainWindow.fullScreen = true;
+
+  mainWindow.menuBarVisible = false
+  mainWindow.fullScreen = true;
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+  }
 
   ses.on('will-download', (e, downloadItem, webContents) => {
-
     let name = downloadItem.getFilename()
     const existingFilePath = app.getPath('desktop') + `\\ברקוד- לא למחוק` + `/${name}`
 

@@ -20,12 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
     fileName = 'uniqTasks'
     window.expose.SendExcel("sendReadExcel", fileName);
     window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-        gridOptions = {
-            columnDefs: columnDefs,
-            rowData: JSON.parse(data),
-        };
-        var gridDiv = document.querySelector('#tasksGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
+        if (data != 0) {
+            gridOptions = {
+                columnDefs: columnDefs,
+                rowData: JSON.parse(data),
+            };
+            var gridDiv = document.querySelector('#tasksGrid');
+            new agGrid.Grid(gridDiv, gridOptions);
+        }
     });
 });
 

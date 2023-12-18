@@ -100,15 +100,6 @@
             };
             var gridDiv = document.querySelector('#studentsGrid');
             new agGrid.Grid(gridDiv, gridOptions);
-            if (!localStorage.getItem("downloadDate")) {
-              localStorage.setItem("downloadDate", currentDate)
-            }
-            else {
-              if (localStorage.getItem("downloadDate") != currentDate) {
-                localStorage.setItem("downloadDate", currentDate)
-                Export('הורדה אוטומטית')
-              }
-            }
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
