@@ -23,7 +23,7 @@ function createWindow() {
 
   ses.on('will-download', (e, downloadItem, webContents) => {
     let name = downloadItem.getFilename()
-    const existingFilePath = app.getPath('desktop') + `\\ברקוד- לא למחוק` + `/${name}`
+    const existingFilePath = app.getPath('desktop') + `\\תוכנית הברקודים` + `/${name}`
 
     if (fs.existsSync(existingFilePath)) {
       fs.unlink(existingFilePath, (err) => {
@@ -43,7 +43,7 @@ function createWindow() {
         dialog.showMessageBox({
           type: 'info',
           title: 'הודעת מערכת',
-          message: 'הקובץ נשמר בהצלחה!'
+          message: 'הקובץ נשמר בהצלחה בתקיית תוכנית הברקודים!'
         })
       } else {
         dialog.showErrorBox('הודעת מערכת', 'הקובץ לא נשמר')
