@@ -17,6 +17,7 @@ function createWindow() {
 
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
+
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }

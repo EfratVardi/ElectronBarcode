@@ -18,7 +18,8 @@
 
     #d1,
     #d2,
-    #d3 {
+    #d3,
+    #d4 {
       font-family: printFont;
       direction: rtl;
       font-size: 20px;
@@ -161,7 +162,6 @@
 
     function searchInExcel() {
       try {
-        state = 2
         for (var i = 0; i < students.length; i++) {
           if (students[i]["tz"] == searchVal) {
             studentResult = students[i];
@@ -172,6 +172,7 @@
           showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
           return;
         }
+        state = 2
         systemConfig.color == 1 ?
           document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground2.gif')" :
           document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground2.gif')";
@@ -422,12 +423,13 @@
       try {
         var divName = "printableArea";
         setTimeout(function () {
-          document.getElementById("d1").innerHTML = studentResult.name + " " + studentResult.grade;
+          document.getElementById("d1").innerHTML = studentResult.name;
+          document.getElementById("d2").innerHTML = studentResult.grade;
           if (task == 1)
-            document.getElementById("d2").innerHTML = "      משימה" + ": " + result.name;
+            document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
           else
-            document.getElementById("d2").innerHTML = "     נרכשה מתנה " + " " + result.name;
-          document.getElementById("d3").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
+            document.getElementById("d3").innerHTML = "     נרכשה מתנה " + " " + result.name;
+          document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
           var printContents = document.getElementById(divName).innerHTML;
           var originalContents = document.body.innerHTML;
           document.body.innerHTML = printContents;
@@ -481,10 +483,11 @@
     <div id="d1"> </div>
     <div id="d2"> </div>
     <div id="d3"> </div>
+    <div id="d4"> </div>
     <br />
     <div id="title">בהצלחה!</div>
     <br /><br /><br /><br />
-    <div id="d4" style="font-size:10px; font-family: Arial, Helvetica, sans-serif; direction: rtl;">להזמנות: אפרת מלכה
+    <div id="d5" style="font-size:10px; font-family: Arial, Helvetica, sans-serif; direction: rtl;">להזמנות: אפרת מלכה
       0504167969 211efrat@gmail.com
     </div>
   </div>
