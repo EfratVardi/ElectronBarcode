@@ -40,9 +40,8 @@
     var currentDateTime = getTodayDateTime();
     var students = ""
     var uniqTasks = ""
-    var tasks = ""
     var systemConfig = ""
-    var productsExcel = [{}];
+    var products = ""
     var searchVal
     var counter = 0;
     var state = 1
@@ -93,6 +92,13 @@
             })
           };
         });
+        fileName = 'products'
+        window.expose.SendExcel("sendReadExcel", fileName);
+        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          if (data != 0) {
+            products = JSON.parse(data)
+          };
+        });
 
         if (!localStorage.getItem("log")) {
           localStorage.setItem("log", "[]")
@@ -132,12 +138,12 @@
             login('ParentsMeeting')
           else if (state == 1)//כיתה או בת
             searchInExcel();
+          else if (searchVal.startsWith('6666') && state == 2)//מוצר
+            buyProduct();
           else if (systemConfig.type == 2 && state == 2)//משימה רגילה
             updateTask();
           else if (systemConfig.type == 1 && state == 2)//משימה חד פעמית
             updateUniqTask();
-          else if (searchVal.startsWith('6') && state == 2)//מוצר
-            buyProduct();
           else {
             showAlert("קוד לא תקין, גש למורה!");
             return;
@@ -304,26 +310,24 @@
     function buyProduct() {
       try {
         state = 3;
-        if (searchVal.startsWith(6)) {
-          for (var i = 0; i < productsExcel.length; i++) {
-            if (productsExcel[i]["code"] == searchVal) {
-              result = productsExcel[i]
-              break;
-            }
+        for (var i = 0; i < products.length; i++) {
+          if (products[i]["code"] == searchVal) {
+            result = products[i]
+            break;
           }
-          if (result != "") {
-            savePoints(result.points);
-            if (returnval == 1)
-              return;
-            document.getElementById("line1").innerHTML = "! המוצר נרכש בהצלחה ";
-            document.getElementById("line2").innerHTML = "מיד עוברים להדפסת אישור";
-            document.getElementById("line3").innerHTML = "";
-            toPrint(0);
-          }
-          else {
-            showAlert("קוד לא תקין, גשו למורה!");
+        }
+        if (result != "") {
+          savePoints(result.points);
+          if (returnval == 1)
             return;
-          }
+            document.getElementById("line1").innerHTML = "הידד" + "! " + "רכשת בהצלחה " + result.name;
+          document.getElementById("line2").innerHTML = "מיד עוברים להדפסת אישור";
+          document.getElementById("line3").innerHTML = "";
+          toPrint(0);
+        }
+        else {
+          showAlert("קוד לא תקין, גשו למורה!");
+          return;
         }
       }
       catch (err) {
@@ -428,7 +432,7 @@
           if (task == 1)
             document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
           else
-            document.getElementById("d3").innerHTML = "     נרכשה מתנה " + " " + result.name;
+            document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
           document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
           var printContents = document.getElementById(divName).innerHTML;
           var originalContents = document.body.innerHTML;

@@ -98,7 +98,7 @@
                     workbook.SheetNames.forEach(function (sheetName) {
                         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
                         json_object = JSON.stringify(XL_row_object);
-                        if (file.name == "students.xlsx" || file.name == "uniqTasks.xlsx" || file.name == "tasks.xlsx") {
+                        if (file.name == "students.xlsx" || file.name == "uniqTasks.xlsx" || file.name == "products.xlsx") {
                             fileName = file.name.split('.')[0]
                             window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
                             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
@@ -182,15 +182,19 @@
                         <label for="uploaduniqTasks" class="form-label">משימות </label>
                         <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-3">
+                        <label for="uploadProducts" class="form-label">מתנות </label>
+                        <input type=file class="form-control" id="uploadProducts" name="files[]">
+                    </div>
+                    <div class="form-group col-md-1">
                         <label class="form-label">.</label>
                         <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-1">
                         <label class="form-label">.</label>
                         <button onclick="exportLog()" class="form-control"> לוג</button>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-1">
                         <label class="form-label">.</label>
                         <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
                     </div>
@@ -240,6 +244,7 @@
     <script>
         document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 
