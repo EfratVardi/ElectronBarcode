@@ -1,6 +1,6 @@
 {
   "name": "barcode",
-  "productName": "תוכנית הברקודים",
+  "productName": "צבירת נקודות",
   "description": "צבירת נקודות דיגיטלית",
   "version": "1.0.1",
   "main": "main.js",

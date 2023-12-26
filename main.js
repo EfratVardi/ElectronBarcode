@@ -13,13 +13,14 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('User.html')
+  mainWindow.loadFile('Main.html')
 
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
 
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
+    mainWindow.fullScreen = false;
   }
 
   ses.on('will-download', (e, downloadItem, webContents) => {

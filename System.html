@@ -80,7 +80,7 @@
             counter += 1;
             if (counter > 9) {
                 if (document.getElementById('barcode').value == '011429519')
-                    login("User")
+                    login("Main")
                 if (document.getElementById('barcode').value == '999999999')
                     login("Manage")
             }
@@ -207,12 +207,19 @@
                             <option value="2">כללי</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-2">
+                        <label for="device" class="form-label">סוג מכשיר</label>
+                        <select class="form-control" id="device">
+                            <option value="1">ברקוד</option>
+                            <option value="2">כרטיס מגנטי</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
                         <label for="date" class="form-label"> יום פעילות אחרון </label>
                         <input type="date" class="form-control" id="date">
                     </div>
-                    <div class="form-group col-md-2">
-                        <label for="position" class="form-label">מספר עמדה</label>
+                    <div class="form-group col-md-1">
+                        <label for="position" class="form-label">עמדה</label>
                         <input type="number" class="form-control" id="position">
                     </div>
                     <div class="form-group col-md-2">

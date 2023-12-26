@@ -14,19 +14,21 @@
     font-style: normal;
     font-variant: normal;
     line-height: 4vw;
-    color: white;
 }
 
 #line1 {
     font-size: 5.5vw;
+    color: white;
 }
 
 #line2 {
     font-size: 3.5vw;
+    color: white;
 }
 
 #line3 {
     font-size: 2vw;
+    color: white;
 }
 
 #position {

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>צבירת נקודות</title>
+</head>
+
+<body onload="onLoad()">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
+    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/shared.js"></script>
+
+    <script>
+        var currentDate = getTodayDate();
+        var currentDateTime = getTodayDateTime();
+        var uniqTasks = ""
+        var systemConfig = ""
+        var products = ""
+        var searchVal
+        var counter = 0;
+
+        function onLoad() {
+            fileName = 'systemConfig'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
+                }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
+                if (systemConfig.color == "1") {
+                    document.getElementById("position").style.backgroundColor = "aquamarine";
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground1.gif')"
+                }
+                else if (systemConfig.color == "2") {
+                    document.getElementById("position").style.backgroundColor = "yellow";
+                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
+                }
+                if (systemConfig.position.length > 0) {
+                    document.getElementById("position").innerHTML += ' ' + systemConfig.position
+                }
+                else {
+                    document.getElementById("position").style.display = "none";
+                }
+                if (currentDate > systemConfig.date) {
+                    window.location.href = 'Expired.html';
+                }
+            })
+            fileName = 'uniqTasks'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data != 0) {
+                    uniqTasks = JSON.parse(data)
+                    createCards()
+                }
+            })
+
+            fileName = 'products'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data != 0) {
+                    products = JSON.parse(data)
+                };
+            });
+        }
+
+        document.addEventListener("keypress", function (e) {
+            if (e.target.tagName !== "INPUT") {
+                var input = document.querySelector(".my-input");
+                input.focus();
+                input.value = e.key;
+                e.preventDefault();
+            }
+            counter += 1;
+            if (counter > 9) {
+                searchVal = document.getElementById('barcode').value
+                counter = 0;
+                document.getElementById("barcode").value = "";
+                if (searchVal == '999999999')
+                    login('Manage')
+                else if (searchVal == '011429519')
+                    login('System')
+                else if (searchVal == '207594581')
+                    login('ParentsMeeting')
+                else {
+                    showAlert("קוד לא תקין!");
+                    return;
+                }
+            }
+        });
+
+        function reset(time = 0) {
+            setTimeout(function () {
+                location.reload();
+            }, time);
+        }
+
+        function showAlert(message) {
+            document.querySelector(".modal-body").innerHTML = message;
+            $(document).ready(function () {
+                $('#modal').modal('show')
+            });
+            setTimeout(function () {
+                $(document).ready(function () {
+                    $('#modal').modal('hide')
+                });
+            }, 2500);
+            reset(2500)
+        }
+        function handleClick(code) {
+            alert(code);
+        }
+        function createCards() {
+            // Get the card container element
+            const cardContainer = document.querySelector(".row");
+
+            // Loop through the JSON object and generate cards dynamically
+            uniqTasks.forEach(cardData => {
+                // Create card column
+                const cardColumn = document.createElement("div");
+                cardColumn.classList.add("col-sm-2");
+
+                // Create card element
+                const cardElement = document.createElement("div");
+                cardElement.classList.add("card");
+
+                // Create card body
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                // Create card title
+                const cardTitle = document.createElement("h5");
+                cardTitle.classList.add("card-title");
+                cardTitle.textContent = cardData.name + " " + cardData.points + ' נקודות'
+
+                // Create button element
+                const button = document.createElement("a");
+                button.classList.add("btn", "btn-info");
+                button.textContent = "Go somewhere";
+
+                // Add click event listener to the button
+                button.addEventListener("click", function () {
+                    handleClick(cardData.code); // Pass the code from the JSON object
+                });
+
+                // Append elements to card body
+                cardBody.appendChild(cardTitle);
+                // cardBody.appendChild(cardDescription);
+                cardBody.appendChild(button);
+
+                // Append elements to card
+                cardElement.appendChild(cardBody);
+
+                // Append card to card column
+                cardColumn.appendChild(cardElement);
+
+                // Append card column to card container
+                cardContainer.appendChild(cardColumn);
+            });
+        }
+    </script>
+
+    <div class="background" id="background">
+        <div class="text">
+            <div id="line1">!...שלום</div>
+            <div id="line2">יש לבחור פעולה לביצוע</div>
+            <div id="line3"></div>
+            <br><br>
+            <input type="text" class="my-input" id="barcode">
+            <div class="row">
+            </div>
+            <div id="position">עמדה</div>
+        </div>
+        <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog"
+            aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">הודעת מערכת</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
