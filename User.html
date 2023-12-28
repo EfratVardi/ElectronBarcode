@@ -74,9 +74,6 @@
           else {
             document.getElementById("position").style.display = "none";
           }
-          if (currentDate > systemConfig.date) {
-            window.location.href = 'Expired.html';
-          }
         })
         fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
