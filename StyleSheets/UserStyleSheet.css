@@ -1,7 +1,8 @@
 ﻿@font-face {
     font-family: "printFont";
-    src:url("../fonts/FbMagnolia-Regular.otf");
+    src: url("../fonts/FbMagnolia-Regular.otf");
 }
+
 .text {
     position: absolute;
     left: 10%;
@@ -37,3 +38,6 @@
     border-radius: 0px 50px 50px 0px;
 }
 
+.row {
+    direction: rtl;
+}

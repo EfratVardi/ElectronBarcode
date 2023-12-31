@@ -16,15 +16,18 @@
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    systemConfig = JSON.parse(data)
-                    if (currentDate > systemConfig.date)
-                        login('Expired')
-                    if (systemConfig.device == 1)
-                        login("User")
-                    else if (systemConfig.device == 2)
-                        login("CardUser")
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
                 }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
+                if (currentDate > systemConfig.date)
+                    login('Expired')
+                else if (systemConfig.device == 1)
+                    login("User")
+                else if (systemConfig.device == 2)
+                    login("CardUser")
             })
         }
     </script>

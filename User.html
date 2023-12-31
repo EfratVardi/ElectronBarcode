@@ -28,11 +28,11 @@
 </head>
 
 <body onload="onLoad()">
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
   <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
   <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/bootstrap.min.css">
   <script src="js/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="js/shared.js"></script>
 
   <script>
@@ -503,7 +503,7 @@
     <div id="position">עמדה</div>
     <input type="text" class="my-input" id="barcode">
   </div>
-  <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

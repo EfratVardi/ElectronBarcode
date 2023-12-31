@@ -33,6 +33,11 @@ input:focus {
     width: 25vw;
 }
 
+.modal
+{
+    direction: rtl;
+}
+
 
 
 
