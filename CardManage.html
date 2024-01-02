@@ -51,6 +51,7 @@
                 var swich = document.getElementById("swich");
                 swich.checked = systemConfig.buy
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
+                showLabel()
                 fileName = 'uniqTasks'
                 window.expose.SendExcel("sendReadExcel", fileName);
                 window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -197,6 +198,7 @@
         function swichChange() {
             createList()
             updateSystemConfig()
+            showLabel()
         }
 
         function updateSystemConfig() {
@@ -229,6 +231,14 @@
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
             });
         }
+        
+        function showLabel() {
+            var swich = document.getElementById("swich");
+            if (swich.checked)
+                document.querySelector(".form-check-label").innerHTML = 'מצב קנייה פעיל';
+            else
+                document.querySelector(".form-check-label").innerHTML = 'מצב הגשת משימות פעיל';
+        }
     </script>
     <div class="background" id="background">
         <div class="text">
@@ -246,8 +256,7 @@
                     </ul>
                 </div>
                 <div class="col-9">
-                    <img onclick="Export('ניקוד תלמידות')"
-                        src="resources/barcode/download-simple-light.svg" />
+                    <img onclick="Export('ניקוד תלמידות')" src="resources/barcode/download-simple-light.svg" />
                     <img onclick="New()" src="resources/barcode/plus-light.svg" />
                     <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
                     <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
