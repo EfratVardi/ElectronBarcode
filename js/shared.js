@@ -13,7 +13,7 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "type": "1","device":"1","hasPrint":"1","hasBuy":"0", "date": getYesterdayDate(), "position": "", "color": "1" };
+    return { "type": "1", "device": "1", "hasPrint": "1", "hasBuy": "0", "date": getYesterdayDate(), "position": "", "color": "1", "buy": false };
 }
 
 function login(page) {

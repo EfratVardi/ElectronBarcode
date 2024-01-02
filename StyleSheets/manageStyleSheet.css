@@ -40,3 +40,7 @@ img {
 .ag-cell-value {
     direction: rtl;
 }
+
+#checkboxList{
+    direction: rtl;
+}

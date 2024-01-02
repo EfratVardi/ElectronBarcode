@@ -11,7 +11,6 @@
     <link href="StyleSheets/SystemStyleSheet.css" rel="stylesheet" />
     <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
     <script src="js/ag-grid-community.min.js"></script>
-    <script src="js/log-ag-grid.js"></script>
     <script src="js/uniqTasks-ag-grid.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/xlsx.full.min.js"></script>
@@ -35,7 +34,8 @@
                     systemConfig = JSON.parse(data)
                 }
                 Object.entries(systemConfig).forEach(x => {
-                    document.getElementById(x[0]).value = x[1]
+                    if (x[0] != 'buy')
+                        document.getElementById(x[0]).value = x[1]
                 })
                 if (systemConfig.color == "1") {
                     document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
@@ -65,8 +65,6 @@
                     document.getElementById('reset').disabled = true;
                 }
             })
-            if (!localStorage.getItem("log"))
-                window.localStorage.setItem("log", '[]')
         }
 
         document.addEventListener("keypress", function (e) {
@@ -148,17 +146,14 @@
         function update() {
             Object.entries(systemConfig).forEach(x => {
                 var key = x[0]
-                systemConfig[key] = document.getElementById(x[0]).value
+                if (key != 'buy')
+                    systemConfig[key] = document.getElementById(x[0]).value
             })
             fileName = "systemConfig"
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(systemConfig)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                 location.reload()
             });
-        }
-
-        function exportLog() {
-            ExportLog()
         }
 
         function exportUniqTasks() {
@@ -187,10 +182,6 @@
                 <div class="col-md-1">
                     <label class="form-label">.</label>
                     <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
-                </div>
-                <div class="col-md-1">
-                    <label class="form-label">.</label>
-                    <button onclick="exportLog()" class="form-control"> לוג</button>
                 </div>
                 <div class="col-md-1">
                     <label class="form-label">.</label>
@@ -245,7 +236,6 @@
                 </div>
             </form>
             <br />
-            <div id="logGrid"></div>
             <div id="tasksGrid"></div>
             <div>
                 התקנת דרייבר למדפסת |

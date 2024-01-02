@@ -45,7 +45,6 @@
         var searchVal
         var counter = 0;
         var state = 1
-        var buy = 0
 
         function onLoad() {
             fileName = 'systemConfig'
@@ -77,7 +76,7 @@
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 if (data != 0) {
                     students = JSON.parse(data)
-                    buy == 0 ? fileName = 'uniqTasks' : fileName = 'products'
+                    systemConfig.buy == 0 ? fileName = 'uniqTasks' : fileName = 'products'
                     window.expose.SendExcel("sendReadExcel", fileName);
                     window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                         if (data != 0) {
@@ -102,7 +101,7 @@
                 searchVal = document.getElementById('barcode').value
                 document.getElementById("barcode").value = "";
                 if (searchVal == '999999999')
-                    login('Manage')
+                    login('CardManage')
                 else if (searchVal == '011429519')
                     login('System')
                 else if (searchVal == '207594581')
@@ -168,7 +167,7 @@
                     break;
                 }
             }
-            buy == 0 ?
+            systemConfig.buy == 0 ?
                 document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
                 document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
             document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
@@ -197,7 +196,7 @@
         function finishSession() {
             studentResult.tasks += result.name + ',';
             studentResult.tasksNumber += result.code + ',';
-            if (buy == 0)
+            if (systemConfig.buy == 0)
                 studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
             else {
                 studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
@@ -235,7 +234,7 @@
             var divName = "printableArea";
             document.getElementById("d1").innerHTML = studentResult.name;
             document.getElementById("d2").innerHTML = studentResult.grade;
-            buy == 0 ?
+            systemConfig.buy == 0 ?
                 document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name :
                 document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
             document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
@@ -288,11 +287,11 @@
             <div id="line1">!...שלום</div>
             <div id="line2">יש לבחור פעולה לביצוע</div>
             <div id="line3"></div>
-            <div id="position">עמדה</div>
             <div class="row row-cols-1 row-cols-md-4 g-4" id="cards">
             </div>
-            <input type="text" class="my-input" id="barcode">
         </div>
+        <div id="position">עמדה</div>
+        <input type="text" class="my-input" id="barcode">
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
