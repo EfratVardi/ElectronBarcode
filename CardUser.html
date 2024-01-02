@@ -76,7 +76,7 @@
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 if (data != 0) {
                     students = JSON.parse(data)
-                    systemConfig.buy == 0 ? fileName = 'uniqTasks' : fileName = 'products'
+                    systemConfig.buy ? fileName = 'products' : fileName = 'uniqTasks'
                     window.expose.SendExcel("sendReadExcel", fileName);
                     window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                         if (data != 0) {

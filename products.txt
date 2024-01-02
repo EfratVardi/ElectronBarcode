@@ -1,1 +1,1 @@
-[{"code":666611111,"name":"ברד","points":50,"show":true},{"code":666611112,"name":"ימבמבם","points":10,"show":true},{"code":666611113,"name":"ממתק","points":20},{"code":666611114,"name":"פופקורן","points":10},{"code":666611115,"name":"5% במבחן","points":5}]
+[{"code":666611111,"name":"ברד","points":50,"show":true},{"code":666611112,"name":"ימבמבם","points":10,"show":true},{"code":666611113,"name":"ממתק","points":20,"show":true},{"code":666611114,"name":"פופקורן","points":10,"show":false},{"code":666611115,"name":"5% במבחן","points":5}]

@@ -2,6 +2,10 @@
     font-family: "printFont";
     src: url("../fonts/FbMagnolia-Regular.otf");
 }
+@font-face {
+    font-family: "myFirstFont";
+    src:url("../fonts/GanCLMBold.ttf");
+}
 
 .text {
     position: absolute;
@@ -16,6 +20,7 @@
     font-variant: normal;
     line-height: 4vw;
     color: white;
+    font-family: "myFirstFont";
 }
 
 #line1 {
