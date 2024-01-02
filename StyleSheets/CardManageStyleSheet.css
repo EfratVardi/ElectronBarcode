@@ -45,3 +45,8 @@ img {
 #checkboxList{
     direction: rtl;
 }
+
+.list-group {
+    max-height: 400px;
+    overflow-y: scroll;
+  }

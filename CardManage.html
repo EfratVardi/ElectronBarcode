@@ -51,7 +51,21 @@
                 var swich = document.getElementById("swich");
                 swich.checked = systemConfig.buy
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
-
+                fileName = 'uniqTasks'
+                window.expose.SendExcel("sendReadExcel", fileName);
+                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                    if (data != 0) {
+                        uniqTasks = JSON.parse(data)
+                        fileName = 'products'
+                        window.expose.SendExcel("sendReadExcel", fileName);
+                        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                            if (data != 0) {
+                                products = JSON.parse(data)
+                                createList()
+                            }
+                        })
+                    }
+                })
             });
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -78,21 +92,6 @@
                 }
             });
 
-            fileName = 'uniqTasks'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    uniqTasks = JSON.parse(data)
-                    fileName = 'products'
-                    window.expose.SendExcel("sendReadExcel", fileName);
-                    window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                        if (data != 0) {
-                            products = JSON.parse(data)
-                            createList()
-                        }
-                    })
-                }
-            })
         }
 
         document.addEventListener("keypress", function (e) {
@@ -135,7 +134,7 @@
         function onFirstDataRendered(params) {
             gridOptions.api.sizeColumnsToFit({
                 defaultMaxWidth: 150,
-                columnLimits: [{ key: 'tasks', maxWidth: 500 },{ key: 'points', maxWidth: 100 }],
+                columnLimits: [{ key: 'tasks', maxWidth: 500 }, { key: 'points', maxWidth: 100 }],
             });
         }
 
@@ -235,7 +234,7 @@
         <div class="text">
             <div id="line1">ברוכה הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <div class="row">
+            <div class="row h-100">
                 <div class="col-3">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="swich"
@@ -247,9 +246,9 @@
                     </ul>
                 </div>
                 <div class="col-9">
-                    <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')"
+                    <img onclick="Export('ניקוד תלמידות')"
                         src="resources/barcode/download-simple-light.svg" />
-                    <img style="margin-left: 10px;" onclick="New()" src="resources/barcode/plus-light.svg" />
+                    <img onclick="New()" src="resources/barcode/plus-light.svg" />
                     <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
                     <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
                 </div>
