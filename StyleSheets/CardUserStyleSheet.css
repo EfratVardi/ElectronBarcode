@@ -10,32 +10,32 @@
 
 .text {
     position: absolute;
-    left: 10%;
-    top: 20%;
-    bottom: 20%;
-    width: 80%;
+    left: 5%;
+    top: 10%;
+    bottom: 10%;
+    width: 90%;
     text-align: center;
     margin-right: auto;
     margin-left: auto;
     font-style: normal;
     font-variant: normal;
-    line-height: 4vw;
-    font-family: "myFirstFont";
 }
 
 #line1 {
-    font-size: 5.5vw;
-    color: white;
+    font-size: 4vw;
+    color: #E4B1B7;
+    font-family: 'printFont';
+    line-height: 4vw;
 }
 
 #line2 {
-    font-size: 3.5vw;
-    color: white;
+    font-size: 2vw;
+    color: #D8C262;
+    font-family: 'printFont';
 }
 
 #line3 {
     font-size: 2vw;
-    color: white;
 }
 
 #position {
@@ -44,3 +44,13 @@
     border-radius: 0px 50px 50px 0px;
     font-family: "myFirstFont";
 }
+
+.row {
+    direction: rtl;
+}
+
+.card {
+    --bs-focus-ring-color: #E4B1B7;
+    border-color: #E4B1B7;
+}
+

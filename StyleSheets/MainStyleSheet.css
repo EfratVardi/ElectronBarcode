@@ -4,6 +4,7 @@ body, html {
     margin: 0;
     user-select: none;
 }
+
 .background {
     height: 100%;
     background-position: center;

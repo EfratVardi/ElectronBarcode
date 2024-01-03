@@ -27,9 +27,9 @@
     </style>
 </head>
 
-<body onload="onLoad()">
+<body onload="onLoad()" class="bg-danger bg-opacity-10">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
+    <link href="StyleSheets/CardUserStyleSheet.css" rel="stylesheet" />
     <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
     <script src="js/jquery.min.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -56,19 +56,25 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                if (systemConfig.color == "1") {
-                    document.getElementById("position").style.backgroundColor = "aquamarine";
-                    document.getElementById("background").style.backgroundImage = "url('resources/magnetCard/background.png')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("position").style.backgroundColor = "yellow";
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
-                }
+                // if (systemConfig.color == "1") {
+                //     document.getElementById("position").style.backgroundColor = "aquamarine";
+                //     document.getElementById("background").style.backgroundImage = "url('resources/magnetCard/background.png')"
+                // }
+                // else if (systemConfig.color == "2") {
+                //     document.getElementById("position").style.backgroundColor = "yellow";
+                //     document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
+                // }
                 if (systemConfig.position.length > 0) {
                     document.getElementById("position").innerHTML += ' ' + systemConfig.position
                 }
                 else {
                     document.getElementById("position").style.display = "none";
+                }
+                if (systemConfig.buy) {
+                    document.getElementById("line2").innerHTML = "יש לבחור מתנה לקנייה"
+                }
+                else {
+                    document.getElementById("line2").innerHTML = "יש לבחור משימה מהרשימה"
                 }
                 fileName = 'students'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -101,12 +107,10 @@
                 counter = 0;
                 searchVal = document.getElementById('barcode').value
                 document.getElementById("barcode").value = "";
-                if (searchVal == '999999999')
+                if (searchVal == '888888888')
                     login('CardManage')
                 else if (searchVal == '011429519')
                     login('System')
-                else if (searchVal == '207594581')
-                    login('ParentsMeeting')
                 else if (state == 2)//כיתה או בת
                     searchInExcel();
                 else {
@@ -127,34 +131,33 @@
                 const cardColumn = document.createElement("div");
                 cardColumn.classList.add("col");
 
-                const cardElement = document.createElement("div");
-                cardElement.classList.add("card", "h-100");
+                const cardElement = document.createElement("a");
+                cardElement.classList.add("card", "h-100", "focus-ring", "text-decoration-none", "rounded-2");
+                cardElement.addEventListener("click", function () {
+                    selectAction(cardData.code);
+                });
+                cardElement.href = '#'
+
+                const cardFooter = document.createElement("div");
+                cardFooter.classList.add("card-footer", "h-10");
+
+                const footerSmall = document.createElement("small");
+                footerSmall.classList.add("text-body-secondary");
+                footerSmall.textContent = cardData.points + ' נקודות'
 
                 const cardBody = document.createElement("div");
                 cardBody.classList.add("card-body");
 
                 const cardTitle = document.createElement("h5");
                 cardTitle.classList.add("card-title");
-                cardTitle.textContent = cardData.name + " " + cardData.points + ' נקודות'
-
-                const button = document.createElement("input");
-                button.classList.add("btn-check");
-                button.name = "task"
-                button.type = "radio"
-                button.id = cardData.code
-                button.addEventListener("click", function () {
-                    selectAction(cardData.code); // Pass the code from the JSON object
-                });
-
-                const label = document.createElement("label");
-                label.classList.add("btn", "btn-secondary");
-                label.innerHTML = 'בחר'
-                label.htmlFor = cardData.code
+                cardTitle.textContent = cardData.name
+                const br = document.createElement("br");
 
                 cardBody.appendChild(cardTitle);
-                cardBody.appendChild(button);
-                cardBody.appendChild(label);
+                cardBody.appendChild(br);
                 cardElement.appendChild(cardBody);
+                cardFooter.appendChild(footerSmall)
+                cardElement.appendChild(cardFooter);
                 cardColumn.appendChild(cardElement);
                 cardContainer.appendChild(cardColumn);
             });
@@ -277,7 +280,7 @@
         <br />
         <div id="title">בהצלחה!</div>
         <br /><br /><br /><br />
-        <div id="d5" style="font-size:10px; font-family: Arial, Helvetica, sans-serif; direction: rtl;">להזמנות: אפרת
+        <div id="d5" style="font-size:10px; font-family: Arial; direction: rtl;">להזמנות: אפרת
             מלכה
             0504167969 211efrat@gmail.com
         </div>
@@ -286,9 +289,12 @@
     <div class="background" id="background">
         <div class="text">
             <div id="line1">!...שלום</div>
-            <div id="line2">יש לבחור פעולה לביצוע</div>
+            <div id="line2"></div>
             <div id="line3"></div>
-            <div class="row row-cols-1 row-cols-md-4 g-4" id="cards">
+            <br>
+            <br>
+            <br>
+            <div class="row row-cols-md-4 g-4 justify-content-md-center" id="cards">
             </div>
         </div>
         <div id="position">עמדה</div>

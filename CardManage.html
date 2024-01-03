@@ -6,7 +6,7 @@
     <title>ממשק ניהול</title>
 </head>
 
-<body onload="onLoad()">
+<body onload="onLoad()" class="bg-danger bg-opacity-10">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="StyleSheets/CardManageStyleSheet.css" rel="stylesheet" />
     <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
@@ -42,15 +42,9 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/magnetCard/background.png')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
-                }
                 var swich = document.getElementById("swich");
-                swich.checked = systemConfig.buy
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
+                swich.checked = systemConfig.buy
                 showLabel()
                 fileName = 'uniqTasks'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -62,8 +56,8 @@
                         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                             if (data != 0) {
                                 products = JSON.parse(data)
-                                createList()
                             }
+                            createList()
                         })
                     }
                 })
@@ -96,7 +90,7 @@
         }
 
         document.addEventListener("keypress", function (e) {
-            if (e.target.tagName !== "INPUT") {
+            if (e.target.id != "barcode") {
                 var input = document.querySelector(".my-input");
                 input.focus();
                 input.value = e.key;
@@ -104,7 +98,7 @@
             }
             counter += 1;
             if (counter > 9) {
-                if (document.getElementById('barcode').value == '999999999')
+                if (document.getElementById('barcode').value == '888888888')
                     login("Main")
                 if (document.getElementById('barcode').value == '011429519')
                     login("System")
@@ -156,11 +150,9 @@
 
         function createList() {
             var checkboxList = document.getElementById("checkboxList");
-
             while (checkboxList.firstChild) {
                 checkboxList.removeChild(checkboxList.firstChild);
             }
-
             let jsonData = ""
             var swich = document.getElementById("swich");
             if (swich.checked)
@@ -174,14 +166,14 @@
                 li.classList.add("list-group-item");
 
                 var input = document.createElement("input");
-                input.classList.add("form-check-input", "me-1");
+                input.classList.add("form-check-input", "ms-2");
                 input.type = "checkbox";
                 input.id = item.code;
                 input.checked = item.show
 
                 var label = document.createElement("label");
-                label.classList.add("form-check-label");
-                label.setAttribute("for", item.id);
+                label.classList.add("form-check-label", "stretched-link");
+                label.setAttribute("for", item.code);
                 label.textContent = item.name;
 
                 input.addEventListener("change", function () {
@@ -196,9 +188,9 @@
         }
 
         function swichChange() {
-            createList()
-            updateSystemConfig()
             showLabel()
+            updateSystemConfig()
+            createList()
         }
 
         function updateSystemConfig() {
@@ -231,7 +223,7 @@
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
             });
         }
-        
+
         function showLabel() {
             var swich = document.getElementById("swich");
             if (swich.checked)
@@ -247,12 +239,12 @@
             <div class="row h-100">
                 <div class="col-3">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="swich"
-                            onchange="swichChange()">
                         <label class="form-check-label" for="swich">
                         </label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="swich"
+                            onchange="swichChange()">
                     </div>
-                    <ul class="list-group" id="checkboxList">
+                    <ul class="list-group overflow-y-auto" id="checkboxList">
                     </ul>
                 </div>
                 <div class="col-9">

@@ -76,10 +76,15 @@
             }
             counter += 1;
             if (counter > 9) {
-                if (document.getElementById('barcode').value == '011429519')
+                let searchVal = document.getElementById('barcode').value
+                if (searchVal == '011429519')
                     login("Main")
-                if (document.getElementById('barcode').value == '999999999')
+                else if (searchVal == '999999999')
                     login("Manage")
+                else if (searchVal == '888888888')
+                    login('CardManage')
+                else if (searchVal == '207594581')
+                    login('ParentsMeeting')
             }
         });
 
