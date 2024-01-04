@@ -56,14 +56,6 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                // if (systemConfig.color == "1") {
-                //     document.getElementById("position").style.backgroundColor = "aquamarine";
-                //     document.getElementById("background").style.backgroundImage = "url('resources/magnetCard/background.png')"
-                // }
-                // else if (systemConfig.color == "2") {
-                //     document.getElementById("position").style.backgroundColor = "yellow";
-                //     document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
-                // }
                 if (systemConfig.position.length > 0) {
                     document.getElementById("position").innerHTML += ' ' + systemConfig.position
                 }
@@ -96,7 +88,7 @@
         }
 
         document.addEventListener("keypress", function (e) {
-            if (e.target.id != "barcode") {
+            if (e.target.tagName !== "INPUT") {
                 var input = document.querySelector(".my-input");
                 input.focus();
                 input.value = e.key;
@@ -107,8 +99,8 @@
                 counter = 0;
                 searchVal = document.getElementById('barcode').value
                 document.getElementById("barcode").value = "";
-                if (searchVal == '888888888')
-                    login('CardManage')
+                if (searchVal == '999999999')
+                    login('ManageMain')
                 else if (searchVal == '011429519')
                     login('System')
                 else if (state == 2)//כיתה או בת
@@ -186,7 +178,7 @@
                 }
             }
             if (studentResult == "") {
-                showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
+                showAlert("כרטיס לא תקין. גשו למורה!")
                 return;
             }
 
@@ -223,8 +215,8 @@
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                 document.getElementById("line1").innerHTML = studentResult.name;
-                document.getElementById("line2").innerHTML = "! יש בחשבונך " + studentResult.points + " נקודות ";
-                document.getElementById("line3").innerHTML = "!בהצלחה";
+                document.getElementById("line2").innerHTML = "!הפעולה נקלטה בהצלחה";
+                document.getElementById("line3").innerHTML = "...כעת יש בחשבונך " + studentResult.points + " נקודות";
                 if (systemConfig.hasPrint == 1)
                     setTimeout(function () {
                         toPrint();
@@ -291,6 +283,7 @@
             <div id="line1">!...שלום</div>
             <div id="line2"></div>
             <div id="line3"></div>
+            <br>
             <br>
             <br>
             <br>

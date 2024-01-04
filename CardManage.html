@@ -90,7 +90,7 @@
         }
 
         document.addEventListener("keypress", function (e) {
-            if (e.target.id != "barcode") {
+            if (e.target.tagName !== "INPUT") {
                 var input = document.querySelector(".my-input");
                 input.focus();
                 input.value = e.key;
@@ -98,8 +98,8 @@
             }
             counter += 1;
             if (counter > 9) {
-                if (document.getElementById('barcode').value == '888888888')
-                    login("Main")
+                if (document.getElementById('barcode').value == '999999999')
+                    login("UserMain")
                 if (document.getElementById('barcode').value == '011429519')
                     login("System")
             }

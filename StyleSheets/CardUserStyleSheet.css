@@ -22,35 +22,44 @@
 }
 
 #line1 {
-    font-size: 4vw;
+    font-size: 5vw;
     color: #E4B1B7;
     font-family: 'printFont';
     line-height: 4vw;
 }
 
 #line2 {
-    font-size: 2vw;
+    font-size: 3vw;
     color: #D8C262;
     font-family: 'printFont';
 }
 
 #line3 {
     font-size: 2vw;
+    font-family: 'printFont';
 }
 
 #position {
     font-size: 4vw;
     width: 18vw;
     border-radius: 0px 50px 50px 0px;
-    font-family: "myFirstFont";
+    font-family: 'printFont';
 }
 
 .row {
     direction: rtl;
+    position: absolute;
+    left:10%;
+    width: 80%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .card {
     --bs-focus-ring-color: #E4B1B7;
     border-color: #E4B1B7;
 }
+
+
 
