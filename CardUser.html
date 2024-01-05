@@ -95,24 +95,24 @@
                 e.preventDefault();
             }
             counter += 1;
-            if (counter > 9 && state != 3) {
+            if (counter > 9) {
                 counter = 0;
                 searchVal = document.getElementById('barcode').value
                 document.getElementById("barcode").value = "";
-                if (searchVal == '999999999')
-                    login('ManageMain')
-                else if (searchVal == '011429519')
-                    login('System')
-                else if (state == 2)//כיתה או בת
-                    searchInExcel();
-                else {
-                    showAlert("יש לבחור לפני העברת כרטיס!");
-                    return;
+                if (state == 1) {
+                    if (searchVal == '999999999')
+                        login('ManageMain')
+                    else if (searchVal == '011429519')
+                        login('System')
+                    else {
+                        showAlert("יש לבחור לפני העברת כרטיס!");
+                        return;
+                    }
                 }
-            }
-            else if (counter > 9 && state == 3) {
-                counter = 0;
-                document.getElementById("barcode").value = ""
+                else if (state == 2)//כיתה או בת
+                {
+                    searchInExcel();
+                }
             }
         });
 
@@ -204,7 +204,7 @@
             saveData();
         }
 
-        function saveData(points) {
+        function saveData() {
             for (var i = 0; i < students.length; i++) {
                 if (students[i]["tz"] == studentResult.tz) {
                     students[i] = studentResult;
@@ -257,8 +257,9 @@
                 $(document).ready(function () {
                     $('#modal').modal('hide')
                 });
-            }, 2500);
-            reset(2500)
+                reset(0)
+            }
+                , 2500);
         }
 
     </script>
