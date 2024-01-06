@@ -156,17 +156,19 @@
         }
 
         function selectAction(code) {
-            state = 2;
-            for (var i = 0; i < actions.length; i++) {
-                if (actions[i]["code"] == code) {
-                    result = actions[i]
-                    break;
+            if (state == 1) {
+                state = 2;
+                for (var i = 0; i < actions.length; i++) {
+                    if (actions[i]["code"] == code) {
+                        result = actions[i]
+                        break;
+                    }
                 }
+                systemConfig.buy == 0 ?
+                    document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
+                    document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
+                document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
             }
-            systemConfig.buy == 0 ?
-                document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
-                document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
-            document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
         }
 
         function searchInExcel() {
