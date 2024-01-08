@@ -156,7 +156,7 @@
         }
 
         function selectAction(code) {
-            if (state == 1) {
+            if (state != 3) {
                 state = 2;
                 for (var i = 0; i < actions.length; i++) {
                     if (actions[i]["code"] == code) {
@@ -167,6 +167,7 @@
                 systemConfig.buy == 0 ?
                     document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
                     document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
+                document.getElementById("line1").style.fontSize = '4vw';
                 document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
             }
         }
@@ -217,8 +218,8 @@
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                 document.getElementById("line1").innerHTML = studentResult.name;
-                document.getElementById("line2").innerHTML = "!הפעולה נקלטה בהצלחה";
-                document.getElementById("line3").innerHTML = "...כעת יש בחשבונך " + studentResult.points + " נקודות";
+                document.getElementById("line2").innerHTML = "הפעולה נקלטה בהצלחה!";
+                document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות...";
                 if (systemConfig.hasPrint == 1)
                     setTimeout(function () {
                         toPrint();
@@ -283,11 +284,9 @@
 
     <div class="background" id="background">
         <div class="text">
-            <div id="line1">!...שלום</div>
+            <div id="line1">שלום...!</div>
             <div id="line2"></div>
             <div id="line3"></div>
-            <br>
-            <br>
             <br>
             <br>
             <div class="row row-cols-md-4 g-4 justify-content-md-center" id="cards">
