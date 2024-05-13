@@ -2,4 +2,4 @@
 
 אפליקציית דסקטופ לצבירת נקודות
 
-![ss ](https://www.youtube.com/watch?v=iL3c5ADja_o)
+[![Alt text for the video](https://raw.githubusercontent.com/stackacademytv/master-electron/master/splash.png)](https://www.youtube.com/watch?v=iL3c5ADja_o)
