@@ -2,4 +2,4 @@
 
 אפליקציית דסקטופ לצבירת נקודות
 
-![תוכנית הברקודים](https://www.youtube.com/watch?v=iL3c5ADja_o)
+![ss ](https://www.youtube.com/watch?v=iL3c5ADja_o)
