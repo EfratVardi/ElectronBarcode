@@ -1,1 +1,1 @@
-{"type":"1","device":"2","hasPrint":"0","hasBuy":"1","date":"2024-02-05","position":"","color":"1","buy":false}
+{"type":"1","device":"2","hasPrint":"0","hasBuy":"1","date":"2024-05-13","position":"","color":"1","buy":false}
