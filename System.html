@@ -23,6 +23,7 @@
         var uniqTasks = ""
         var tasks = ""
         var systemConfig = ""
+        var excelFiles = ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -98,7 +99,7 @@
                     workbook.SheetNames.forEach(function (sheetName) {
                         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
                         json_object = JSON.stringify(XL_row_object);
-                        if (file.name == "students.xlsx" || file.name == "uniqTasks.xlsx" || file.name == "products.xlsx") {
+                        if (excelFiles.includes(file.name)) {
                             fileName = file.name.split('.')[0]
                             window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
                             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
@@ -146,6 +147,7 @@
                 });
             }
         }
+
         function update() {
             Object.entries(systemConfig).forEach(x => {
                 var key = x[0]
@@ -182,13 +184,9 @@
                     <label for="uploadProducts" class="form-label">מתנות </label>
                     <input type=file class="form-control" id="uploadProducts" name="files[]">
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">.</label>
-                    <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
-                </div>
-                <div class="col-md-1">
-                    <label class="form-label">.</label>
-                    <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
+                <div class="col-md-3">
+                    <label for="uploadParents" class="form-label">הורים </label>
+                    <input type=file class="form-control" id="uploadParents" name="files[]">
                 </div>
                 <div class="col-md-2">
                     <label for="type" class="form-label">סוג משחק</label>
@@ -229,9 +227,17 @@
                     <label for="date" class="form-label"> יום פעילות אחרון </label>
                     <input type="date" class="form-control" id="date">
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <label for="position" class="form-label">עמדה</label>
                     <input type="number" class="form-control" id="position">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">.</label>
+                    <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">.</label>
+                    <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">.</label>
@@ -253,6 +259,7 @@
         document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadParents').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 

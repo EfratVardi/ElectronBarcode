@@ -1,8 +1,8 @@
-version: 1.0.2
+version: 1.0.3
 files:
-  - url: barcode-setup-1.0.2.exe
-    sha512: O665DGoba22Fj+2TPZRv2GquzGBTVJIgZwD8uHwQHI9dGFQOql+/BxHRDnI8ZJo2HvrMy0E+cdclcUML4qLfAA==
-    size: 65044972
-path: barcode-setup-1.0.2.exe
-sha512: O665DGoba22Fj+2TPZRv2GquzGBTVJIgZwD8uHwQHI9dGFQOql+/BxHRDnI8ZJo2HvrMy0E+cdclcUML4qLfAA==
-releaseDate: '2024-01-08T00:23:36.309Z'
+  - url: parentsmeeting-setup-1.0.3.exe
+    sha512: OGJgIUqLWk0fAECBum8NJn379vefex2Qcz7z6D4V9QEkUC3P0+EhVyjxcFlWt3BMAUwUfQbHtLpIZeqfZfINlA==
+    size: 65607305
+path: parentsmeeting-setup-1.0.3.exe
+sha512: OGJgIUqLWk0fAECBum8NJn379vefex2Qcz7z6D4V9QEkUC3P0+EhVyjxcFlWt3BMAUwUfQbHtLpIZeqfZfINlA==
+releaseDate: '2024-05-16T16:46:23.682Z'

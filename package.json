@@ -1,8 +1,8 @@
 {
-  "name": "barcode",
-  "productName": "צבירת נקודות",
+  "name": "parentsmeeting",
+  "productName": "אסיפת הורים",
   "description": "צבירת נקודות דיגיטלית",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

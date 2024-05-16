@@ -13,7 +13,9 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('UserMain.html')
+  // mainWindow.loadFile('UserMain.html')
+  mainWindow.loadFile('ParentsMeeting.html')
+
 
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
