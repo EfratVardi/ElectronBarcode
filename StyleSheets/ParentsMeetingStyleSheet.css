@@ -34,8 +34,13 @@
 #line3 {
     font-size: 2vw;
 }
-
-#content {
+#position {
+    font-size: 4vw;
+    width: 18vw;
+    border-radius: 0px 50px 50px 0px;
+    font-family: "myFirstFont";
+}
+#content,#nameInput {
     background-color: #3196BD;
     font-size: 2vw;
     font-family: "printFont";

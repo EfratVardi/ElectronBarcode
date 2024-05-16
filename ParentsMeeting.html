@@ -58,10 +58,18 @@
           systemConfig = JSON.parse(data)
         }
         if (systemConfig.color == "1") {
+          document.getElementById("position").style.backgroundColor = "#75DDB4";
           document.getElementById("background").style.backgroundImage = "url('resources/parentsMeeting/pinkBackground1.gif')"
         }
         else if (systemConfig.color == "2") {
+          document.getElementById("position").style.backgroundColor = "yellow";
           document.getElementById("background").style.backgroundImage = "url('resources/parentsMeeting/greenBackground1.gif')";
+        }
+        if (systemConfig.position.length > 0) {
+          document.getElementById("position").innerHTML += ' ' + systemConfig.position
+        }
+        else {
+          document.getElementById("position").style.display = "none";
         }
       })
     }
@@ -141,6 +149,9 @@
     }
   </script>
   <div id="printableArea" style="display: none;">
+    <div id="name"> </div>
+    <br />
+    <br />
     <div id="header">פתק מאמא</div>
     <br />
     <br />
@@ -164,8 +175,11 @@
         ...מוזמנת לסרוק את הברקוד ולהוסיף כמה מילים טובות של אמא
       </div>
       <form id="form" style="display: none;direction: rtl;">
+        <div class="form-group col-md-8" style="padding-left: 33.33%;">
+          <input id="nameInput" class="form-control" placeholder="שם בת ושם משפחה">
+        </div>
         <div class="form-group col-md-10" style="padding-left: 16.666%; ">
-          <textarea id="content" class="form-control" rows="6"></textarea>
+          <textarea id="content" class="form-control" rows="6" placeholder="כתבי כאן כמה מילים טובות לביתך"></textarea>
         </div>
         <div class="form-group col-md-8" style="padding-left: 33.33%;">
           <button onclick="toPrint(1)" id="btnPrint" class="form-control">שליחה
@@ -173,6 +187,7 @@
         </div>
       </form>
     </div>
+    <div id="position">עמדה</div>
     <input type="text" class="my-input" id="barcode">
   </div>
 
