@@ -1,8 +1,8 @@
 version: 1.0.3
 files:
   - url: parentsmeeting-setup-1.0.3.exe
-    sha512: OGJgIUqLWk0fAECBum8NJn379vefex2Qcz7z6D4V9QEkUC3P0+EhVyjxcFlWt3BMAUwUfQbHtLpIZeqfZfINlA==
-    size: 65607305
+    sha512: xCnBIMd7u5ew/rWj80jIzvCMdhsjZEWIJrNOZ2c0bhzRKrM/vC7XMfS840Tjjc0l8udgZgmYrFaM7y2EPqSXsQ==
+    size: 65606826
 path: parentsmeeting-setup-1.0.3.exe
-sha512: OGJgIUqLWk0fAECBum8NJn379vefex2Qcz7z6D4V9QEkUC3P0+EhVyjxcFlWt3BMAUwUfQbHtLpIZeqfZfINlA==
-releaseDate: '2024-05-16T16:46:23.682Z'
+sha512: xCnBIMd7u5ew/rWj80jIzvCMdhsjZEWIJrNOZ2c0bhzRKrM/vC7XMfS840Tjjc0l8udgZgmYrFaM7y2EPqSXsQ==
+releaseDate: '2024-05-30T11:51:18.322Z'

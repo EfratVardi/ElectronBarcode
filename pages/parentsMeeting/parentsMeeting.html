@@ -134,14 +134,14 @@
       document.getElementById("line2").style.fontSize = "4.5vw"
       document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
       document.getElementById("text").style.top = "15%";
-      document.getElementById("content").value = result.text ? result.text : ""
+      document.getElementById("content").value = result.text ? result.text :""
       document.getElementById("form").style.display = "inline"
     }
 
     function studentStart() {
       state = 2
       document.getElementById("line2").innerHTML = "שלום " + result.name;
-      document.getElementById("line3").innerHTML = "!ההדפסה של הברכה מאמא כבר מתחילה";
+      document.getElementById("line3").innerHTML = "!ההדפסה של המכתב מאמא כבר מתחילה";
       setTimeout(function () {
         toPrint();
       }, 2500);
@@ -160,7 +160,7 @@
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
         document.getElementById("form").style.display = "none"
         document.getElementById("text").style.top = "30%";
-        document.getElementById("line2").innerHTML = "!הברכה נשמרה";
+        document.getElementById("line2").innerHTML = "!המכתב נשמר";
         document.getElementById("line3").innerHTML = "...תודה רבה על שיתוף הפעולה";
         reset(2000);
       });
@@ -168,7 +168,7 @@
 
     function toPrint() {
       var divName = "printableArea";
-      document.getElementById("textContent").innerHTML = result.text
+      document.getElementById("textContent").innerHTML = result.text?result.text: "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!";
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;

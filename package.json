@@ -1,6 +1,6 @@
 {
-  "name": "parentsmeeting",
-  "productName": "אסיפת הורים",
+  "name": "accumulatingpoints",
+  "productName": "צבירת נקודות",
   "description": "צבירת נקודות דיגיטלית",
   "version": "1.0.3",
   "main": "main.js",
