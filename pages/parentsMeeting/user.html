@@ -37,13 +37,13 @@
 </head>
 
 <body onload="onLoad()">
-  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link href="StyleSheets/ParentsMeetingStyleSheet.css" rel="stylesheet" />
-  <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-  <script src="js/ag-grid-community.min.js"></script>
-  <script src="js/jquery.min.js"></script>
-  <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="js/shared.js"></script>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link href="../../styleSheets/parentsMeetingStyleSheet.css" rel="stylesheet" />
+  <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+  <script src="../../js/ag-grid-community.min.js"></script>
+  <script src="../../js/jquery.min.js"></script>
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../../js/shared.js"></script>
 
   <script>
     var currentDate = getTodayDate()
@@ -64,14 +64,8 @@
         else {
           systemConfig = JSON.parse(data)
         }
-        if (systemConfig.color == "1") {
-          document.getElementById("position").style.backgroundColor = "#75DDB4";
-          document.getElementById("background").style.backgroundImage = "url('resources/parentsMeeting/pinkBackground4.gif')"
-        }
-        else if (systemConfig.color == "2") {
-          document.getElementById("position").style.backgroundColor = "yellow";
-          document.getElementById("background").style.backgroundImage = "url('resources/parentsMeeting/greenBackground4.gif')";
-        }
+        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 4)
         if (systemConfig.position.length > 0) {
           document.getElementById("position").innerHTML += ' ' + systemConfig.position
         }
@@ -101,9 +95,9 @@
         counter = 0;
         document.getElementById("barcode").value = "";
         if (searchVal == '011429519')
-          login('System')
+          login('../main/system')
         else if (searchVal == '207594581')
-          login('UserMain')
+          login('../main/user')
         else //כיתה או בת
           searchInExcel();
       }
@@ -134,7 +128,7 @@
       document.getElementById("line2").style.fontSize = "4.5vw"
       document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
       document.getElementById("text").style.top = "15%";
-      document.getElementById("content").value = result.text ? result.text :""
+      document.getElementById("content").value = result.text ? result.text : ""
       document.getElementById("form").style.display = "inline"
     }
 
@@ -168,7 +162,7 @@
 
     function toPrint() {
       var divName = "printableArea";
-      document.getElementById("textContent").innerHTML = result.text?result.text: "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!";
+      document.getElementById("textContent").innerHTML = result.text ? result.text : "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!";
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;

@@ -28,12 +28,12 @@
 </head>
 
 <body onload="onLoad()" class="bg-danger bg-opacity-10">
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link href="StyleSheets/CardUserStyleSheet.css" rel="stylesheet" />
-    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-    <script src="js/jquery.min.js"></script>
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="js/shared.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/cardUserStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/shared.js"></script>
 
     <script>
         var currentDate = getTodayDate();
@@ -101,9 +101,9 @@
                 document.getElementById("barcode").value = "";
                 if (state == 1) {
                     if (searchVal == '999999999')
-                        login('ManageMain')
+                        login('../main/manage')
                     else if (searchVal == '011429519')
-                        login('System')
+                        login('../main/system')
                     else {
                         showAlert("יש לבחור לפני העברת כרטיס!");
                         return;

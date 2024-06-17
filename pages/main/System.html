@@ -7,15 +7,15 @@
 </head>
 
 <body onload="onLoad()">
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link href="StyleSheets/SystemStyleSheet.css" rel="stylesheet" />
-    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-    <script src="js/ag-grid-community.min.js"></script>
-    <script src="js/uniqTasks-ag-grid.js"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/xlsx.full.min.js"></script>
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="js/shared.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/systemStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/ag-grid-community.min.js"></script>
+    <script src="../../js/uniqTasks-ag-grid.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/xlsx.full.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/shared.js"></script>
 
     <script>
         var counter = 0;
@@ -38,12 +38,7 @@
                     if (x[0] != 'buy')
                         document.getElementById(x[0]).value = x[1]
                 })
-                if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
-                }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 4);
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -79,11 +74,11 @@
             if (counter > 9) {
                 let searchVal = document.getElementById('barcode').value
                 if (searchVal == '011429519')
-                    login("UserMain")
+                    login("user")
                 else if (searchVal == '999999999')
-                    login("ManageMain")
+                    login("manage")
                 else if (searchVal == '207594581')
-                    login('ParentsMeeting')
+                    login('../parentsMeeting/user')
             }
         });
 

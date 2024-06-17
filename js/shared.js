@@ -19,3 +19,21 @@ function getDefaultConfig() {
 function login(page) {
     window.location.href = page + '.html';
 }
+
+function getBackground(type, num) {
+    switch (type) {
+        case "1":
+            return "url('../../resources/barcode/pinkBackground" + num + ".gif')";
+        case "2":
+            return "url('../../resources/barcode/greenBackground" + num + ".gif')";
+    }
+}
+
+function getPosition(type) {
+    switch (type) {
+        case "1":
+            return "#75DDB4";
+        case "2":
+            return "yellow";
+    }
+}

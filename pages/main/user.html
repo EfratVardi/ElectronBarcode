@@ -7,7 +7,7 @@
 </head>
 
 <body onload="onLoad()">
-    <script src="js/shared.js"></script>
+    <script src="../../js/shared.js"></script>
     <script>
         var systemConfig = ""
         var currentDate = getTodayDate();
@@ -23,11 +23,11 @@
                     systemConfig = JSON.parse(data)
                 }
                 if (currentDate > systemConfig.date)
-                    login('Expired')
+                    login('expired')
                 else if (systemConfig.device == 1)
-                    login("User")
+                    login("../barcode/user")
                 else if (systemConfig.device == 2)
-                    login("CardUser")
+                    login("../magnetCard/user")
             })
         }
     </script>

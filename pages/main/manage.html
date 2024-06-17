@@ -7,7 +7,7 @@
 </head>
 
 <body onload="onLoad()">
-    <script src="js/shared.js"></script>
+    <script src="../../js/shared.js"></script>
     <script>
         var systemConfig = ""
 
@@ -22,9 +22,9 @@
                     systemConfig = JSON.parse(data)
                 }
                 if (systemConfig.device == 1)
-                    login("Manage")
+                    login("../barcode/manage")
                 else if (systemConfig.device == 2)
-                    login("CardManage")
+                    login("../magnetCard/manage")
             })
         }
     </script>

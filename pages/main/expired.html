@@ -7,10 +7,10 @@
 </head>
 
 <body onload="onLoad()">
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-    <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
-    <script src="js/shared.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/MainStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/userStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/shared.js"></script>
 
     <script>
         var systemConfig;
@@ -25,12 +25,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
-                }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color,4);
             })
         }
         document.addEventListener("keypress", function (e) {
@@ -43,9 +38,9 @@
             counter += 1;
             if (counter > 9) {
                 if (document.getElementById('barcode').value == '011429519')
-                    login("System")
+                    login("system")
                 else if (document.getElementById('barcode').value == '999999999')
-                    login("ManageMain")
+                    login("manage")
             }
         });
 

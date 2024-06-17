@@ -28,12 +28,12 @@
 </head>
 
 <body onload="onLoad()">
-  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
-  <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="js/shared.js"></script>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link href="../../styleSheets/userStyleSheet.css" rel="stylesheet" />
+  <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+  <script src="../../js/jquery.min.js"></script>
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../../js/shared.js"></script>
 
   <script>
     var currentDate = getTodayDate();
@@ -60,14 +60,8 @@
           else {
             systemConfig = JSON.parse(data)
           }
-          if (systemConfig.color == "1") {
-            document.getElementById("position").style.backgroundColor = "aquamarine";
-            document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground1.gif')"
-          }
-          else if (systemConfig.color == "2") {
-            document.getElementById("position").style.backgroundColor = "yellow";
-            document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground1.gif')";
-          }
+          document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
+          document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 1)
           if (systemConfig.position.length > 0) {
             document.getElementById("position").innerHTML += ' ' + systemConfig.position
           }
@@ -128,11 +122,11 @@
           counter = 0;
           document.getElementById("barcode").value = "";
           if (searchVal == '999999999')
-            login('ManageMain')
+            login('../main/manage')
           else if (searchVal == '011429519')
-            login('System')
+            login('../main/system')
           else if (searchVal == '207594581')
-            login('ParentsMeeting')
+            login('../parentsMeeting/user')
           else if (state == 1)//כיתה או בת
             searchInExcel();
           else if (searchVal.startsWith('6666') && state == 2)//מוצר
@@ -176,9 +170,7 @@
           return;
         }
         state = 2
-        systemConfig.color == 1 ?
-          document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground2.gif')" :
-          document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground2.gif')";
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
         document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
         document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה או לקניית מתנה";
         document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
@@ -439,7 +431,7 @@
           }, 1000)
           window.expose.receive("receivePrint", (data) => {
             document.body.innerHTML = originalContents;
-            systemConfig.color == 1 ? document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground3.gif')" : document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground3.gif')";
+            document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 3);
             document.getElementById("line1").innerHTML = "! יש בחשבונך " + studentResult.points + " נקודות ";
             document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
             reset(1800);
@@ -503,8 +495,7 @@
     <div id="position">עמדה</div>
     <input type="text" class="my-input" id="barcode">
   </div>
-  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
