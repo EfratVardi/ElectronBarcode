@@ -1,1 +1,0 @@
-[{"code":666611111,"name":"ברד","points":50,"multiple":1,"show":true},{"code":666611112,"name":"ימבמבם","points":10,"multiple":1,"show":true},{"code":666611113,"name":"ממתק","points":20,"multiple":1,"show":true},{"code":666611114,"name":"פופקורן","points":10,"multiple":1,"show":true},{"code":666611115,"name":"5% במבחן","points":5,"multiple":1,"show":true}]
