@@ -47,408 +47,270 @@
     var state = 1
     var studentResult = ""
     var result = "";
-    var returnval = 0;
 
     function onLoad() {
-      try {
-        fileName = 'systemConfig'
-        window.expose.SendExcel("sendReadExcel", fileName);
-        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          if (data == 0) {
-            systemConfig = getDefaultConfig()
-          }
-          else {
-            systemConfig = JSON.parse(data)
-          }
-          document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-          document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 1)
-          if (systemConfig.position.length > 0) {
-            document.getElementById("position").innerHTML += ' ' + systemConfig.position
-          }
-          else {
-            document.getElementById("position").style.display = "none";
-          }
-        })
-        fileName = 'students'
-        window.expose.SendExcel("sendReadExcel", fileName);
-        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          if (data != 0) {
-            students = JSON.parse(data)
-            fileName = 'uniqTasks'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-              if (data != 0) {
-                uniqTasks = JSON.parse(data)
-              }
-            })
-          };
-        });
-        fileName = 'products'
-        window.expose.SendExcel("sendReadExcel", fileName);
-        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-          if (data != 0) {
-            products = JSON.parse(data)
-          };
-        });
-
-        if (!localStorage.getItem("log")) {
-          localStorage.setItem("log", "[]")
+      fileName = 'systemConfig'
+      window.expose.SendExcel("sendReadExcel", fileName);
+      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+        if (data == 0) {
+          systemConfig = getDefaultConfig()
         }
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-      }
+        else {
+          systemConfig = JSON.parse(data)
+        }
+        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 1)
+
+        if (systemConfig.position.length > 0) {
+          document.getElementById("position").innerHTML += ' ' + systemConfig.position
+        }
+        else {
+          document.getElementById("position").style.display = "none";
+        }
+      })
+      fileName = 'students'
+      window.expose.SendExcel("sendReadExcel", fileName);
+      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+        if (data != 0) {
+          students = JSON.parse(data)
+          fileName = 'uniqTasks'
+          window.expose.SendExcel("sendReadExcel", fileName);
+          window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+            if (data != 0) {
+              uniqTasks = JSON.parse(data)
+            }
+          })
+        };
+      });
+      fileName = 'products'
+      window.expose.SendExcel("sendReadExcel", fileName);
+      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+        if (data != 0) {
+          products = JSON.parse(data)
+        };
+      });
     }
 
     document.addEventListener("keypress", function (e) {
-      try {
-        if (e.target.tagName !== "INPUT") {
-          var input = document.querySelector(".my-input");
-          input.focus();
-          input.value = e.key;
-          e.preventDefault();
-        }
-        counter += 1;
-        if (counter > 9 && state != 3) {
-          searchVal = document.getElementById('barcode').value
-          counter = 0;
-          document.getElementById("barcode").value = "";
+      counter += 1;
+      if (e.target.tagName !== "INPUT") {
+        var input = document.querySelector(".my-input");
+        input.focus();
+        input.value = e.key;
+        e.preventDefault();
+      }
+      if (counter > 9) {
+        counter = 0;
+        searchVal = document.getElementById('barcode').value
+        document.getElementById("barcode").value = "";
+
+        if (state == 1) {//כיתה או בת
           if (searchVal == '999999999')
             login('../main/manage')
           else if (searchVal == '011429519')
             login('../main/system')
           else if (searchVal == '207594581')
             login('../parentsMeeting/user')
-          else if (state == 1)//כיתה או בת
+          else
             searchInExcel();
-          else if (searchVal.startsWith('6666') && state == 2)//מוצר
+        }
+
+        else if (state == 2) {
+          if (searchVal.startsWith('6666'))//מוצר
+          {
+            systemConfig.buy = 1
             buyProduct();
-          else if (systemConfig.type == 2 && state == 2)//משימה רגילה
-            updateTask();
-          else if (systemConfig.type == 1 && state == 2)//משימה חד פעמית
+          }
+          else if (systemConfig.type == 1)//משימה חד פעמית
             updateUniqTask();
+          else if (systemConfig.type == 2)//משימה רגילה
+            updateTask();
           else {
             showAlert("קוד לא תקין, גש למורה!");
             return;
           }
         }
-        if (state == 3) {
-          document.getElementById("barcode").value = ""
-        }
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
       }
     });
 
     function searchInExcel() {
-      try {
-        for (var i = 0; i < students.length; i++) {
-          if (students[i]["tz"] == searchVal) {
-            studentResult = students[i];
-            break;
-          }
+      state = 2
+      for (var i = 0; i < students.length; i++) {
+        if (students[i]["tz"] == searchVal) {
+          studentResult = students[i];
+          break;
         }
-        if (studentResult == "") {
-          showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
-          return;
-        }
-        state = 2
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
-        document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
-        document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה או לקניית מתנה";
-        document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
       }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
+      if (studentResult == "") {
+        showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
+        return;
       }
+      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
+      document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
+      document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה או לקניית מתנה";
+      document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
     }
 
     function updateTask() {
-      try {
-        state = 3;
-        for (var i = 0; i < uniqTasks.length; i++) {
-          if (uniqTasks[i]["code"] == searchVal) {
-            result = uniqTasks[i]
-            break;
-          }
+      state = 3;
+      for (var i = 0; i < uniqTasks.length; i++) {
+        if (uniqTasks[i]["code"] == searchVal) {
+          result = uniqTasks[i]
+          break;
         }
-        if (result == "") {
-          showAlert("קוד לא תקין, גשו למורה!")
-          return;
-        }
-
-        if (result.class && !studentResult.tz.toString().startsWith(1)) {
-          showAlert("אין אפשרות לתקף משימה כיתתית!")
-          return;
-        }
-
-        if (!result.class && studentResult.tz.toString().startsWith(1)) {
-          showAlert("כיתה לא יכולה לתקף משימה אישית!")
-          return;
-        }
-
-        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-          showAlert("הי, אסור להגיש משימה פעמיים!");
-          return;
-        }
-
-        for (var i = 0; i < students.length; i++) {
-          if (students[i]["tz"] == studentResult.tz) {
-            students[i].tasks += result.name + ',';
-            students[i].tasksNumber += result.code + ',';
-            break;
-          }
-        }
-        finishSession()
       }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
+      if (result == "") {
+        showAlert("קוד לא תקין, גשו למורה!")
+        return;
       }
+
+      if (result.class && !studentResult.tz.toString().startsWith(1)) {
+        showAlert("אין אפשרות לתקף משימה כיתתית!")
+        return;
+      }
+
+      if (!result.class && studentResult.tz.toString().startsWith(1)) {
+        showAlert("כיתה לא יכולה לתקף משימה אישית!")
+        return;
+      }
+
+      if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+        showAlert("הי, אסור להגיש משימה פעמיים!");
+        return;
+      }
+      finishSession()
     }
 
     function updateUniqTask() {
-      try {
-        state = 3;
-        for (var i = 0; i < uniqTasks.length; i++) {
-          if (uniqTasks[i]["code"] == searchVal) {
-            result = uniqTasks[i]
-            break;
-          }
+      state = 3;
+      for (var i = 0; i < uniqTasks.length; i++) {
+        if (uniqTasks[i]["code"] == searchVal) {
+          result = uniqTasks[i]
+          break;
         }
-        if (result == "") {
-          showAlert("קוד לא תקין, גשו למורה!")
-          return;
-        }
-
-        if (result.class && !studentResult.tz.toString().startsWith(1)) {
-          showAlert("אין אפשרות לתקף משימה כיתתית!")
-          return;
-        }
-
-        if (!result.class && studentResult.tz.toString().startsWith(1)) {
-          showAlert("כיתה לא יכולה לתקף משימה אישית!")
-          return;
-        }
-
-        if (result.used == 1) {
-          showAlert("הי, משימה זו כבר תוקפה!");
-          return;
-        }
-
-        for (var i = 0; i < students.length; i++) {
-          if (students[i]["tz"] == studentResult.tz) {
-            students[i].tasks += result.name + ',';
-            students[i].tasksNumber += result.code + ',';
-            break;
-          }
-        }
-        for (var i = 0; i < uniqTasks.length; i++) {
-          if (uniqTasks[i]["code"] == result.code) {
-            uniqTasks[i].used = 1
-            break;
-          }
-        }
-        finishSession()
       }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
+      if (result == "") {
+        showAlert("קוד לא תקין, גשו למורה!")
+        return;
       }
+
+      if (result.class && !studentResult.tz.toString().startsWith(1)) {
+        showAlert("אין אפשרות לתקף משימה כיתתית!")
+        return;
+      }
+
+      if (!result.class && studentResult.tz.toString().startsWith(1)) {
+        showAlert("כיתה לא יכולה לתקף משימה אישית!")
+        return;
+      }
+
+      if (result.used == 1) {
+        showAlert("הי, משימה זו כבר תוקפה!");
+        return;
+      }
+      finishSession()
     }
 
     function buyProduct() {
-      try {
-        state = 3;
-        for (var i = 0; i < products.length; i++) {
-          if (products[i]["code"] == searchVal) {
-            result = products[i]
-            break;
-          }
-        }
-        if (result != "") {
-          savePoints(result.points);
-          if (returnval == 1)
-            return;
-          document.getElementById("line1").innerHTML = "הידד" + "! " + "רכשת בהצלחה " + result.name;
-          document.getElementById("line2").innerHTML = "מיד עוברים להדפסת אישור";
-          document.getElementById("line3").innerHTML = "";
-          toPrint(0);
-        }
-        else {
-          showAlert("קוד לא תקין, גשו למורה!");
-          return;
+      state = 3;
+      for (var i = 0; i < products.length; i++) {
+        if (products[i]["code"] == searchVal) {
+          result = products[i]
+          break;
         }
       }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-      }
-    }
 
-    function finishSession() {
-      savePoints(result.points);
-      try {
-        if (studentResult.tz.toString().startsWith(1)) {
-          document.getElementById("line1").innerHTML = "כיתה מדהימה" + "! " + "ביצעתם את משימה" + " " + result.name;
-          document.getElementById("line2").innerHTML = "מיד תועברו להדפסת אישור";
-          document.getElementById("line3").innerHTML = "";
-        }
-        else {
-          document.getElementById("line1").innerHTML = "הידד" + "! " + "ביצעת את משימה" + " " + result.name;
-          document.getElementById("line2").innerHTML = "מיד עוברים להדפסת אישור";
-          document.getElementById("line3").innerHTML = "";
-        }
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-      }
-      toPrint(1);
-    }
-
-    function savePoints(points) {
-      try {
-        studentResult.points = parseInt(points) +
-          parseInt(studentResult.points);
-        if (studentResult.points < 0) {
-          returnval = 1;
-          showAlert("אין לך מספיק נקודות בחשבון !")
-          return;
-        }
-        for (var i = 0; i < students.length; i++) {
-          if (students[i]["tz"] == studentResult.tz) {
-            students[i].points = studentResult.points;
-            break;
-          }
-        }
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-      }
-      try {
-        fileName = 'uniqTasks'
-        window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-          fileName = 'students'
-          window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-          window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-          });
-        });
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-        showAlert("אירעה שגיאה במהלך השמירה. הנתונים לא נשמרו!")
+      if (result == "") {
+        showAlert("קוד לא תקין, גשו למורה!");
         return;
       }
     }
 
-    function toPrint(task) {
-      try {
-        var divName = "printableArea";
-        setTimeout(function () {
-          document.getElementById("d1").innerHTML = studentResult.name;
-          document.getElementById("d2").innerHTML = studentResult.grade;
-          if (task == 1)
-            document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
-          else
-            document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
-          document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
-          var printContents = document.getElementById(divName).innerHTML;
-          var originalContents = document.body.innerHTML;
-          document.body.innerHTML = printContents;
+
+    function finishSession() {
+      studentResult.tasks += result.name + ',';
+      studentResult.tasksNumber += result.code + ',';
+      if (systemConfig.type == 1)
+        result.used = 1
+      if (systemConfig.buy == 1) {
+        studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
+        if (studentResult.points < 0) {
+          showAlert("אין לך מספיק נקודות בחשבון !")
+          return;
+        }
+      }
+      else {
+        studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
+      }
+      saveData();
+    }
+
+    function saveData() {
+      if (systemConfig.type == 1) {
+        for (var i = 0; i < uniqTasks.length; i++) {
+          if (uniqTasks[i]["code"] == result.code) {
+            uniqTasks[i].used = result
+            break;
+          }
+        }
+        fileName = 'uniqTasks'
+        window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
+      }
+      for (var i = 0; i < students.length; i++) {
+        if (students[i]["tz"] == studentResult.tz) {
+          students[i] = studentResult;
+          break;
+        }
+      }
+      fileName = 'students'
+      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
+      window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
+        if (systemConfig.buy == 1) {
+          document.getElementById("line1").innerHTML = "הידד" + "! " + "רכשת בהצלחה " + result.name;
+        }
+        else if (studentResult.tz.toString().startsWith(1)) {
+          document.getElementById("line1").innerHTML = "כיתה מדהימה" + "! " + "ביצעתם את משימה" + " " + result.name;
+        }
+        else {
+          document.getElementById("line1").innerHTML = "הידד" + "! " + "ביצעת את משימה" + " " + result.name;
+        }
+
+        document.getElementById("line2").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות...";
+        document.getElementById("line3").innerHTML = "בהצלחה!";
+
+        if (systemConfig.hasPrint == 1)
           setTimeout(function () {
-            window.expose.send("sendPrint", "");
-          }, 1000)
-          window.expose.receive("receivePrint", (data) => {
-            document.body.innerHTML = originalContents;
-            document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 3);
-            document.getElementById("line1").innerHTML = "! יש בחשבונך " + studentResult.points + " נקודות ";
-            document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
-            reset(1800);
-          });
-        }, 2000);
-      }
-      catch (err) {
-        var log = JSON.parse(localStorage.getItem("log"))
-        log.push({
-          date: currentDate,
-          function: arguments.callee.toString().substr(0, arguments.callee.toString().indexOf('(')),
-          error: err.message,
-          studentResult: JSON.stringify(studentResult),
-          taskResult: JSON.stringify(result)
-        })
-        localStorage.setItem("log", JSON.stringify(log));
-      }
+            toPrint();
+          }, 2000);
+        else
+          reset(2000);
+      });
+    }
+
+    function toPrint() {
+      var divName = "printableArea";
+      document.getElementById("d1").innerHTML = studentResult.name;
+      document.getElementById("d2").innerHTML = studentResult.grade;
+      if (result.searchVal.startsWith('666'))
+        document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
+      else
+        document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
+      document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      setTimeout(function () {
+        window.expose.send("sendPrint", "");
+      }, 1000)
+      window.expose.receive("receivePrint", (data) => {
+        document.body.innerHTML = originalContents;
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 3);
+        document.getElementById("line1").innerHTML = "תודה רבה";
+        document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
+        reset(1800);
+      });
     }
 
     function reset(time = 0) {
@@ -466,9 +328,11 @@
         $(document).ready(function () {
           $('#modal').modal('hide')
         });
-      }, 2500);
-      reset(2500)
+        reset(0)
+      }
+        , 2500);
     }
+
   </script>
   <div id="printableArea" style="display: none;">
     <div id="title">אישור </div>
