@@ -24,12 +24,14 @@
         var tasks = ""
         var systemConfig = ""
         var excelFiles = ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
+
         function onLoad() {
+            // Get references to the input elements
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                 if (data == 0) {
-                    systemConfig = getDefaultConfig()
+                    // systemConfig = getDefaultConfig()
                 }
                 else {
                     systemConfig = JSON.parse(data)
@@ -38,7 +40,7 @@
                     if (x[0] != 'buy')
                         document.getElementById(x[0]).value = x[1]
                 })
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 4);
+                document.getElementById("background").style.backgroundImage = getBackground("1", 4);
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -61,6 +63,52 @@
                     document.getElementById('reset').disabled = true;
                 }
             })
+            const deviceSelect = document.getElementById('device');
+            const positionInput = document.getElementById('position');
+            const dateInput = document.getElementById('date');
+            const hasBuySelect = document.getElementById('hasBuy');
+            const hasPrintSelect = document.getElementById('hasPrint');
+            const colorSelect = document.getElementById('color');
+            const typeSelect = document.getElementById('type');
+            const uploaduniqTasksInput = document.getElementById('uploaduniqTasks');
+            const uploadStudentsInput = document.getElementById('uploadStudents');
+
+            // Add an event listener for the device select
+            deviceSelect.addEventListener('change', function () {
+                const selectedOption = deviceSelect.value;
+
+                if (selectedOption == '1') {
+                    // Show the inputs for option 1
+                    positionInput.style.display = 'block';
+                    dateInput.style.display = 'block';
+                    hasBuySelect.style.display = 'block';
+                    hasPrintSelect.style.display = 'block';
+                    colorSelect.style.display = 'block';
+                    typeSelect.style.display = 'block';
+                    uploaduniqTasksInput.style.display = 'block';
+                    uploadStudentsInput.style.display = 'block';
+                } else if (selectedOption == '2') {
+                    // Show the inputs for option 2
+                    positionInput.style.display = 'block';
+                    dateInput.style.display = 'block';
+                    hasBuySelect.style.display = 'block';
+                    hasPrintSelect.style.display = 'block';
+                    colorSelect.style.display = 'none';
+                    typeSelect.style.display = 'none';
+                    uploaduniqTasksInput.style.display = 'block';
+                    uploadStudentsInput.style.display = 'block';
+                } else {
+                    // Hide all inputs if no option is selected
+                    positionInput.style.display = 'none';
+                    dateInput.style.display = 'none';
+                    hasBuySelect.style.display = 'none';
+                    hasPrintSelect.style.display = 'none';
+                    colorSelect.style.display = 'none';
+                    typeSelect.style.display = 'none';
+                    uploaduniqTasksInput.style.display = 'none';
+                    uploadStudentsInput.style.display = 'none';
+                }
+            });
         }
 
         document.addEventListener("keypress", function (e) {
@@ -167,6 +215,14 @@
             <div id="line3"></div>
             <br />
             <form class="row g-2">
+                <div class="col-md-2">
+                    <label for="device" class="form-label">סוג מכשיר</label>
+                    <select class="form-control" id="device">
+                        <option value="0">בחר</option>
+                        <option value="1">סורק ברקוד</option>
+                        <option value="2">כרטיס מגנטי</option>
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <label for="uploadStudents" class="form-label">תלמידות</label>
                     <input type=file class="form-control" id="uploadStudents" name="files[]">
@@ -186,20 +242,16 @@
                 <div class="col-md-2">
                     <label for="type" class="form-label">סוג משחק</label>
                     <select class="form-control" id="type">
+                        <option value="0">בחר</option>
                         <option value="1">אישי</option>
                         <option value="2">כללי</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label for="device" class="form-label">סוג מכשיר</label>
-                    <select class="form-control" id="device">
-                        <option value="1">סורק ברקוד</option>
-                        <option value="2">כרטיס מגנטי</option>
-                    </select>
-                </div>
+
                 <div class="col-md-1">
                     <label for="color" class="form-label">עיצוב</label>
-                    <select class="form-control" id="color">
+                    <select class="form-control" id="color">                        <option value="0">בחר</option>
+                        <option value="0">בחר</option>
                         <option value="1">ורוד</option>
                         <option value="2">ירוק</option>
                     </select>
@@ -207,6 +259,7 @@
                 <div class="col-md-1">
                     <label for="hasPrint" class="form-label">הדפסה</label>
                     <select class="form-control" id="hasPrint">
+                        <option value="0">בחר</option>
                         <option value="1">עם</option>
                         <option value="0">בלי</option>
                     </select>
@@ -214,6 +267,7 @@
                 <div class="col-md-1">
                     <label for="hasBuy" class="form-label">קניה</label>
                     <select class="form-control" id="hasBuy">
+                        <option value="0">בחר</option>
                         <option value="1">עם</option>
                         <option value="0">בלי</option>
                     </select>
@@ -224,7 +278,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="position" class="form-label">עמדה</label>
-                    <input type="number" class="form-control" id="position">
+                    <input type="number" class="form-control" id="position" required>
                 </div>
                 <div class="col-md-1">
                     <label class="form-label">.</label>
@@ -236,7 +290,7 @@
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">.</label>
-                    <button onclick="update()" class="form-control">עדכן</button>
+                    <button type="submit" onclick="update()" class="form-control">עדכן</button>
                 </div>
             </form>
             <br />
