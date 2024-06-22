@@ -8,12 +8,13 @@ function getYesterdayDate() {
 function getTodayDate() {
     return new Date().toISOString().split('T')[0];
 }
+
 function getTodayDateTime() {
     return new Date().toLocaleString();
 }
 
 function getDefaultConfig() {
-    return { "type": "1", "device": "1", "hasPrint": "1", "hasBuy": "0", "date": getYesterdayDate(), "position": "", "color": "1", "buy": false };
+    return { "device": "0", "hasBuy": "0", "hasParents": "0", "date": getYesterdayDate(), "buy": false };
 }
 
 function login(page) {
