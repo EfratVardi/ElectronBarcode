@@ -26,13 +26,25 @@
         var excelFiles = ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
 
         function onLoad() {
-            // Get references to the input elements
+            const deviceSelect = document.getElementById('device');
+            const colorSelect = document.getElementById('color');
+            const typeSelect = document.getElementById('type');
+            const hasParentsSelect = document.getElementById('hasParents');
+            const hasBuySelect = document.getElementById('hasBuy');
+            const uploadProductsInput = document.getElementById('uploadProducts');
+            const uploadParentsInput = document.getElementById('uploadParents');
+
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
+                }
+                else {
                     systemConfig = JSON.parse(data)
                 }
+                document.getElementById("background").style.backgroundImage = getBackground("1", 4);
+
                 Object.entries(systemConfig).forEach(x => {
                     if (x[0] != 'buy')
                         document.getElementById(x[0]).value = x[1]
@@ -40,8 +52,7 @@
                 const changeEvent = new Event('change');
                 deviceSelect.dispatchEvent(changeEvent);
                 hasBuySelect.dispatchEvent(changeEvent);
-
-                document.getElementById("background").style.backgroundImage = getBackground("1", 4);
+                hasParentsSelect.dispatchEvent(changeEvent);
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -64,20 +75,13 @@
                     document.getElementById('reset').disabled = true;
                 }
             })
-            const deviceSelect = document.getElementById('device');
-            const colorSelect = document.getElementById('color');
-            const typeSelect = document.getElementById('type');
-            const hasParentsSelect = document.getElementById('hasParents');
-            const hasBuySelect = document.getElementById('hasBuy');
-            const uploadProductsInput = document.getElementById('uploadProducts');
-            const uploadParentsInput = document.getElementById('uploadParents');
 
             hasParentsSelect.addEventListener('change', function () {
                 const selectedOption = hasParentsSelect.value;
                 if (selectedOption == '1') {
                     uploadParentsInput.style.visibility = "visible";
                 }
-                else if (selectedOption == '0') {
+                else {
                     uploadParentsInput.style.visibility = "hidden";
                 }
             });
@@ -87,31 +91,27 @@
                 if (selectedOption == '1') {
                     uploadProductsInput.style.visibility = "visible";
                 }
-                else if (selectedOption == '0') {
+                else {
                     uploadProductsInput.style.visibility = "hidden";
                 }
             });
 
             deviceSelect.addEventListener('change', function () {
                 const selectedOption = deviceSelect.value;
-                colorSelect.value = "0";
-                typeSelect.value = "0";
-                hasParentsSelect.value = "0";
-                const changeEvent = new Event('change');
-                hasParentsSelect.dispatchEvent(changeEvent);
-
                 if (selectedOption == '1') {
                     colorSelect.style.visibility = "visible";
                     typeSelect.style.visibility = "visible";
                     hasParentsSelect.style.visibility = "visible";
-                } else if (selectedOption == '2') {
+                }
+                else {
                     colorSelect.style.visibility = "hidden";
                     typeSelect.style.visibility = "hidden";
                     hasParentsSelect.style.visibility = "hidden";
-                } else {
-                    colorSelect.style.visibility = "hidden";
-                    typeSelect.style.visibility = "hidden";
-                    hasParentsSelect.style.visibility = "hidden";
+                    colorSelect.value = "0";
+                    typeSelect.value = "0";
+                    hasParentsSelect.value = "0";
+                    const changeEvent = new Event('change');
+                    hasParentsSelect.dispatchEvent(changeEvent);
                 }
             });
         }
@@ -151,7 +151,7 @@
                             fileName = file.name.split('.')[0]
                             window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
                             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                // alert("!הקובץ הועלה בהצלחה")
+                                // alert("הקובץ הועלה בהצלחה!")
                                 location.reload()
                             });
                         }
@@ -200,7 +200,10 @@
             Object.entries(systemConfig).forEach(x => {
                 var key = x[0]
                 if (key != 'buy')
-                    systemConfig[key] = document.getElementById(x[0]).value
+                    systemConfig[key] = document.getElementById(x[0]).value;
+                else {
+                    systemConfig[key] = 0;
+                }
             })
 
             fileName = "systemConfig"

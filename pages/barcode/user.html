@@ -7,7 +7,7 @@
   <style>
     @font-face {
       font-family: printFont;
-      src: url("fonts/FbMagnolia-Regular.otf");
+      src: url("../../fonts/FbMagnolia-Regular.otf");
     }
 
     #title {
@@ -78,17 +78,20 @@
           window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
             if (data != 0) {
               uniqTasks = JSON.parse(data)
+              if (systemConfig.hasBuy == '1') {
+                fileName = 'products'
+                window.expose.SendExcel("sendReadExcel", fileName);
+                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                  if (data != 0) {
+                    products = JSON.parse(data)
+                  };
+                });
+              }
             }
           })
         };
       });
-      fileName = 'products'
-      window.expose.SendExcel("sendReadExcel", fileName);
-      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-        if (data != 0) {
-          products = JSON.parse(data)
-        };
-      });
+
     }
 
     document.addEventListener("keypress", function (e) {
@@ -104,7 +107,7 @@
         searchVal = document.getElementById('barcode').value
         document.getElementById("barcode").value = "";
 
-        if (state == 1) {//כיתה או בת
+        if (state == 1) {
           if (searchVal == '999999999')
             login('../main/manage')
           else if (searchVal == '011429519')
@@ -112,23 +115,16 @@
           else if (searchVal == '207594581')
             login('../parentsMeeting/user')
           else
-            searchInExcel();
+            searchInExcel();//כיתה או בת
         }
-
         else if (state == 2) {
           if (searchVal.startsWith('6666'))//מוצר
           {
             systemConfig.buy = 1
             buyProduct();
           }
-          else if (systemConfig.type == 1)//משימה חד פעמית
-            updateUniqTask();
-          else if (systemConfig.type == 2)//משימה רגילה
+          else //משימה רגילה/כללית
             updateTask();
-          else {
-            showAlert("קוד לא תקין, גש למורה!");
-            return;
-          }
         }
       }
     });
@@ -142,12 +138,14 @@
         }
       }
       if (studentResult == "") {
-        showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
+        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
       document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
       document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
-      document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה או לקניית מתנה";
+      document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
+      if (systemConfig.hasBuy == '1')
+        document.getElementById("line2").innerHTML += ' או לקניית מתנה';
       document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
     }
 
@@ -174,39 +172,16 @@
         return;
       }
 
-      if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-        showAlert("הי, אסור להגיש משימה פעמיים!");
-        return;
-      }
-      finishSession()
-    }
-
-    function updateUniqTask() {
-      state = 3;
-      for (var i = 0; i < uniqTasks.length; i++) {
-        if (uniqTasks[i]["code"] == searchVal) {
-          result = uniqTasks[i]
-          break;
+      if (systemConfig.type == "1") {
+        if (result.used == 1) {
+          showAlert("הי, משימה זו כבר תוקפה!");
+          return;
         }
-      }
-      if (result == "") {
-        showAlert("קוד לא תקין, גשו למורה!")
-        return;
-      }
-
-      if (result.class && !studentResult.tz.toString().startsWith(1)) {
-        showAlert("אין אפשרות לתקף משימה כיתתית!")
-        return;
-      }
-
-      if (!result.class && studentResult.tz.toString().startsWith(1)) {
-        showAlert("כיתה לא יכולה לתקף משימה אישית!")
-        return;
-      }
-
-      if (result.used == 1) {
-        showAlert("הי, משימה זו כבר תוקפה!");
-        return;
+        else if (systemConfig.type == "2")
+          if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+            showAlert("הי, אסור להגיש משימה פעמיים!");
+            return;
+          }
       }
       finishSession()
     }
@@ -224,14 +199,20 @@
         showAlert("קוד לא תקין, גשו למורה!");
         return;
       }
+
+      if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+        showAlert("הי, כבר קנית את מתנה זו!");
+        return;
+      }
+
+      finishSession()
     }
 
 
     function finishSession() {
       studentResult.tasks += result.name + ',';
       studentResult.tasksNumber += result.code + ',';
-      if (systemConfig.type == 1)
-        result.used = 1
+
       if (systemConfig.buy == 1) {
         studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
         if (studentResult.points < 0) {
@@ -246,17 +227,6 @@
     }
 
     function saveData() {
-      if (systemConfig.type == 1) {
-        for (var i = 0; i < uniqTasks.length; i++) {
-          if (uniqTasks[i]["code"] == result.code) {
-            uniqTasks[i].used = result
-            break;
-          }
-        }
-        fileName = 'uniqTasks'
-        window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-        window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
-      }
       for (var i = 0; i < students.length; i++) {
         if (students[i]["tz"] == studentResult.tz) {
           students[i] = studentResult;
@@ -266,19 +236,26 @@
       fileName = 'students'
       window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
-        if (systemConfig.buy == 1) {
-          document.getElementById("line1").innerHTML = "הידד" + "! " + "רכשת בהצלחה " + result.name;
+        if (systemConfig.type == 1) {
+          for (var i = 0; i < uniqTasks.length; i++) {
+            if (uniqTasks[i]["code"] == result.code) {
+              uniqTasks[i].used = 1
+              break;
+            }
+          }
+          fileName = 'uniqTasks'
+          window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+          window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
         }
-        else if (studentResult.tz.toString().startsWith(1)) {
-          document.getElementById("line1").innerHTML = "כיתה מדהימה" + "! " + "ביצעתם את משימה" + " " + result.name;
+        document.getElementById("line1").innerHTML = "!הידד";
+        if (systemConfig.buy == 1) {
+          document.getElementById("line2").innerHTML = "רכשת בהצלחה " + result.name;
         }
         else {
-          document.getElementById("line1").innerHTML = "הידד" + "! " + "ביצעת את משימה" + " " + result.name;
+          document.getElementById("line2").innerHTML = "ביצעת את משימה" + " " + result.name;
         }
 
-        document.getElementById("line2").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות...";
-        document.getElementById("line3").innerHTML = "בהצלחה!";
+        document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות ";
 
         if (systemConfig.hasPrint == 1)
           setTimeout(function () {
@@ -293,7 +270,7 @@
       var divName = "printableArea";
       document.getElementById("d1").innerHTML = studentResult.name;
       document.getElementById("d2").innerHTML = studentResult.grade;
-      if (result.searchVal.startsWith('666'))
+      if (systemConfig.buy)
         document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
       else
         document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
@@ -309,6 +286,7 @@
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 3);
         document.getElementById("line1").innerHTML = "תודה רבה";
         document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
+        document.getElementById("line3").innerHTML = "";
         reset(1800);
       });
     }

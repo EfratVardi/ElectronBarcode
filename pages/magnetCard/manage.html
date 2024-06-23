@@ -86,7 +86,6 @@
                     new agGrid.Grid(gridDiv, gridOptions);
                 }
             });
-
         }
 
         document.addEventListener("keypress", function (e) {
@@ -101,7 +100,7 @@
                 if (document.getElementById('barcode').value == '999999999')
                     login("../main/user")
                 else if (document.getElementById('barcode').value == '011429519')
-                    login("../maim/system")
+                    login("../main/system")
             }
         });
 
@@ -248,9 +247,9 @@
                     </ul>
                 </div>
                 <div class="col-9">
-                    <img onclick="Export('ניקוד תלמידות')" src="resources/barcode/download-simple-light.svg" />
-                    <img onclick="New()" src="resources/barcode/plus-light.svg" />
-                    <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
+                    <img onclick="Export('ניקוד תלמידות')" src="../../resources/barcode/download-simple-light.svg" />
+                    <img onclick="New()" src="../../resources/barcode/plus-light.svg" />
+                    <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
                     <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
                 </div>
             </div>

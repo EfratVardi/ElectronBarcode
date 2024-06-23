@@ -14,7 +14,7 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "device": "0", "hasBuy": "0", "hasParents": "0", "date": getYesterdayDate(), "buy": false };
+    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "buy": false };
 }
 
 function login(page) {

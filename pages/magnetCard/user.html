@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: printFont;
-            src: url("fonts/FbMagnolia-Regular.otf");
+            src: url("../../fonts/FbMagnolia-Regular.otf");
         }
 
         #title {
@@ -230,15 +230,13 @@
         }
 
         function toPrint() {
-            var divName = "printableArea";
             document.getElementById("d1").innerHTML = studentResult.name;
             document.getElementById("d2").innerHTML = studentResult.grade;
             systemConfig.buy == 0 ?
                 document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name :
                 document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
             document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
-            var printContents = document.getElementById(divName).innerHTML;
-            document.body.innerHTML = printContents;
+            document.body.innerHTML =document.getElementById("printableArea").innerHTML;
             window.expose.send("sendPrint", "");
             window.expose.receive("receivePrint", (data) => {
                 reset();
