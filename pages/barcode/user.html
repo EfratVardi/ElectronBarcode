@@ -47,6 +47,7 @@
     var state = 1
     var studentResult = ""
     var result = "";
+    var fileName
 
     function onLoad() {
       fileName = 'systemConfig'
@@ -91,7 +92,6 @@
           })
         };
       });
-
     }
 
     document.addEventListener("keypress", function (e) {
@@ -254,7 +254,6 @@
         else {
           document.getElementById("line2").innerHTML = "ביצעת את משימה" + " " + result.name;
         }
-
         document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות ";
 
         if (systemConfig.hasPrint == 1)

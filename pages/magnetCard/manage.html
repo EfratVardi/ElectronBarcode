@@ -104,7 +104,7 @@
             }
         });
 
-        function New() {
+        function newStudent() {
             if (students.length > 0) {
                 var tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
                 for (var i = 0; i < students.length; i++) {
@@ -140,7 +140,7 @@
             });
         }
 
-        function Export(name) {
+        function exportToExcel(name) {
             var params = {
                 fileName: currentDate + ' ' + name,
             };
@@ -247,8 +247,8 @@
                     </ul>
                 </div>
                 <div class="col-9">
-                    <img onclick="Export('ניקוד תלמידות')" src="../../resources/barcode/download-simple-light.svg" />
-                    <img onclick="New()" src="../../resources/barcode/plus-light.svg" />
+                    <img onclick="exportToExcel('ניקוד תלמידות')" src="../../resources/barcode/download-simple-light.svg" />
+                    <img onclick="newStudent()" src="../../resources/barcode/plus-light.svg" />
                     <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
                     <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
                 </div>
