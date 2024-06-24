@@ -23,7 +23,7 @@
         var uniqTasks = ""
         var tasks = ""
         var systemConfig = ""
-        var excelFiles = ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
+        var excelFiles = getExcelFiles();
 
         function onLoad() {
             const deviceSelect = document.getElementById('device');

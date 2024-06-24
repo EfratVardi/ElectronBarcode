@@ -38,3 +38,8 @@ function getPosition(type) {
             return "yellow";
     }
 }
+
+
+function getExcelFiles() {
+    return ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
+}
