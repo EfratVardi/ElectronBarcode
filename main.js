@@ -69,7 +69,7 @@ ipcMain.on("sendPrint", (event, args) => {
 });
 
 ipcMain.on("sendReadExcel", (event, args) => {
-  fs.readFile('data/'+args + '.txt',
+  fs.readFile(args + '.txt',
     { encoding: 'utf8', flag: 'r' },
     function (err, data) {
       if (err) {
@@ -82,7 +82,7 @@ ipcMain.on("sendReadExcel", (event, args) => {
 });
 
 ipcMain.on("sendWriteExcel", (event, args) => {
-  fs.writeFile('data/'+args[0] + '.txt', args[1], err => {
+  fs.writeFile(args[0] + '.txt', args[1], err => {
     if (err) {
       console.error(err);
     }
