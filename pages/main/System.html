@@ -147,8 +147,9 @@
                     workbook.SheetNames.forEach(function (sheetName) {
                         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
                         json_object = JSON.stringify(XL_row_object);
-                        if (excelFiles.includes(file.name)) {
-                            fileName = file.name.split('.')[0]
+                        var name = checkFileName(file.name)
+                        if (name != "") {
+                            fileName = name;
                             window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
                             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                                 // alert("הקובץ הועלה בהצלחה!")
@@ -163,6 +164,15 @@
                 reader.readAsBinaryString(file);
             };
         };
+
+        function checkFileName(fileName) {
+            for (let i = 0; i < excelFiles.length; i++) {
+                if (fileName.startsWith(excelFiles[i])) {
+                    return excelFiles[i];
+                }
+            }
+            return "";
+        }
 
         function handleFileSelect(evt) {
             var files = evt.target.files;

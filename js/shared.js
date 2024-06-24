@@ -41,5 +41,5 @@ function getPosition(type) {
 
 
 function getExcelFiles() {
-    return ["students.xlsx", "uniqTasks.xlsx", "products.xlsx", "parents.xlsx"];
+    return ["students", "uniqTasks", "products", "parents"];
 }
