@@ -25,7 +25,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color,4);
+                document.getElementById("background").style.backgroundImage = getBackground("1",4);
             })
         }
         document.addEventListener("keypress", function (e) {
