@@ -142,11 +142,11 @@
         return;
       }
       document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
-      document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
-      document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
+      document.getElementById("line1").innerHTML = ", שלום  " + studentResult.name;
+      document.getElementById("line2").innerHTML = "!וברוכה הבאה למועדון שלנו";
       if (systemConfig.hasBuy == '1')
         document.getElementById("line2").innerHTML += ' או לקניית מתנה';
-      document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
+      document.getElementById("line3").innerHTML = "יש לסרוק את הברקוד לטעינת הסוללה";
     }
 
     function updateTask() {
@@ -247,14 +247,14 @@
           window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
           window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
         }
-        document.getElementById("line1").innerHTML = "!הידד";
+        document.getElementById("line1").innerHTML = result.name
         if (systemConfig.buy == 1) {
           document.getElementById("line2").innerHTML = "רכשת בהצלחה " + result.name;
         }
         else {
-          document.getElementById("line2").innerHTML = "ביצעת את משימה" + " " + result.name;
+          document.getElementById("line2").innerHTML = "הטענת" + " " + result.points + " " + "אחוז";
         }
-        document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות ";
+        document.getElementById("line3").innerHTML = ""
 
         if (systemConfig.hasPrint == 1)
           setTimeout(function () {
@@ -272,8 +272,8 @@
       if (systemConfig.buy)
         document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
       else
-        document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
-      document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
+        document.getElementById("d3").innerHTML = "הוספת לסוללה שלך" + ": " + result.points+" "+"אחוזים";
+      document.getElementById("d4").innerHTML = "נותר להטעין עוד" + ": " + (100-studentResult.points)+"אחוזים";
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;
@@ -283,8 +283,8 @@
       window.expose.receive("receivePrint", (data) => {
         document.body.innerHTML = originalContents;
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 3);
-        document.getElementById("line1").innerHTML = "תודה רבה";
-        document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
+        document.getElementById("line1").innerHTML = "עד כה הטענת" + " " + studentResult.points + " אחוזים ";
+        document.getElementById("line2").innerHTML = "...אל תשכחי לקחת את האישור מהמדפסת";
         document.getElementById("line3").innerHTML = "";
         reset(1800);
       });
@@ -328,7 +328,7 @@
 
   <div class="background" id="background">
     <div class="text">
-      <div id="line1">!...שלום</div>
+      <div id="line1">!שלום חברת מועדון יקרה</div>
       <div id="line2">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
       <div id="line3"></div>
       <br><br>
