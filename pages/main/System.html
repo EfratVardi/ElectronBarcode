@@ -44,7 +44,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground("1", 4);
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, "4");
 
                 Object.entries(systemConfig).forEach(x => {
                     if (x[0] != 'buy')
@@ -277,6 +277,8 @@
                                 <option value="0">בחר</option>
                                 <option value="1">סורק ברקוד</option>
                                 <option value="2">כרטיס מגנטי</option>
+                                <option value="3">כרטיס גירוד</option>
+
                             </select>
                         </div>
                         <div class="col-md-1">

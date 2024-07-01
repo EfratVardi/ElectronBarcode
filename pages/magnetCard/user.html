@@ -44,10 +44,16 @@
         var result = "";
         var searchVal
         var counter = 0;
-        var state = 1
         var fileName
+        var step
+        const Steps = {
+            step1: "1",
+            step2: "2",
+            step3: "3"
+        };
 
         function onLoad() {
+            state = Steps.step1;
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -100,7 +106,7 @@
                 counter = 0;
                 searchVal = document.getElementById('barcode').value
                 document.getElementById("barcode").value = "";
-                if (state == 1) {
+                if (state == Steps.step1) {
                     if (searchVal == '999999999')
                         login('../main/manage')
                     else if (searchVal == '011429519')
@@ -110,7 +116,7 @@
                         return;
                     }
                 }
-                else if (state == 2)//כיתה או בת
+                else if (state == Steps.step2)//כיתה או בת
                 {
                     searchInExcel();
                 }
@@ -157,8 +163,8 @@
         }
 
         function selectAction(code) {
-            if (state != 3) {
-                state = 2;
+            if (state != Steps.step3) {
+                state = Steps.step2;
                 for (var i = 0; i < actions.length; i++) {
                     if (actions[i]["code"] == code) {
                         result = actions[i]
@@ -174,7 +180,7 @@
         }
 
         function searchInExcel() {
-            state = 3
+            state = Steps.step3
             for (var i = 0; i < students.length; i++) {
                 if (students[i]["tz"] == searchVal) {
                     studentResult = students[i];
@@ -237,7 +243,7 @@
                 document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name :
                 document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
             document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
-            document.body.innerHTML =document.getElementById("printableArea").innerHTML;
+            document.body.innerHTML = document.getElementById("printableArea").innerHTML;
             window.expose.send("sendPrint", "");
             window.expose.receive("receivePrint", (data) => {
                 reset();

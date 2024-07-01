@@ -44,6 +44,11 @@
     var counter = 0;
     var result = "";
     var fileName
+    const Steps = {
+      step1: "1",
+      step2: "2",
+      step3: "3"
+    };
 
     function onLoad() {
       fileName = 'systemConfig'
@@ -55,7 +60,7 @@
         else {
           systemConfig = JSON.parse(data)
         }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 1)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step1)
       })
       fileName = 'products'
       window.expose.SendExcel("sendReadExcel", fileName);
@@ -83,8 +88,6 @@
           login('../main/manage')
         else if (searchVal == '011429519')
           login('../main/system')
-        else if (searchVal == '207594581')
-          login('../parentsMeeting/user')
         else
           searchInExcel();
       }
@@ -97,20 +100,19 @@
           break;
         }
       }
-      if (result == "") {
-        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
-        return;
-      }
       let texts
-      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.color, 2)
-      if (result.isPrize == "1") {
-        texts = getWonTexts();
-        const randomIndex = Math.floor(Math.random() * texts.length);
+      if (result == "") {
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step2)
+        texts = getLossTexts()
+        document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+        reset(2000)
       }
       else {
-        texts = getLossTexts()
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step3)
+        texts = getWonTexts();
+        document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+        saveData();
       }
-      document.getElementById("line1").innerHTML = texts[randomIndex];
     }
 
     function saveData() {
@@ -120,15 +122,12 @@
           break;
         }
       }
-      fileName = 'productsproducts'
+      fileName = 'products'
       window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        if (result.isPrize == "1")
-          setTimeout(function () {
-            toPrint();
-          }, 2000);
-        else
-          reset(2000);
+        setTimeout(function () {
+          toPrint();
+        }, 2000);
       });
     }
 
@@ -188,7 +187,6 @@
       <div id="line3">...אולי תזכי</div>
       <br><br>
     </div>
-    <div id="position">עמדה</div>
     <input type="text" class="my-input" id="barcode">
   </div>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">

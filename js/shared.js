@@ -21,14 +21,25 @@ function login(page) {
     window.location.href = page + '.html';
 }
 
-function getBackground(type, num) {
-    switch (type) {
-        case "1":
-            return "url('../../resources/barcode/pinkBackground" + num + ".gif')";
-        case "2":
-            return "url('../../resources/barcode/greenBackground" + num + ".gif')";
+function getBackground(device, color, step) {
+    switch (device) {
+        case "0":{
+            return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
+        };
+        case "1": {
+            switch (color) {
+                case "1":
+                    return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
+                case "2":
+                    return "url('../../resources/barcode/greenBackground" + step + ".gif')";
+            }
+        };
+        case "3": {
+            return "url('../../resources/digitalCard/background" + step + ".png')";
+        };
     }
 }
+
 
 function getPosition(type) {
     switch (type) {
