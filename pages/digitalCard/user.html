@@ -85,7 +85,9 @@
         searchVal = document.getElementById('barcode').value
         document.getElementById("barcode").value = "";
         if (step == Steps.step1) {
-          if (searchVal == '011429519')
+          if (searchVal == '999999999')
+            login('../main/manage')
+          else if (searchVal == '011429519')
             login('../main/system')
           else
             searchInExcel();
@@ -177,7 +179,7 @@
   <div id="printableArea" style="display: none;">
     <div id="title">שובר </div>
     <br />
-    <div id="d1">!!וואו, איזה כיף </div>
+    <div id="d1">וואו, איזה כיף!!</div>
     <div id="d2"> </div>
     <div id="d3"> </div>
     <div id="d4"> </div>

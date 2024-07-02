@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>ממשק ניהול</title>
+</head>
+
+<body onload="onLoad()">
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/digitalManageStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/ag-grid-community.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/shared.js"></script>
+
+    <script>
+        var counter = 0;
+        var systemConfig = "";
+        var products = "";
+        var fileName
+        var currentDate = getTodayDate();
+        var getV = function (params) {
+            return params.data.used == 1 ? "V" : ""
+        };
+        var gridOptions
+        var columnDefs = [
+            { headerName: "שם", field: "name", editable: true },
+            { headerName: "קוד", field: "code", editable: true },
+            {
+                headerName: "האם שומש", valueGetter: getV,
+            },
+        ];
+
+        function onLoad() {
+            fileName = 'systemConfig'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
+                }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4);
+            });
+            fileName = 'products'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data != 0) {
+                    products = JSON.parse(data)
+                    gridOptions = {
+                        columnDefs: columnDefs,
+                        rowData: products,
+                        enableRtl: true,
+                        defaultColDef: {
+                            filter: 'agTextColumnFilter',
+                            filterParams: {
+                                suppressAndOrCondition: true
+                            },
+                            sortable: true,
+                        },
+                        onFirstDataRendered: onFirstDataRendered,
+                        onCellEditingStopped: onCellEditingStopped
+                    };
+                    var gridDiv = document.querySelector('#productsGrid');
+                    new agGrid.Grid(gridDiv, gridOptions);
+                }
+            });
+        }
+
+        document.addEventListener("keypress", function (e) {
+            if (e.target.tagName !== "INPUT") {
+                var input = document.querySelector(".my-input");
+                input.focus();
+                input.value = e.key;
+                e.preventDefault();
+            }
+            counter += 1;
+            if (counter > 9) {
+                if (document.getElementById('barcode').value == '999999999')
+                    login("../main/user")
+                if (document.getElementById('barcode').value == '011429519')
+                    login("../main/system")
+            }
+        });
+
+        function newProducts() {
+            if (products.length > 0) {
+                products.unshift({
+                    name: '', code: '', used: "0"
+                })
+                fileName = 'products'
+                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
+                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                    location.reload()
+                });
+            }
+        }
+        function onFirstDataRendered(params) {
+            gridOptions.api.sizeColumnsToFit({
+                defaultMaxWidth: 180
+            });
+        }
+
+        function onCellEditingStopped(params) {
+            fileName = 'products'
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                location.reload()
+            });
+        }
+
+    </script>
+    <div class="background" id="background">
+        <div class="text">
+            <div id="line1">ברוכה הבאה לממשק ניהול</div>
+            <div id="line2">כאן אפשר להוסיף ולשנות מתנות</div>
+            <br>
+            <img style="margin-left: 10px;" onclick="newProducts()" src="../../resources/barcode/plus-light.svg" />
+            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
+            <div id="productsGrid" style="width:100%" class="ag-theme-alpine"></div>
+        </div>
+        <input type="text" class="my-input" id="barcode">
+    </div>
+</body>
+
+</html>
