@@ -177,12 +177,13 @@
           showAlert("הי, משימה זו כבר תוקפה!");
           return;
         }
-        else if (systemConfig.type == "2")
-          if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-            showAlert("הי, אסור להגיש משימה פעמיים!");
-            return;
-          }
       }
+      else if (systemConfig.type == "2")
+        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+          showAlert("הי, אסור להגיש משימה פעמיים!");
+          return;
+        }
+
       finishSession()
     }
 
@@ -272,8 +273,8 @@
       if (systemConfig.buy)
         document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
       else
-        document.getElementById("d3").innerHTML = "הוספת לסוללה שלך" + ": " + result.points+" "+"אחוזים";
-      document.getElementById("d4").innerHTML = "נותר להטעין עוד" + ": " + (100-studentResult.points)+" אחוזים";
+        document.getElementById("d3").innerHTML = "הוספת לסוללה שלך" + ": " + result.points + " " + "אחוזים";
+      document.getElementById("d4").innerHTML = "נותר להטעין עוד" + ": " + (100 - studentResult.points) + " אחוזים";
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;
