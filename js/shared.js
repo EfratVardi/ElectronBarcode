@@ -23,7 +23,7 @@ function login(page) {
 
 function getBackground(device, color, step) {
     switch (device) {
-        case "0":{
+        case "0": {
             return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
         };
         case "1": {
@@ -53,4 +53,12 @@ function getPosition(type) {
 
 function getExcelFiles() {
     return ["students", "uniqTasks", "products", "parents"];
+}
+
+function getWonTexts() {
+    return ["!!זכית, איזה כיף", "---כן, כן זכית", "...וואו, איזה חלום", "---קולולולולו"];
+}
+
+function getLossTexts() {
+    return ["...לא זכית, אולי בפעם הבאה", "!!מצטערים--- לא זכית הפעם", "!אופס...הכרטיס שלך לא שווה כלום", "...לא זכית! לא נורא"];
 }

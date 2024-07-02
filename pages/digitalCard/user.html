@@ -100,15 +100,20 @@
           break;
         }
       }
+
       let texts
       if (result == "") {
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step2)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step3)
         texts = getLossTexts()
         document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
         reset(2000)
       }
       else {
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step3)
+        if (result.used == "1") {
+          showAlert("הי, שובר זה כבר הודפס!");
+          return;
+        }
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step2)
         texts = getWonTexts();
         document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
         saveData();
@@ -123,7 +128,7 @@
         }
       }
       fileName = 'products'
-      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
         setTimeout(function () {
           toPrint();
