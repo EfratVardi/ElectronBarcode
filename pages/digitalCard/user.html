@@ -29,7 +29,7 @@
 
 <body onload="onLoad()">
   <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link href="../../styleSheets/userStyleSheet.css" rel="stylesheet" />
+  <link href="../../styleSheets/digitalUserStyleSheet.css" rel="stylesheet" />
   <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
   <script src="../../js/jquery.min.js"></script>
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -51,6 +51,7 @@
     };
 
     function onLoad() {
+      step = Steps.step1;
       fileName = 'systemConfig'
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -60,7 +61,7 @@
         else {
           systemConfig = JSON.parse(data)
         }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step1)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
       })
       fileName = 'products'
       window.expose.SendExcel("sendReadExcel", fileName);
@@ -83,13 +84,12 @@
         counter = 0;
         searchVal = document.getElementById('barcode').value
         document.getElementById("barcode").value = "";
-
-        if (searchVal == '999999999')
-          login('../main/manage')
-        else if (searchVal == '011429519')
-          login('../main/system')
-        else
-          searchInExcel();
+        if (step == Steps.step1) {
+          if (searchVal == '011429519')
+            login('../main/system')
+          else
+            searchInExcel();
+        }
       }
     });
 
@@ -102,21 +102,25 @@
       }
 
       let texts
-      if (result == "") {
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step3)
-        texts = getLossTexts()
-        document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
-        reset(2000)
-      }
-      else {
+      if (result != "") {
+        step = Steps.step2;
         if (result.used == "1") {
           showAlert("הי, שובר זה כבר הודפס!");
           return;
         }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, Steps.step2)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
         texts = getWonTexts();
         document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+        document.getElementById("line2").innerHTML = "זכית ב" + result.name
         saveData();
+      }
+      else {
+        step = Steps.step3;
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
+        texts = getLossTexts()
+        document.getElementById("line2").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+        document.getElementById("line1").style.visibility = 'hidden';
+        reset(2500)
       }
     }
 
@@ -132,7 +136,7 @@
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
         setTimeout(function () {
           toPrint();
-        }, 2000);
+        }, 2500);
       });
     }
 
@@ -187,9 +191,9 @@
 
   <div class="background" id="background">
     <div class="text">
-      <div id="line1">!...שלום</div>
-      <div id="line2">העבירי את הברקוד בסורק</div>
-      <div id="line3">...אולי תזכי</div>
+      <span id="line1" class="rectangle-background1">יש לסרוק את כרטיס ההפתעה</span>
+      <p></p>
+      <span id="line2" class="rectangle-background2">...אולי הכרטיס שלך יזכה</span>
       <br><br>
     </div>
     <input type="text" class="my-input" id="barcode">

@@ -21,6 +21,7 @@
         var counter = 0;
         var students = ""
         var uniqTasks = ""
+        var products = ""
         var tasks = ""
         var systemConfig = ""
         var excelFiles = getExcelFiles();
@@ -61,9 +62,6 @@
                 if (data != 0) {
                     students = JSON.parse(data);
                 }
-                else {
-                    document.getElementById('reset').disabled = true;
-                }
             })
 
             fileName = 'uniqTasks'
@@ -72,8 +70,13 @@
                 if (data != 0) {
                     uniqTasks = JSON.parse(data)
                 }
-                else {
-                    document.getElementById('reset').disabled = true;
+            })
+
+            fileName = 'products'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data != 0) {
+                    products = JSON.parse(data)
                 }
             })
 
@@ -182,27 +185,43 @@
         }
 
         function resetExcel() {
-            if (students.length > 0 && uniqTasks.length > 0) {
-                for (var i = 0; i < students.length; i++) {
-                    students[i].points = 0
-                    students[i].tasksNumber = ','
-                    students[i].tasks = ','
-                }
-                if (systemConfig.type == 1) {
-                    for (var i = 0; i < uniqTasks.length; i++) {
-                        uniqTasks[i].used = 0
+            if (systemConfig.device == 1 || systemConfig.device == 2) {
+                if (students.length > 0 && uniqTasks.length > 0) {
+                    for (var i = 0; i < students.length; i++) {
+                        students[i].points = 0
+                        students[i].tasksNumber = ','
+                        students[i].tasks = ','
                     }
-                }
-
-                fileName = "students"
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    fileName = "uniqTasks"
-                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+                    fileName = "students"
+                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                     window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        // alert("!הקבצים אופסו בהצלחה")
-                        location.reload()
+                        if (systemConfig.type == 1) {
+                            for (var i = 0; i < uniqTasks.length; i++) {
+                                uniqTasks[i].used = 0
+                            }
+                            fileName = "uniqTasks"
+                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                                // alert("!הקבצים אופסו בהצלחה")
+                                location.reload()
+                            });
+                        }
+                        else {
+                            location.reload()
+                        }
+
                     });
+                }
+            }
+            else {
+                for (var i = 0; i < products.length; i++) {
+                    products[i].used = 0
+                }
+                fileName = "products"
+                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
+                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                    // alert("!הקבצים אופסו בהצלחה")
+                    location.reload()
                 });
             }
         }
