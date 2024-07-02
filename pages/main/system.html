@@ -45,7 +45,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, "4");
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4);
 
                 Object.entries(systemConfig).forEach(x => {
                     if (x[0] != 'buy')

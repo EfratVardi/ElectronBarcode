@@ -34,6 +34,9 @@ function getBackground(device, color, step) {
                     return "url('../../resources/barcode/greenBackground" + step + ".gif')";
             }
         };
+        case "2": {
+            return "url('../../resources/magnetCard/background.png')";
+        };
         case "3": {
             return "url('../../resources/digitalCard/background" + step + ".png')";
         };
