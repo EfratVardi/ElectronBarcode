@@ -66,7 +66,7 @@
           systemConfig = JSON.parse(data)
         }
         document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color, step)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
 
         if (systemConfig.position.length > 0) {
           document.getElementById("position").innerHTML += ' ' + systemConfig.position
@@ -147,7 +147,7 @@
         showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color, step)
+      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
       document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
       document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
       if (systemConfig.hasBuy == '1')
@@ -183,12 +183,12 @@
           showAlert("הי, משימה זו כבר תוקפה!");
           return;
         }
-        else if (systemConfig.type == "2")
-          if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-            showAlert("הי, אסור להגיש משימה פעמיים!");
-            return;
-          }
       }
+      else if (systemConfig.type == "2")
+        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+          showAlert("הי, אסור להגיש משימה פעמיים!");
+          return;
+        }
       finishSession()
     }
 
@@ -288,7 +288,7 @@
       }, 1000)
       window.expose.receive("receivePrint", (data) => {
         document.body.innerHTML = originalContents;
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color, step);
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step);
         document.getElementById("line1").innerHTML = "תודה רבה";
         document.getElementById("line2").innerHTML = "...לא לשכוח לקחת את האישור מהמדפסת";
         document.getElementById("line3").innerHTML = "";
