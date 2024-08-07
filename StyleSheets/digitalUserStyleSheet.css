@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "printFont";
+    src: url("../fonts/FbMagnolia-Regular.otf");
+}
+
+@font-face {
+    font-family: "myFirstFont";
+    src: url("../fonts/SecularOne-Regular.ttf");
+}
+
+.text {
+    position: absolute;
+    left: 5%;
+    top: 10%;
+    bottom: 20%;
+    width: 90%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    font-family: "myFirstFont";
+}
+
+#line1 {
+    font-size: 4.5vw;
+    color: white;
+}
+
+#line2 {
+    font-size: 6.5vw;
+    color: white;
+    margin-top: 15px;
+}
+
+.rectangle-background1 {
+    background-color: #0CC0DF; 
+    padding-left: 15px; 
+    padding-right: 15px; 
+}
+
+.rectangle-background2 {
+    background-color: #FED140; 
+    padding-left: 20px; 
+    padding-right: 20px;
+ }

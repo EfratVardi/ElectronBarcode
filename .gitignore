@@ -1,2 +1,8 @@
 node_modules
 dist
+parents.txt
+products.txt
+students.txt
+uniqTasks.txt
+systemConfig.txt
+dist/builder-debug.yml

@@ -3,31 +3,41 @@
     src: url("../fonts/FbMagnolia-Regular.otf");
 }
 
+@font-face {
+    font-family: "myFirstFont";
+    src: url("../fonts/GanCLMBold.ttf");
+}
+
 .text {
     position: absolute;
     left: 10%;
-    top: 10%;
+    top: 30%;
     bottom: 20%;
     width: 80%;
     text-align: center;
     margin-right: auto;
     margin-left: auto;
-    font-style: normal;
-    font-variant: normal;
-    line-height: 4vw;
+    line-height: 5vw;
     color: white;
+    font-family: "myFirstFont";
 }
-
 #line1 {
-    font-size: 4.5vw;
+    font-size: 4vw;
 }
 
 #line2 {
-    font-size: 2.5vw;
+    font-size: 6vw;
 }
 
 #line3 {
     font-size: 2vw;
+}
+
+#position {
+    font-size: 4vw;
+    width: 18vw;
+    border-radius: 0px 50px 50px 0px;
+    font-family: "myFirstFont";
 }
 
 #content {
@@ -37,7 +47,7 @@
     color: white
 }
 
-#btnPrint {
+#btnSave {
     background-color: #75DDB4;
     color: white;
 }

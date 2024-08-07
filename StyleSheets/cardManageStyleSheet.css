@@ -1,0 +1,55 @@
+﻿@font-face {
+    font-family: "printFont";
+    src: url("../fonts/FbMagnolia-Regular.otf");
+}
+
+.text {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 5%;
+    bottom: 10%;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#line1 {
+    font-size: 2.5vw;
+    font-weight: 400;
+    text-align: center;
+    font-family: printFont;
+    color:hsl(353, 49%, 79%);
+    line-height: 2.5vw;
+}
+
+#line2 {
+    font-size: 1.5vw;
+    font-weight: 300;
+    text-align: center;
+    color: #D8C262;
+    font-family: printFont;
+}
+
+img {
+    height: 4%;
+    float: right;
+}
+
+.ag-theme-alpine {
+    display: inline-block;
+    padding: 1rem 1rem;
+    vertical-align: middle;
+    height: 90%;
+    --ag-background-opacity: 0.33
+}
+
+.ag-cell-value {
+    direction: rtl;
+}
+
+.list-group {
+    max-height: 400px;
+    direction: rtl;
+  }
+ 

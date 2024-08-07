@@ -1,4 +1,9 @@
-﻿.text {
+﻿@font-face {
+    font-family: "myFirstFont";
+    src:url("../fonts/GanCLMBold.ttf");
+}
+
+.text {
     position: absolute;
     left: 10%;
     right: 10%;
@@ -8,10 +13,9 @@
     text-align: center;
     margin-right: auto;
     margin-left: auto;
-    font-style: normal;
-    font-variant: normal;
     line-height: 2vw;
     color: white;
+    font-family: "myFirstFont";
 }
 
 #line1 {
@@ -38,5 +42,9 @@ img {
 }
 
 .ag-cell-value {
+    direction: rtl;
+}
+
+#checkboxList{
     direction: rtl;
 }

@@ -13,18 +13,18 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('User.html')
-
+  mainWindow.loadFile('pages/main/user.html')
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
 
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
+    mainWindow.fullScreen = false;
   }
 
   ses.on('will-download', (e, downloadItem, webContents) => {
     let name = downloadItem.getFilename()
-    const existingFilePath = app.getPath('desktop') + `\\תוכנית הברקודים` + `/${name}`
+    const existingFilePath = app.getPath('desktop') + `\\ניקוד תלמידים` + `/${name}`
 
     if (fs.existsSync(existingFilePath)) {
       fs.unlink(existingFilePath, (err) => {
@@ -44,7 +44,7 @@ function createWindow() {
         dialog.showMessageBox({
           type: 'info',
           title: 'הודעת מערכת',
-          message: 'הקובץ נשמר בהצלחה בתקיית תוכנית הברקודים!'
+          message: 'הקובץ נשמר בהצלחה בתקיית ניקוד תלמידים!'
         })
       } else {
         dialog.showErrorBox('הודעת מערכת', 'הקובץ לא נשמר')

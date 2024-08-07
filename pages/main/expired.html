@@ -7,14 +7,16 @@
 </head>
 
 <body onload="onLoad()">
-    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link href="StyleSheets/UserStyleSheet.css" rel="stylesheet" />
-    <script src="js/shared.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/userStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/shared.js"></script>
 
     <script>
         var systemConfig;
         var counter = 0;
+        var fileName
+
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -25,12 +27,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
-                }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color,4);
             })
         }
         document.addEventListener("keypress", function (e) {
@@ -43,12 +40,12 @@
             counter += 1;
             if (counter > 9) {
                 if (document.getElementById('barcode').value == '011429519')
-                    login("System")
-                if (document.getElementById('barcode').value == '999999999')
-                    login("Manage")
+                    login("system")
+                else if (document.getElementById('barcode').value == '999999999')
+                    login("manage")
             }
         });
-       
+
     </script>
     <div class="background" id="background">
         <div class="text">

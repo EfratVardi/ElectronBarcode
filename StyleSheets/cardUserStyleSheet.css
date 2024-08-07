@@ -1,0 +1,67 @@
+﻿@font-face {
+    font-family: "printFont";
+    src: url("../fonts/FbMagnolia-Regular.otf");
+}
+
+@font-face {
+    font-family: "myFirstFont";
+    src: url("../fonts/GanCLMBold.ttf");
+}
+
+.text {
+    position: absolute;
+    left: 5%;
+    top: 10%;
+    bottom: 10%;
+    width: 90%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+ }
+
+#line1 {
+    font-size: 5vw;
+    color: #E4B1B7;
+    font-family: 'printFont';
+    line-height: 4vw;
+    direction: rtl;
+}
+
+#line2 {
+    font-size: 3vw;
+    color: #D8C262;
+    font-family: 'printFont';
+    direction: rtl;
+}
+
+#line3 {
+    font-size: 2vw;
+    font-family: 'printFont';
+    direction: rtl;
+}
+
+#position {
+    font-size: 2.5vw;
+    width: 11vw;
+    border-radius: 0px 50px 50px 0px;
+    font-family: 'printFont';
+    background-color:#E4B1B7;
+}
+
+.row {
+    direction: rtl;
+    position: absolute;
+    left:10%;
+    width: 80%;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card {
+    --bs-focus-ring-color: #E4B1B7;
+    border-color: #E4B1B7;
+}
+
+
+

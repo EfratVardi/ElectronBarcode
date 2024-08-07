@@ -7,18 +7,18 @@
 </head>
 
 <body onload="onLoad()">
-    <link href="StyleSheets/manageStyleSheet.css" rel="stylesheet" />
-    <link href="StyleSheets/MainStyleSheet.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/ag-grid-community.min.js"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/shared.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/manageStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/ag-grid-community.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/shared.js"></script>
 
     <script>
         var counter = 0;
-        var systemConfig = [];
-        var students = [];
+        var systemConfig = "";
+        var students = "";
         var fileName
         var currentDate = getTodayDate();
         var gridOptions
@@ -40,12 +40,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                if (systemConfig.color == "1") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/pinkBackground4.gif')"
-                }
-                else if (systemConfig.color == "2") {
-                    document.getElementById("background").style.backgroundImage = "url('resources/barcode/greenBackground4.gif')";
-                }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4);
             });
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -83,13 +78,13 @@
             counter += 1;
             if (counter > 9) {
                 if (document.getElementById('barcode').value == '999999999')
-                    login("User")
+                    login("../main/user")
                 if (document.getElementById('barcode').value == '011429519')
-                    login("System")
+                    login("../main/system")
             }
         });
 
-        function New() {
+        function newStudent() {
             if (students.length > 0) {
                 var tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
                 for (var i = 0; i < students.length; i++) {
@@ -125,7 +120,7 @@
             });
         }
 
-        function Export(name) {
+        function exportToExcel(name) {
             var params = {
                 fileName: currentDate + ' ' + name,
             };
@@ -137,10 +132,10 @@
         <div class="text">
             <div id="line1">ברוכה הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <img style="margin-left: 10px;" onclick="Export('ניקוד תלמידות')"
-                src="resources/barcode/download-simple-light.svg" />
-            <img style="margin-left: 10px;" onclick="New()" src="resources/barcode/plus-light.svg" />
-            <img onclick="expose.appClose()" src="resources/barcode/x-light.svg" />
+            <img style="margin-left: 10px;" onclick="exportToExcel('ניקוד תלמידות')"
+                src="../../resources/barcode/download-simple-light.svg" />
+            <img style="margin-left: 10px;" onclick="newStudent()" src="../../resources/barcode/plus-light.svg" />
+            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
             <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
         </div>
         <input type="text" class="my-input" id="barcode">
