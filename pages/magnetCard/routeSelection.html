@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>צבירת נקודות</title>
+    <style>
+        @font-face {
+            font-family: printFont;
+            src: url("../../fonts/FbMagnolia-Regular.otf");
+        }
+
+        #title {
+            font-family: printFont;
+            direction: rtl;
+            font-size: 40px;
+        }
+
+        #d1,
+        #d2,
+        #d3,
+        #d4 {
+            font-family: printFont;
+            direction: rtl;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body onload="onLoad()" class="bg-danger bg-opacity-10">
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="../../styleSheets/cardUserStyleSheet.css" rel="stylesheet" />
+    <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/shared.js"></script>
+
+    <script>
+        var currentDate = getTodayDate();
+        var actions = ""
+        var systemConfig = ""
+        var students = ""
+        var studentResult = ""
+        var result = "";
+        var searchVal
+        var counter = 0;
+        var fileName
+        var step
+        const Steps = {
+            step1: "1",
+            step2: "2",
+            step3: "3"
+        };
+
+        function onLoad() {
+            state = Steps.step1;
+            fileName = 'systemConfig'
+            window.expose.SendExcel("sendReadExcel", fileName);
+            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                if (data == 0) {
+                    systemConfig = getDefaultConfig()
+                }
+                else {
+                    systemConfig = JSON.parse(data)
+                }
+                if (systemConfig.position.length > 0) {
+                    document.getElementById("position").innerHTML += ' ' + systemConfig.position
+                }
+                else {
+                    document.getElementById("position").style.display = "none";
+                }
+                if (systemConfig.buy) {
+                    document.getElementById("line2").innerHTML = "יש לבחור מתנה לקנייה"
+                }
+                else {
+                    document.getElementById("line2").innerHTML = "יש לבחור משימה מהרשימה"
+                }
+                fileName = 'students'
+                window.expose.SendExcel("sendReadExcel", fileName);
+                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                    if (data != 0) {
+                        students = JSON.parse(data)
+                        systemConfig.buy ?
+                            fileName = 'products' : fileName = 'uniqTasks';
+                        window.expose.SendExcel("sendReadExcel", fileName);
+                        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                            if (data != 0) {
+                                actions = JSON.parse(data)
+                                createCards()
+                            }
+                        })
+                    }
+                });
+            })
+        }
+
+        document.addEventListener("keypress", function (e) {
+            if (e.target.tagName !== "INPUT") {
+                var input = document.querySelector(".my-input");
+                input.focus();
+                input.value = e.key;
+                e.preventDefault();
+            }
+            counter += 1;
+            if (counter > 9) {
+                counter = 0;
+                searchVal = document.getElementById('barcode').value
+                document.getElementById("barcode").value = "";
+                if (state == Steps.step1) {
+                    if (searchVal == '999999999')
+                        login('../main/manage')
+                    else if (searchVal == '011429519')
+                        login('../main/system')
+                    else {
+                        showAlert("יש לבחור לפני העברת כרטיס!");
+                        return;
+                    }
+                }
+                else if (state == Steps.step2)//כיתה או בת
+                {
+                    searchInExcel();
+                }
+            }
+        });
+
+        function createCards() {
+            const cardContainer = document.getElementById("cards");
+
+            actions.filter(item => item.show).forEach(cardData => {
+                const cardColumn = document.createElement("div");
+                cardColumn.classList.add("col");
+
+                const cardElement = document.createElement("a");
+                cardElement.classList.add("card", "h-100", "focus-ring", "text-decoration-none", "rounded-2");
+                cardElement.addEventListener("click", function () {
+                    selectAction(cardData.code);
+                });
+                cardElement.href = '#'
+
+                const cardFooter = document.createElement("div");
+                cardFooter.classList.add("card-footer", "h-10");
+
+                const footerSmall = document.createElement("small");
+                footerSmall.classList.add("text-body-secondary");
+                footerSmall.textContent = cardData.points + ' נקודות'
+
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                const cardTitle = document.createElement("h5");
+                cardTitle.classList.add("card-title");
+                cardTitle.textContent = cardData.name
+                const br = document.createElement("br");
+
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(br);
+                cardElement.appendChild(cardBody);
+                cardFooter.appendChild(footerSmall)
+                cardElement.appendChild(cardFooter);
+                cardColumn.appendChild(cardElement);
+                cardContainer.appendChild(cardColumn);
+            });
+        }
+
+        function selectAction(code) {
+            if (state != Steps.step3) {
+                state = Steps.step2;
+                for (var i = 0; i < actions.length; i++) {
+                    if (actions[i]["code"] == code) {
+                        result = actions[i]
+                        break;
+                    }
+                }
+                systemConfig.buy == 0 ?
+                    document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
+                    document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
+                document.getElementById("line1").style.fontSize = '4vw';
+                document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
+            }
+        }
+
+        function searchInExcel() {
+            state = Steps.step3
+            for (var i = 0; i < students.length; i++) {
+                if (students[i]["tz"] == searchVal) {
+                    studentResult = students[i];
+                    break;
+                }
+            }
+            if (studentResult == "") {
+                showAlert("כרטיס לא תקין. גשו למורה!")
+                return;
+            }
+
+            if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
+                showAlert("הי, בחירה זו כבר קיימת בחשבונך!");
+                return;
+            }
+            finishSession()
+        }
+
+        function finishSession() {
+            studentResult.tasks += result.name + ',';
+            studentResult.tasksNumber += result.code + ',';
+            if (systemConfig.buy == 0)
+                studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
+            else {
+                studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
+                if (studentResult.points < 0) {
+                    showAlert("אין לך מספיק נקודות בחשבון !")
+                    return;
+                }
+            }
+            saveData();
+        }
+
+        function saveData() {
+            for (var i = 0; i < students.length; i++) {
+                if (students[i]["tz"] == studentResult.tz) {
+                    students[i] = studentResult;
+                    break;
+                }
+            }
+            fileName = 'students'
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                document.getElementById("line1").innerHTML = studentResult.name;
+                document.getElementById("line2").innerHTML = "הפעולה נקלטה בהצלחה!";
+                document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות...";
+                if (systemConfig.hasPrint == 1)
+                    setTimeout(function () {
+                        toPrint();
+                    }, 2000);
+                else
+                    reset(2000);
+            });
+        }
+
+        function toPrint() {
+            document.getElementById("d1").innerHTML = studentResult.name;
+            document.getElementById("d2").innerHTML = studentResult.grade;
+            systemConfig.buy == 0 ?
+                document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name :
+                document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
+            document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
+            document.body.innerHTML = document.getElementById("printableArea").innerHTML;
+            window.expose.send("sendPrint", "");
+            window.expose.receive("receivePrint", (data) => {
+                reset();
+            });
+        }
+
+        function reset(time = 0) {
+            setTimeout(function () {
+                location.reload();
+            }, time);
+        }
+
+        function showAlert(message) {
+            document.querySelector(".modal-body").innerHTML = message;
+            $(document).ready(function () {
+                $('#modal').modal('show')
+            });
+            setTimeout(function () {
+                $(document).ready(function () {
+                    $('#modal').modal('hide')
+                });
+                reset(0)
+            }
+                , 2500);
+        }
+
+    </script>
+    <div id="printableArea" style="display: none;">
+        <div id="title">אישור </div>
+        <br />
+        <div id="d1"> </div>
+        <div id="d2"> </div>
+        <div id="d3"> </div>
+        <div id="d4"> </div>
+        <br />
+        <div id="title">בהצלחה!</div>
+        <br /><br /><br /><br />
+        <div id="d5" style="font-size:10px; font-family: Arial; direction: rtl;">להזמנות: אפרת
+            מלכה
+            0504167969 211efrat@gmail.com
+        </div>
+    </div>
+
+    <div class="background" id="background">
+        <div class="text">
+            <div id="line1">שלום...!</div>
+            <div id="line2"></div>
+            <div id="line3"></div>
+            <br>
+            <br>
+            <div class="row row-cols-md-4 g-4 justify-content-md-center" id="cards">
+            </div>
+        </div>
+        <div id="position">עמדה</div>
+        <input type="text" class="my-input" id="barcode">
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">הודעת מערכת</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
