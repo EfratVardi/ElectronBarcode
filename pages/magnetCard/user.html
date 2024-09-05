@@ -35,7 +35,7 @@
         #d1,
         #d2,
         #d3,
-        #d35 ,
+        #d35,
         #d4 {
             font-size: 20px;
         }
@@ -45,7 +45,8 @@
             font-family: Arial;
             direction: rtl;
         }
-        #end{
+
+        #end {
             font-size: 30px;
 
         }
@@ -161,6 +162,7 @@
                 cardElement.addEventListener("click", function () {
                     selectAction(cardData.code);
                 });
+
                 cardElement.href = '#'
 
                 const cardFooter = document.createElement("div");
@@ -168,12 +170,17 @@
 
                 const footerSmall = document.createElement("small");
                 footerSmall.classList.add("text-body-secondary");
-                footerSmall.textContent = cardData.points + ' נקודות'
+                footerSmall.textContent = cardData.description + " " + cardData.points + ' נקודות'
                 footerSmall.style.fontSize = "2vw";
 
                 const cardBody = document.createElement("div");
                 cardBody.classList.add("card-body");
-
+                if (cardData.color == 1)
+                    cardBody.style.backgroundColor = '#70c1e7'
+                if (cardData.color == 2)
+                    cardBody.style.backgroundColor = '#d7a3b7'
+                if (cardData.color == 3)
+                    cardBody.style.backgroundColor = '#8f7247'
                 const cardTitle = document.createElement("h5");
                 cardTitle.classList.add("card-title");
                 cardTitle.textContent = cardData.name

@@ -57,12 +57,12 @@
     text-align: center;
     margin-right: auto;
     margin-left: auto;
-    margin-top: 8%; 
+    margin-top: 6%; 
 }
 
 .card {
-    --bs-focus-ring-color: #d7a3b7;
-    border-color: #d7a3b7;
+    --bs-focus-ring-color: #180145;
+    border-color: #180145;
     opacity: 80%;
 }
 
