@@ -30,6 +30,7 @@
             { headerName: "תעודת זהות", field: "tz" },
             { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
             { headerName: "נקודות", field: "points", editable: true },
+            { headerName: "מסלול", field: "route", editable: true },
             { headerName: "שמות המשימות", field: "tasks" }];
 
         function onLoad() {
@@ -226,9 +227,9 @@
         function showLabel() {
             var swich = document.getElementById("swich");
             if (swich.checked)
-                document.querySelector(".form-check-label").innerHTML = 'מצב קנייה פעיל';
+                document.querySelector(".form-check-label").innerHTML = 'מצב בחירת מסלול פעיל';
             else
-                document.querySelector(".form-check-label").innerHTML = 'מצב הגשת משימות פעיל';
+                document.querySelector(".form-check-label").innerHTML = 'מצב בחירת חבילות פעיל';
         }
     </script>
     <div class="background" id="background">

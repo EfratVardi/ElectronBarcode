@@ -21,7 +21,8 @@
 
 #line1 {
     font-size: 5vw;
-    color: #E4B1B7;
+    font-weight: bold;
+    color: #180145;
     font-family: 'printFont';
     line-height: 4vw;
     direction: rtl;
@@ -29,7 +30,7 @@
 
 #line2 {
     font-size: 3vw;
-    color: #D8C262;
+    color: #d7a3b7;
     font-family: 'printFont';
     direction: rtl;
 }
@@ -45,7 +46,7 @@
     width: 11vw;
     border-radius: 0px 50px 50px 0px;
     font-family: 'printFont';
-    background-color:#E4B1B7;
+    background-color:#d7a3b7;
 }
 
 .row {
@@ -56,11 +57,13 @@
     text-align: center;
     margin-right: auto;
     margin-left: auto;
+    margin-top: 8%; 
 }
 
 .card {
-    --bs-focus-ring-color: #E4B1B7;
-    border-color: #E4B1B7;
+    --bs-focus-ring-color: #d7a3b7;
+    border-color: #d7a3b7;
+    opacity: 80%;
 }
 
 
