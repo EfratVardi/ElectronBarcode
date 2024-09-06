@@ -27,7 +27,7 @@
     </style>
 </head>
 
-<body onload="onLoad()" class="bg-danger bg-opacity-10">
+<body onload="onLoad()">
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="../../styleSheets/cardUserStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
@@ -63,6 +63,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device)
                 if (systemConfig.position.length > 0) {
                     document.getElementById("position").innerHTML += ' ' + systemConfig.position
                 }

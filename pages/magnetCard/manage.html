@@ -6,7 +6,7 @@
     <title>ממשק ניהול</title>
 </head>
 
-<body onload="onLoad()" class="bg-danger bg-opacity-10">
+<body onload="onLoad()">
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="../../styleSheets/cardManageStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
@@ -42,6 +42,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device)
                 var swich = document.getElementById("swich");
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
                 swich.checked = systemConfig.buy
