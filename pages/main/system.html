@@ -103,15 +103,12 @@
             deviceSelect.addEventListener('change', function () {
                 const selectedOption = deviceSelect.value;
                 if (selectedOption == '1') {
-                    colorSelect.style.visibility = "visible";
                     typeSelect.style.visibility = "visible";
                     hasParentsSelect.style.visibility = "visible";
                 }
                 else {
-                    colorSelect.style.visibility = "hidden";
                     typeSelect.style.visibility = "hidden";
                     hasParentsSelect.style.visibility = "hidden";
-                    colorSelect.value = "0";
                     typeSelect.value = "0";
                     hasParentsSelect.value = "0";
                     const changeEvent = new Event('change');
@@ -306,6 +303,8 @@
                                 <option value="0">בחר</option>
                                 <option value="1">ורוד</option>
                                 <option value="2">ירוק</option>
+                                <option value="3">רב קו</option>
+                                <option value="4">עיצוב אישי</option>
                             </select>
                         </div>
                         <div class="col-md-2">

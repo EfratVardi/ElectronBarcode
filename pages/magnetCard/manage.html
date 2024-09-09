@@ -42,7 +42,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device)
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color)
                 var swich = document.getElementById("swich");
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
                 swich.checked = systemConfig.buy

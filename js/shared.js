@@ -32,10 +32,19 @@ function getBackground(device, color, step) {
                     return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
                 case "2":
                     return "url('../../resources/barcode/greenBackground" + step + ".gif')";
+                case "3":
+                    return "url('../../resources/barcode/ravKavBackground.png')";
+                case "4":
+                    return "url('../../resources/barcode/personalBackground.png')";
             }
         };
         case "2": {
-            return "url('../../resources/magnetCard/background.png')";
+            switch (color) {
+                case "1":
+                    return "url('../../resources/magnetCard/background.png')";
+                case "4":
+                    return "url('../../resources/magnetCard/personalBackground.png')";
+            };
         };
         case "3": {
             return "url('../../resources/digitalCard/background" + step + ".gif')";
