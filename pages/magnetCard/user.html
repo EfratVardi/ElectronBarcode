@@ -9,7 +9,6 @@
             font-family: printFont;
             src: url("../../fonts/FbMagnolia-Regular.otf");
         }
-
         #print {
             font-family: printFont;
             direction: rtl;
@@ -20,12 +19,9 @@
         }
 
         #logo {
-            width: 120px;
-            height: 100px;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: left;
-            margin-bottom: 30px;
+            width: 220px;
+            height: 150px;
+            margin-bottom: 20px;
         }
 
         #date {
@@ -37,7 +33,7 @@
         #d3,
         #d35,
         #d4 {
-            font-size: 20px;
+            font-size: 18px;
         }
 
         #d5 {
@@ -45,9 +41,8 @@
             font-family: Arial;
             direction: rtl;
         }
-
         #end {
-            font-size: 30px;
+            font-size: 13px;
 
         }
     </style>
@@ -272,7 +267,7 @@
         }
 
         function toPrint() {
-            document.getElementById("date").innerHTML = getTodayDate();
+            document.getElementById("date").innerHTML = 'תאריך: '+ getTodayDate();
             document.getElementById("d1").innerHTML = studentResult.name;
             document.getElementById("d2").innerHTML = studentResult.grade;
             systemConfig.buy == 0 ?
@@ -310,15 +305,15 @@
     </script>
     <div id="printableArea" style="display: none;">
         <div id="print">
+            <img id="logo" src="../../resources/magnetCard/logo.png" alt="logo">
             <div id="title">אישור </div>
-            <div id="logo"></div>
             <div id="date"></div>
+            <br />
             <br />
             <div id="d1"> </div>
             <div id="d2"> </div>
             <div id="d3"> </div>
             <div id="d35"> </div>
-            <br>
             <div id="d4"> </div>
             <br />
             <br />
