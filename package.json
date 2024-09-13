@@ -1,8 +1,8 @@
 {
   "name": "accumulatingpoints",
-  "productName": "צבירת נקודות",
+  "productName": "אפיקים אשדוד",
   "description": "צבירת נקודות דיגיטלית",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
