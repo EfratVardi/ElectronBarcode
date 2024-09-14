@@ -1,7 +1,6 @@
 ﻿@font-face {
     font-family: "myFirstFont";
-    src:url("../fonts/GanCLMBold.ttf");
-}
+    src:url("../fonts/FbAlexander-Bold.otf")}
 
 .text {
     position: absolute;
@@ -14,7 +13,7 @@
     margin-right: auto;
     margin-left: auto;
     line-height: 2vw;
-    color: white;
+    color: black;
     font-family: "myFirstFont";
 }
 
