@@ -42,6 +42,8 @@ function getBackground(device, color, step) {
             switch (color) {
                 case "1":
                     return "url('../../resources/magnetCard/background.png')";
+                case "3":
+                    return "url('../../resources/magnetCard/ravKavBackground.png')";
                 case "4":
                     return "url('../../resources/magnetCard/personalBackground.png')";
             };

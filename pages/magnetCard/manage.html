@@ -32,6 +32,18 @@
             { headerName: "נקודות", field: "points", editable: true },
             { headerName: "שמות המשימות", field: "tasks" }];
 
+        var getV = function (params) {
+            return params.data.used == 1 ? "V" : ""
+        };
+        var gridOptions
+        var columnDefs = [
+            { headerName: "שם", field: "name", editable: true },
+            { headerName: "קוד", field: "code", editable: true },
+            {
+                headerName: "האם שומש", valueGetter: getV,
+            },
+        ];
+
         function onLoad() {
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -42,7 +54,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color)
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
                 var swich = document.getElementById("swich");
                 systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
                 swich.checked = systemConfig.buy
@@ -244,11 +256,13 @@
                         <input class="form-check-input" type="checkbox" role="switch" id="swich"
                             onchange="swichChange()">
                     </div>
-                    <ul class="list-group overflow-y-auto" id="checkboxList">
-                    </ul>
+                    <!-- <ul class="list-group overflow-y-auto" id="checkboxList">
+                    </ul> -->
+                    <div id="productsGrid" style="width:100%" class="ag-theme-alpine"></div>
                 </div>
                 <div class="col-9">
-                    <img onclick="exportToExcel('ניקוד תלמידות')" src="../../resources/barcode/download-simple-light.svg" />
+                    <img onclick="exportToExcel('ניקוד תלמידות')"
+                        src="../../resources/barcode/download-simple-light.svg" />
                     <img onclick="newStudent()" src="../../resources/barcode/plus-light.svg" />
                     <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
                     <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>

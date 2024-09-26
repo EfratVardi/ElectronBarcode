@@ -19,7 +19,7 @@
     font-weight: 400;
     text-align: center;
     font-family: printFont;
-    color:hsl(353, 49%, 79%);
+    color:#2e2c64;
     line-height: 2.5vw;
 }
 
@@ -27,7 +27,7 @@
     font-size: 1.5vw;
     font-weight: 300;
     text-align: center;
-    color: #D8C262;
+    color: #623693;
     font-family: printFont;
 }
 
