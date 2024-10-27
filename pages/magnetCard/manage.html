@@ -76,8 +76,8 @@
                         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                             if (data != 0) {
                                 products = JSON.parse(data)
+                                createProductsGrid()
                             }
-                            createProductsGrid()
                         })
                     }
                 })
