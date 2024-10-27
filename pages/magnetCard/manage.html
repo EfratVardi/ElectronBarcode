@@ -62,8 +62,10 @@
                 }
                 document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
                 swich = document.getElementById("swich");
-                systemConfig.hasBuy == 1 ? swich.disabled = false : swich.disabled = true
-                swich.checked = systemConfig.buy
+                swich_sec = document.getElementById("swich-sec");
+                systemConfig.hasBuy != 1 ?
+                    swich_sec.style.display = 'none' :
+                    swich.checked = systemConfig.buy
                 showLabel()
                 fileName = 'uniqTasks'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -308,7 +310,7 @@
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
             <div class="row h-100">
                 <div class="col-3 d-flex flex-column mb-4">
-                    <div class="form-check form-switch mb-2">
+                    <div class="form-check form-switch mb-2" id="swich-sec">
                         <input class="form-check-input" type="checkbox" role="switch" id="swich"
                             onchange="swichChange()">
                         <label class="form-check-label" for="swich"></label>

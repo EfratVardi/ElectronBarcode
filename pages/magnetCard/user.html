@@ -239,11 +239,10 @@
 
         function toPrint() {
             document.getElementById("d1").innerHTML = studentResult.name;
-            document.getElementById("d2").innerHTML = studentResult.grade;
             systemConfig.buy == 0 ?
-                document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name :
-                document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
-            document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
+                document.getElementById("d2").innerHTML = "      נוספו" + ": " + result.points +" נקודות" :
+                document.getElementById("d2").innerHTML = "     זכאות למתנה" + ": " + result.name;
+            document.getElementById("d4").innerHTML = "      סך הנקודות בחשבון" + ": " + studentResult.points;
             document.body.innerHTML = document.getElementById("printableArea").innerHTML;
             window.expose.send("sendPrint", "");
             window.expose.receive("receivePrint", (data) => {
