@@ -11,8 +11,8 @@
 .text {
     position: absolute;
     left: 5%;
-    top: 10%;
-    bottom: 10%;
+    top: 5%;
+    bottom: 5%;
     width: 90%;
     text-align: center;
     margin-right: auto;
@@ -20,15 +20,15 @@
  }
 
 #line1 {
-    font-size: 5vw;
+    font-size: 3vw;
     color: #2e2c64;
     font-family: 'printFont';
-    line-height: 4vw;
+    line-height: 3vw;
     direction: rtl;
 }
 
 #line2 {
-    font-size: 3vw;
+    font-size: 2vw;
     color: #623693;
     font-family: 'printFont';
     direction: rtl;
@@ -63,5 +63,12 @@
     border-color: #623693;
 }
 
-
+#cards {
+    position: absolute;
+    left: 5%;
+    top: 15%;
+    bottom: 5%;
+    width: 90%;
+    overflow-y: auto; /* Add vertical scroll if content exceeds the height */
+}
 
