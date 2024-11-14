@@ -250,42 +250,7 @@
             <div id="line1">הגדרות המערכת</div>
             <div id="line3"></div>
             <br />
-            <form class="g-2" id="myForm">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="uploadStudents" class="form-label">תלמידות</label>
-                        <input type=file class="form-control" id="uploadStudents" name="files[]">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="uploaduniqTasks" class="form-label">משימות </label>
-                        <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="date" class="form-label"> יום פעילות אחרון </label>
-                        <input type="date" class="form-control" id="date">
-                    </div>
-                    <div class="col-md-1">
-                        <label for="position" class="form-label">עמדה</label>
-                        <input type="number" class="form-control" id="position">
-                    </div>
-                    <div class="col-md-1">
-                        <label for="hasPrint" class="form-label">הדפסה</label>
-                        <select class="form-control" id="hasPrint">
-                            <option value="1">עם</option>
-                            <option value="0">בלי</option>
-                        </select>
-                    </div>
-                    <div class="col-md-1">
-                        <label for="hasBuy" class="form-label">קניה</label>
-                        <select class="form-control" id="hasBuy">
-                            <option value="0">בלי</option>
-                            <option value="1">עם</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="uploadProducts" class="form-label">מתנות </label>
-                        <input type=file class="form-control" id="uploadProducts" name="files[]">
-                    </div>
+            <form class="g-2" id="myForm" style="direction: rtl;">
                     <div class="row">
                         <div class="col-md-2">
                             <label for="device" class="form-label">סוג מכשיר</label>
@@ -294,10 +259,9 @@
                                 <option value="1">סורק ברקוד</option>
                                 <option value="2">כרטיס מגנטי</option>
                                 <option value="3">כרטיס גירוד</option>
-
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <label for="color" class="form-label">עיצוב</label>
                             <select class="form-control" id="color">
                                 <option value="0">בחר</option>
@@ -309,7 +273,7 @@
                         </div>
                         <div class="col-md-2">
                             <label for="type" class="form-label">סוג משחק</label>
-                            <select class="form-control" id="type">
+                            <select class="form-control" id="type"> 
                                 <option value="0">בחר</option>
                                 <option value="1">אישי</option>
                                 <option value="2">כללי</option>
@@ -322,11 +286,52 @@
                                 <option value="1">עם</option>
                             </select>
                         </div>
-
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="date" class="form-label"> יום פעילות אחרון </label>
+                            <input type="date" class="form-control" id="date">
+                        </div>
+                        <div class="col-md-1">
+                            <label for="position" class="form-label">עמדה</label>
+                            <input type="number" class="form-control" id="position">
+                        </div>
+                        <div class="col-md-1">
+                            <label for="hasPrint" class="form-label">הדפסה</label>
+                            <select class="form-control" id="hasPrint">
+                                <option value="1">עם</option>
+                                <option value="0">בלי</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="hasBuy" class="form-label">קניה</label>
+                            <select class="form-control" id="hasBuy">
+                                <option value="0">בלי</option>
+                                <option value="1">עם</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">.</label>
+                            <button type="submit" onclick="update()" class="form-control">עדכן</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="uploadStudents" class="form-label">תלמידות</label>
+                            <input type=file class="form-control" id="uploadStudents" name="files[]">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="uploaduniqTasks" class="form-label">משימות </label>
+                            <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
+                        </div>
+                         <div class="col-md-2">
+                            <label for="uploadProducts" class="form-label">מתנות </label>
+                            <input type=file class="form-control" id="uploadProducts" name="files[]">
+                        </div>
                         <div class="col-md-3">
                             <label for="uploadParents" class="form-label">הורים </label>
                             <input type=file class="form-control" id="uploadParents" name="files[]">
-                        </div>
+                        </div>                   
                     </div>
                     <div class="row">
                         <div class="col-md-1">
@@ -336,10 +341,6 @@
                         <div class="col-md-2">
                             <label class="form-label">.</label>
                             <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">.</label>
-                            <button type="submit" onclick="update()" class="form-control">עדכן</button>
                         </div>
                     </div>
             </form>
