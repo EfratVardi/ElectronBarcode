@@ -17,18 +17,18 @@
     text-align: center;
     margin-right: auto;
     margin-left: auto;
- }
+}
 
 #line1 {
-    font-size: 5vw;
+    font-size: 4.5vw;
     color: #2e2c64;
     font-family: 'printFont';
-    line-height: 4vw;
+    line-height: 3.5vw;
     direction: rtl;
 }
 
 #line2 {
-    font-size: 3vw;
+    font-size: 2vw;
     color: #623693;
     font-family: 'printFont';
     direction: rtl;
@@ -45,13 +45,12 @@
     width: 11vw;
     border-radius: 0px 50px 50px 0px;
     font-family: 'printFont';
-    background-color:#E4B1B7;
+    background-color: #E4B1B7;
 }
 
 .row {
     direction: rtl;
-    position: absolute;
-    left:10%;
+    left: 10%;
     width: 80%;
     text-align: center;
     margin-right: auto;
@@ -63,5 +62,8 @@
     border-color: #623693;
 }
 
-
-
+#cards {
+    max-height: 30vW;
+    overflow-y: auto;
+    /* Add vertical scroll if content exceeds the height */
+}

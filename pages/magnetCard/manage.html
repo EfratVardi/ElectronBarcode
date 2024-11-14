@@ -73,14 +73,16 @@
                     if (data != 0) {
                         uniqTasks = JSON.parse(data)
                         createTasksGrid()
-                        fileName = 'products'
-                        window.expose.SendExcel("sendReadExcel", fileName);
-                        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                            if (data != 0) {
-                                products = JSON.parse(data)
-                                createProductsGrid()
-                            }
-                        })
+                        if (systemConfig.hasBuy == 1) {
+                            fileName = 'products'
+                            window.expose.SendExcel("sendReadExcel", fileName);
+                            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                                if (data != 0) {
+                                    products = JSON.parse(data)
+                                    createProductsGrid()
+                                }
+                            })
+                        }
                     }
                 })
             });
@@ -126,7 +128,7 @@
             };
             var tasksGridDiv = document.querySelector('#tasksGrid');
             new agGrid.Grid(tasksGridDiv, tasksGridOptions);
-            document.getElementById("tasksSec").style.visibility="visible"
+            document.getElementById("tasksSec").style.visibility = "visible"
         }
 
         function createProductsGrid() {
@@ -146,7 +148,7 @@
             };
             var productsGridDiv = document.querySelector('#productsGrid');
             new agGrid.Grid(productsGridDiv, productsGridOptions);
-            document.getElementById("productsSec").style.visibility="visible"
+            document.getElementById("productsSec").style.visibility = "visible"
         }
 
         function createStudentsGrid() {
@@ -304,7 +306,7 @@
         function showLabel() {
             swich.checked ?
                 document.querySelector(".form-check-label").innerHTML = 'מצב קנייה פעיל' :
-                document.querySelector(".form-check-label").innerHTML = 'מצב הגשת משימות פעיל';
+                document.querySelector(".form-check-label").innerHTML = 'מצב צבירת נקודות פעיל';
         }
 
     </script>
@@ -313,7 +315,7 @@
             <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
         </div>
         <div class="text">
-            <div id="line1">ברוכה הבאה לממשק ניהול</div>
+            <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
             <div class="row h-100">
                 <div class="col-4 d-flex flex-column mb-4">
