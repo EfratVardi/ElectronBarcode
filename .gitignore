@@ -5,3 +5,9 @@ parents.txt
 products.txt
 students.txt
 uniqTasks.txt
+
+dist/builder-debug.yml
+dist/latest.yml
+dist/win-unpacked/resources/app-update.yml
+dist/win-unpacked/resources/app.asar
+systemConfig.txt
