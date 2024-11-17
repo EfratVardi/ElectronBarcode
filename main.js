@@ -18,8 +18,7 @@ function createWindow() {
   mainWindow.fullScreen = true;
 
   if (!app.isPackaged) {
-    mainWindow.webContents.openDevTools();
-    mainWindow.fullScreen = false;
+    mainWindow.menuBarVisible = true
   }
 
   ses.on('will-download', (e, downloadItem, webContents) => {
