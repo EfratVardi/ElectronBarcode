@@ -40,8 +40,7 @@
     var currentDateTime = getTodayDateTime();
     var systemConfig = ""
     var products = ""
-    var searchVal
-    var counter = 0;
+    var searchVal=""
     var result = "";
     var fileName
     const Steps = {
@@ -73,25 +72,19 @@
     }
 
     document.addEventListener("keypress", function (e) {
-      counter += 1;
-      if (e.target.tagName !== "INPUT") {
-        var input = document.querySelector(".my-input");
-        input.focus();
-        input.value = e.key;
-        e.preventDefault();
-      }
-      if (counter > 9) {
-        counter = 0;
-        searchVal = document.getElementById('barcode').value
-        document.getElementById("barcode").value = "";
-        if (step == Steps.step1) {
-          if (searchVal == '999999999')
-            login('../main/manage')
-          else if (searchVal == '011429519')
-            login('../main/system')
-          else
-            searchInExcel();
+      if (e.key === "Enter") {
+        if (searchVal.length > 0) {
+          if (step == Steps.step1) {
+            if (searchVal == '999999999')
+              login('../main/manage')
+            else if (searchVal == '011429519')
+              login('../main/system')
+            else
+              searchInExcel();
+          }
         }
+      } else {
+        searchVal += e.key;
       }
     });
 
@@ -198,7 +191,6 @@
       <span id="line2" class="rectangle-background2">...אולי הכרטיס שלך יזכה</span>
       <br><br>
     </div>
-    <input type="text" class="my-input" id="barcode">
   </div>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

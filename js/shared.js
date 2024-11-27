@@ -38,16 +38,18 @@ function getBackground(device, color, step) {
                     return "url('../../resources/barcode/personalBackground.png')";
             }
         };
-        case "2": {
-            switch (color) {
-                case "1":
-                    return "url('../../resources/magnetCard/background.png')";
-                case "3":
-                    return "url('../../resources/magnetCard/ravKavBackground.png')";
-                case "4":
-                    return "url('../../resources/magnetCard/personalBackground.png')";
+        case "2":
+        case "4":
+            {
+                switch (color) {
+                    case "1":
+                        return "url('../../resources/magnetCard/background.png')";
+                    case "3":
+                        return "url('../../resources/magnetCard/ravKavBackground.png')";
+                    case "4":
+                        return "url('../../resources/magnetCard/personalBackground.png')";
+                };
             };
-        };
         case "3": {
             return "url('../../resources/digitalCard/background" + step + ".gif')";
         };

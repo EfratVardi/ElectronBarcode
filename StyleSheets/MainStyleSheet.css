@@ -16,17 +16,6 @@ body, html {
     padding-bottom: 2.5%;
 }
 
-.my-input {
-    border-color: transparent;
-    color:transparent;
-    background-color:transparent;
-}
-
-input:focus {
-    outline: none;
-    color: transparent;
-}
-
 .gif {
     width: 25vw;
 }

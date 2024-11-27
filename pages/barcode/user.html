@@ -42,8 +42,8 @@
     var uniqTasks = ""
     var systemConfig = ""
     var products = ""
-    var searchVal
-    var counter = 0;
+    var searchVal = ""
+    var buffer = "";
     var step
     var studentResult = ""
     var result = "";
@@ -101,37 +101,32 @@
     }
 
     document.addEventListener("keypress", function (e) {
-      counter += 1;
-      if (e.target.tagName !== "INPUT") {
-        var input = document.querySelector(".my-input");
-        input.focus();
-        input.value = e.key;
-        e.preventDefault();
-      }
-      if (counter > 9) {
-        counter = 0;
-        searchVal = document.getElementById('barcode').value
-        document.getElementById("barcode").value = "";
-
-        if (step == Steps.step1) {
-          if (searchVal == '999999999')
-            login('../main/manage')
-          else if (searchVal == '011429519')
-            login('../main/system')
-          else if (searchVal == '207594581')
-            login('../parentsMeeting/user')
-          else
-            searchInExcel();//בת
-        }
-        else if (step == Steps.step2) {
-          if (searchVal.startsWith('6666'))//מוצר
-          {
-            systemConfig.buy = 1
-            buyProduct();
+      if (e.key === "Enter") {
+        if (buffer.length > 0) {
+          searchVal = buffer;
+          buffer = "";
+          if (step == Steps.step1) {
+            if (searchVal == '999999999')
+              login('../main/manage')
+            else if (searchVal == '011429519')
+              login('../main/system')
+            else if (searchVal == '207594581')
+              login('../parentsMeeting/user')
+            else
+              searchInExcel();//בת
           }
-          else //משימה רגילה/כללית
-            updateTask();
+          else if (step == Steps.step2) {
+            if (searchVal.startsWith('6666'))//מוצר
+            {
+              systemConfig.buy = 1
+              buyProduct();
+            }
+            else //משימה רגילה/כללית
+              updateTask();
+          }
         }
+      } else {
+        buffer += e.key;
       }
     });
 
@@ -328,7 +323,6 @@
       <br><br>
     </div>
     <div id="position">עמדה</div>
-    <input type="text" class="my-input" id="barcode">
   </div>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

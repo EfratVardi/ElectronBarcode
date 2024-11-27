@@ -18,7 +18,6 @@
     <script src="../../js/shared.js"></script>
 
     <script>
-        var counter = 0;
         var students = ""
         var uniqTasks = ""
         var products = ""
@@ -26,6 +25,8 @@
         var systemConfig = ""
         var excelFiles = getExcelFiles();
         var fileName
+        var searchVal=""
+
 
         function onLoad() {
             const deviceSelect = document.getElementById('device');
@@ -118,21 +119,17 @@
         }
 
         document.addEventListener("keypress", function (e) {
-            if (e.target.tagName !== "INPUT") {
-                var input = document.querySelector(".my-input");
-                input.focus();
-                input.value = e.key;
-                e.preventDefault();
-            }
-            counter += 1;
-            if (counter > 9) {
-                let searchVal = document.getElementById('barcode').value
-                if (searchVal == '011429519')
-                    login("user")
-                else if (searchVal == '999999999')
-                    login("manage")
-                else if (searchVal == '207594581')
-                    login('../parentsMeeting/user')
+            if (e.key === "Enter") {
+                if (searchVal.length > 0) {
+                    if (searchVal == '011429519')
+                        login("user")
+                    else if (searchVal == '999999999')
+                        login("manage")
+                    else if (searchVal == '207594581')
+                        login('../parentsMeeting/user')
+                }
+            } else {
+                searchVal += e.key;
             }
         });
 
@@ -182,7 +179,7 @@
         }
 
         function resetExcel() {
-            if (systemConfig.device == 1 || systemConfig.device == 2) {
+            if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
                 if (students.length > 0 && uniqTasks.length > 0) {
                     for (var i = 0; i < students.length; i++) {
                         students[i].points = 0
@@ -251,98 +248,99 @@
             <div id="line3"></div>
             <br />
             <form class="g-2" id="myForm" style="direction: rtl;">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for="device" class="form-label">סוג מכשיר</label>
-                            <select class="form-control" id="device">
-                                <option value="0">בחר</option>
-                                <option value="1">סורק ברקוד</option>
-                                <option value="2">כרטיס מגנטי</option>
-                                <option value="3">כרטיס גירוד</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="color" class="form-label">עיצוב</label>
-                            <select class="form-control" id="color">
-                                <option value="0">בחר</option>
-                                <option value="1">ורוד</option>
-                                <option value="2">ירוק</option>
-                                <option value="3">רב קו</option>
-                                <option value="4">עיצוב אישי</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="type" class="form-label">סוג משחק</label>
-                            <select class="form-control" id="type"> 
-                                <option value="0">בחר</option>
-                                <option value="1">אישי</option>
-                                <option value="2">כללי</option>
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label for="hasParents" class="form-label"> הורים</label>
-                            <select class="form-control" id="hasParents">
-                                <option value="0">בלי</option>
-                                <option value="1">עם</option>
-                            </select>
-                        </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="device" class="form-label">סוג מכשיר</label>
+                        <select class="form-control" id="device">
+                            <option value="0">בחר</option>
+                            <option value="1">סורק ברקוד</option>
+                            <option value="2">כרטיס מגנטי</option>
+                            <option value="3">כרטיס גירוד</option>
+                            <option value="4">צ'יפים</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for="date" class="form-label"> יום פעילות אחרון </label>
-                            <input type="date" class="form-control" id="date">
-                        </div>
-                        <div class="col-md-1">
-                            <label for="position" class="form-label">עמדה</label>
-                            <input type="number" class="form-control" id="position">
-                        </div>
-                        <div class="col-md-1">
-                            <label for="hasPrint" class="form-label">הדפסה</label>
-                            <select class="form-control" id="hasPrint">
-                                <option value="1">עם</option>
-                                <option value="0">בלי</option>
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label for="hasBuy" class="form-label">קניה</label>
-                            <select class="form-control" id="hasBuy">
-                                <option value="0">בלי</option>
-                                <option value="1">עם</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">.</label>
-                            <button type="submit" onclick="update()" class="form-control">עדכן</button>
-                        </div>
+                    <div class="col-md-2">
+                        <label for="color" class="form-label">עיצוב</label>
+                        <select class="form-control" id="color">
+                            <option value="0">בחר</option>
+                            <option value="1">ורוד</option>
+                            <option value="2">ירוק</option>
+                            <option value="3">רב קו</option>
+                            <option value="4">עיצוב אישי</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for="uploadStudents" class="form-label">תלמידות</label>
-                            <input type=file class="form-control" id="uploadStudents" name="files[]">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="uploaduniqTasks" class="form-label">משימות </label>
-                            <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
-                        </div>
-                         <div class="col-md-2">
-                            <label for="uploadProducts" class="form-label">מתנות </label>
-                            <input type=file class="form-control" id="uploadProducts" name="files[]">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="uploadParents" class="form-label">הורים </label>
-                            <input type=file class="form-control" id="uploadParents" name="files[]">
-                        </div>                   
+                    <div class="col-md-2">
+                        <label for="type" class="form-label">סוג משחק</label>
+                        <select class="form-control" id="type">
+                            <option value="0">בחר</option>
+                            <option value="1">אישי</option>
+                            <option value="2">כללי</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-1">
-                            <label class="form-label">.</label>
-                            <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">.</label>
-                            <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
-                        </div>
+                    <div class="col-md-1">
+                        <label for="hasParents" class="form-label"> הורים</label>
+                        <select class="form-control" id="hasParents">
+                            <option value="0">בלי</option>
+                            <option value="1">עם</option>
+                        </select>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="date" class="form-label"> יום פעילות אחרון </label>
+                        <input type="date" class="form-control" id="date">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="position" class="form-label">עמדה</label>
+                        <input type="number" class="form-control" id="position">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="hasPrint" class="form-label">הדפסה</label>
+                        <select class="form-control" id="hasPrint">
+                            <option value="1">עם</option>
+                            <option value="0">בלי</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="hasBuy" class="form-label">קניה</label>
+                        <select class="form-control" id="hasBuy">
+                            <option value="0">בלי</option>
+                            <option value="1">עם</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">.</label>
+                        <button type="submit" onclick="update()" class="form-control">עדכן</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="uploadStudents" class="form-label">תלמידות</label>
+                        <input type=file class="form-control" id="uploadStudents" name="files[]">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="uploaduniqTasks" class="form-label">משימות </label>
+                        <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="uploadProducts" class="form-label">מתנות </label>
+                        <input type=file class="form-control" id="uploadProducts" name="files[]">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="uploadParents" class="form-label">הורים </label>
+                        <input type=file class="form-control" id="uploadParents" name="files[]">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <label class="form-label">.</label>
+                        <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">.</label>
+                        <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
+                    </div>
+                </div>
             </form>
             <br />
             <div id="tasksGrid"></div>
@@ -352,7 +350,6 @@
                 לכוון שעון במחשב
             </div>
         </div>
-        <input type="text" class="my-input" id="barcode">
     </div>
 
     <script>

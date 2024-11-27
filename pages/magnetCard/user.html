@@ -42,8 +42,8 @@
         var students = ""
         var studentResult = ""
         var result = "";
-        var searchVal
-        var counter = 0;
+        var searchVal = ""
+        var buffer = "";
         var fileName
         var step
         const Steps = {
@@ -53,7 +53,7 @@
         };
 
         function onLoad() {
-            state = Steps.step1;
+            step = Steps.step1;
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -63,7 +63,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color)
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
                 if (systemConfig.position.length > 0) {
                     document.getElementById("position").innerHTML += ' ' + systemConfig.position
                 }
@@ -96,31 +96,27 @@
         }
 
         document.addEventListener("keypress", function (e) {
-            if (e.target.tagName !== "INPUT") {
-                var input = document.querySelector(".my-input");
-                input.focus();
-                input.value = e.key;
-                e.preventDefault();
-            }
-            counter += 1;
-            if (counter > 9) {
-                counter = 0;
-                searchVal = document.getElementById('barcode').value
-                document.getElementById("barcode").value = "";
-                if (state == Steps.step1) {
-                    if (searchVal == '999999999')
-                        login('../main/manage')
-                    else if (searchVal == '011429519')
-                        login('../main/system')
-                    else {
-                        showAlert("יש לבחור לפני העברת כרטיס!");
-                        return;
+            document.activeElement.blur(); 
+            if (e.key === "Enter") {
+                if (buffer.length > 0) {
+                    searchVal = buffer;
+                    buffer = "";
+                    if (step == Steps.step1) {
+                        if (searchVal == '999999999')
+                            login('../main/manage')
+                        else if (searchVal == '011429519')
+                            login('../main/system')
+                        else {
+                            showAlert("יש לבחור לפני התיקוף!");
+                            return;
+                        }
+                    }
+                    else if (step == Steps.step2) {
+                        searchInExcel();
                     }
                 }
-                else if (state == Steps.step2)// בת
-                {
-                    searchInExcel();
-                }
+            } else {
+                buffer += e.key;
             }
         });
 
@@ -164,8 +160,8 @@
         }
 
         function selectAction(code) {
-            if (state != Steps.step3) {
-                state = Steps.step2;
+            if (step != Steps.step3) {
+                step = Steps.step2;
                 for (var i = 0; i < actions.length; i++) {
                     if (actions[i]["code"] == code) {
                         result = actions[i]
@@ -176,12 +172,14 @@
                     document.getElementById("line1").innerHTML = "בחרת במשימה: " + result.name :
                     document.getElementById("line1").innerHTML = "בחרת במתנה: " + result.name;
                 document.getElementById("line1").style.fontSize = '4vw';
-                document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
+                systemConfig.device == "2" ?
+                    document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
+                    : document.getElementById("line2").innerHTML = "יש לסרוק את הצ'יפ בקורא "
             }
         }
 
         function searchInExcel() {
-            state = Steps.step3
+            step = Steps.step3
             for (var i = 0; i < students.length; i++) {
                 if (students[i]["tz"] == searchVal) {
                     studentResult = students[i];
@@ -225,15 +223,16 @@
             fileName = 'students'
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                document.getElementById("line1").innerHTML = studentResult.name;
-                document.getElementById("line2").innerHTML = "הפעולה נקלטה בהצלחה!";
-                document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות...";
+                document.getElementById("line1").innerHTML = "תודה רבה " + studentResult.name;
+                document.getElementById("line2").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות";
+                document.getElementById("line3").innerHTML = "בהצלחה!";
+
                 if (systemConfig.hasPrint == 1)
                     setTimeout(function () {
                         toPrint();
-                    }, 2000);
+                    }, 2500);
                 else
-                    reset(2000);
+                    reset(2500);
             });
         }
 
@@ -299,7 +298,6 @@
             </div>
         </div>
         <div id="position">עמדה</div>
-        <input type="text" class="my-input" id="barcode">
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

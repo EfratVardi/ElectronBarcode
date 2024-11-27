@@ -16,12 +16,12 @@
     <script src="../../js/shared.js"></script>
 
     <script>
-        var counter = 0;
         var uniqTasks = ""
         var systemConfig = ""
         var products = ""
         var students = "";
         var fileName
+        var searchVal=""
         var currentDate = getTodayDate();
         var swich
         var isInitialLoadTasks = true;
@@ -96,19 +96,16 @@
             });
         }
 
-        document.addEventListener("keypress", function (e) {
-            if (e.target.tagName !== "INPUT") {
-                var input = document.querySelector(".my-input");
-                input.focus();
-                input.value = e.key;
-                e.preventDefault();
-            }
-            counter += 1;
-            if (counter > 9) {
-                if (document.getElementById('barcode').value == '999999999')
-                    login("../main/user")
-                else if (document.getElementById('barcode').value == '011429519')
-                    login("../main/system")
+         document.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                if (searchVal.length > 0) {
+                    if (searchVal == '999999999')
+                        login("../main/user")
+                    if (searchVal == '011429519')
+                        login("../main/system")
+                }
+            } else {
+                searchVal += e.key;
             }
         });
 
@@ -347,7 +344,6 @@
                 </div>
             </div>
         </div>
-        <input type="text" class="my-input" id="barcode">
     </div>
 
 </body>

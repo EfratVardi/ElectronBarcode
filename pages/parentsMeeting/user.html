@@ -50,12 +50,16 @@
     var currentDateTime = getTodayDateTime()
     var systemConfig = ""
     var parents = ""
-    var searchVal
-    var counter = 0;
-    var state = 1
-    var result = "";
+    var searchVal=""
+    var step
+    const Steps = {
+      step1: "1",
+      step2: "2",
+      step3: "3"
+    }; var result = "";
 
     function onLoad() {
+      step = Steps.step1;
       fileName = 'systemConfig'
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -66,7 +70,7 @@
           systemConfig = JSON.parse(data)
         }
         document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device,systemConfig.color, 4)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4)
         if (systemConfig.position.length > 0) {
           document.getElementById("position").innerHTML += ' ' + systemConfig.position
         }
@@ -84,23 +88,19 @@
     }
 
     document.addEventListener("keypress", function (e) {
-      if (e.target.tagName !== "INPUT" && state == 1) {
-        var input = document.querySelector(".my-input");
-        input.focus();
-        input.value = e.key;
-        e.preventDefault();
-      }
-      counter += 1;
-      if (counter > 9 && state == 1) {
-        searchVal = document.getElementById('barcode').value
-        counter = 0;
-        document.getElementById("barcode").value = "";
-        if (searchVal == '011429519')
-          login('../main/system')
-        else if (searchVal == '207594581')
-          login('../main/user')
-        else //כיתה או בת
-          searchInExcel();
+      if (e.key === "Enter") {
+        if (searchVal.length > 0) {
+          if (step == Steps.step1) {
+            if (searchVal == '011429519')
+              login('../main/system')
+            else if (searchVal == '207594581')
+              login('../main/user')
+            else //כיתה או בת
+              searchInExcel();
+          }
+        }
+      } else {
+        searchVal += e.key;
       }
     });
 
@@ -124,7 +124,7 @@
     }
 
     function paretntStart() {
-      state = 2
+      step = Steps.step2;
       document.getElementById("line2").innerHTML = " שלום אמא של " + result.name;
       document.getElementById("line2").style.fontSize = "4.5vw"
       document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
@@ -134,7 +134,7 @@
     }
 
     function studentStart() {
-      state = 2
+      step = Steps.step2;
       document.getElementById("line2").innerHTML = "שלום " + result.name;
       document.getElementById("line3").innerHTML = "!ההדפסה של המכתב מאמא כבר מתחילה";
       setTimeout(function () {
@@ -232,7 +232,6 @@
 
     </div>
     <div id="position">עמדה</div>
-    <input type="text" class="my-input" id="barcode">
   </div>
 
   <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
