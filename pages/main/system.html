@@ -25,7 +25,7 @@
         var systemConfig = ""
         var excelFiles = getExcelFiles();
         var fileName
-        var searchVal=""
+        var searchVal = ""
 
 
         function onLoad() {
@@ -36,6 +36,8 @@
             const hasBuySelect = document.getElementById('hasBuy');
             const uploadProductsInput = document.getElementById('uploadProducts');
             const uploadParentsInput = document.getElementById('uploadParents');
+            const personalBackgroundUpload = document.getElementById('personalBackgroundUpload');
+            const uploadBackgroundInput = document.getElementById('uploadBackground');
 
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -46,7 +48,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4);
+                document.getElementById("background").style.backgroundImage = getBackground("1","1");
 
                 Object.entries(systemConfig).forEach(x => {
                     if (x[0] != 'buy')
@@ -56,6 +58,8 @@
                 deviceSelect.dispatchEvent(changeEvent);
                 hasBuySelect.dispatchEvent(changeEvent);
                 hasParentsSelect.dispatchEvent(changeEvent);
+                colorSelect.dispatchEvent(changeEvent);
+
             })
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -114,6 +118,35 @@
                     hasParentsSelect.value = "0";
                     const changeEvent = new Event('change');
                     hasParentsSelect.dispatchEvent(changeEvent);
+                }
+            });
+
+            colorSelect.addEventListener('change', function () {
+                if (colorSelect.value === '4') {
+                    personalBackgroundUpload.style.visibility = 'visible';
+                } else {
+                    personalBackgroundUpload.style.visibility = 'hidden';
+                }
+            });
+
+            // Handle background file upload
+            uploadBackgroundInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                const deviceType = document.getElementById("device").value; // סוג מכשיר
+
+                if (file && file.type === 'image/png') {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const data = e.target.result;
+                        // Send the file to the backend for saving
+                        window.expose.send("sendUploadBackground", [deviceType, data]);
+                        window.expose.receive("recieveUploadBackground", (data) => {
+                            location.reload()
+                        });
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    alert("אנא בחר קובץ PNG.");
                 }
             });
         }
@@ -269,6 +302,7 @@
                             <option value="4">עיצוב אישי</option>
                         </select>
                     </div>
+
                     <div class="col-md-2">
                         <label for="type" class="form-label">סוג משחק</label>
                         <select class="form-control" id="type">
@@ -325,6 +359,10 @@
                     <div class="col-md-2">
                         <label for="uploadProducts" class="form-label">מתנות </label>
                         <input type=file class="form-control" id="uploadProducts" name="files[]">
+                    </div>
+                    <div class="col-md-2" id="personalBackgroundUpload" style="visibility: hidden;">
+                        <label for="uploadBackground" class="form-label">בחר רקע אישי</label>
+                        <input type="file" class="form-control" id="uploadBackground" accept="image/png">
                     </div>
                     <div class="col-md-3">
                         <label for="uploadParents" class="form-label">הורים </label>

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, session, dialog } = require('electron')
 const fs = require('fs')
 let mainWindow
+const path = require('path');
 
 function createWindow() {
   let ses = session.defaultSession
@@ -43,7 +44,7 @@ function createWindow() {
         dialog.showMessageBox({
           type: 'info',
           title: 'הודעת מערכת',
-          message: 'הקובץ נשמר בהצלחה בתקיית ניקוד תלמידים!'
+          message: 'הקובץ נשמר בהצלחה בשולחן העבודה בתקיית ניקוד תלמידים! '
         })
       } else {
         dialog.showErrorBox('הודעת מערכת', 'הקובץ לא נשמר')
@@ -83,7 +84,7 @@ ipcMain.on("sendReadExcel", (event, args) => {
 ipcMain.on("sendWriteExcel", (event, args) => {
   if (args[1] && typeof args[1] === "string" && args[1].trim() !== "") {
     try {
-      JSON.parse(args[1]); 
+      JSON.parse(args[1]);
       fs.writeFile(args[0] + '.txt', args[1], err => {
         if (err) {
           console.error(err);
@@ -93,12 +94,42 @@ ipcMain.on("sendWriteExcel", (event, args) => {
       });
     } catch (e) {
       console.error("Invalid JSON data:", e);
-      mainWindow.webContents.send("receiveWriteExcel" + args[0], 0); 
+      mainWindow.webContents.send("receiveWriteExcel" + args[0], 0);
     }
   } else {
     console.error("Empty or invalid data.");
-    mainWindow.webContents.send("receiveWriteExcel" + args[0], 0); 
+    mainWindow.webContents.send("receiveWriteExcel" + args[0], 0);
   }
+});
+
+const baseFolderPath = path.join(__dirname, "resources");
+ipcMain.on("sendUploadBackground", (event, args) => {
+
+  const deviceType = args[0];
+  const fileData = args[1];
+  let deviceFolderPath = "";
+  console.log(deviceType)
+  switch (deviceType) {
+    case "1":
+      deviceFolderPath = path.join(baseFolderPath, 'barcode');
+      break
+    case "2":
+    case "4":
+      deviceFolderPath = path.join(baseFolderPath, 'magnetCard');
+      break
+  }
+
+  // שמירת הקובץ בתיקייה המתאימה
+  const filePath = path.join(deviceFolderPath, 'personalBackground.png');
+  console.log(filePath)
+
+  const buffer = Buffer.from(fileData, "base64");
+  fs.writeFile(filePath, buffer, (err) => {
+    if (err) {
+      console.log(err)
+    }
+    mainWindow.webContents.send("recieveUploadBackground", 1);
+  });
 });
 
 ipcMain.on('close', () => {

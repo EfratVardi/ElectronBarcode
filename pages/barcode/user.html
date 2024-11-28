@@ -41,7 +41,6 @@
     var students = ""
     var uniqTasks = ""
     var systemConfig = ""
-    var products = ""
     var searchVal = ""
     var buffer = "";
     var step
@@ -85,15 +84,6 @@
           window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
             if (data != 0) {
               uniqTasks = JSON.parse(data)
-              if (systemConfig.hasBuy == '1') {
-                fileName = 'products'
-                window.expose.SendExcel("sendReadExcel", fileName);
-                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                  if (data != 0) {
-                    products = JSON.parse(data)
-                  };
-                });
-              }
             }
           })
         };
@@ -116,13 +106,8 @@
               searchInExcel();//בת
           }
           else if (step == Steps.step2) {
-            if (searchVal.startsWith('6666'))//מוצר
-            {
-              systemConfig.buy = 1
-              buyProduct();
-            }
-            else //משימה רגילה/כללית
-              updateTask();
+            //משימה רגילה/כללית
+            updateTask();
           }
         }
       } else {
@@ -145,8 +130,6 @@
       document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
       document.getElementById("line1").innerHTML = "(: שלום  " + studentResult.name;
       document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד לעדכון משימה";
-      if (systemConfig.hasBuy == '1')
-        document.getElementById("line2").innerHTML += ' או לקניית מתנה';
       document.getElementById("line3").innerHTML = "עד כה צברת " + studentResult.points + " נקודות";
     }
 
@@ -177,41 +160,10 @@
       finishSession()
     }
 
-    function buyProduct() {
-      step = Steps.step3;
-      for (var i = 0; i < products.length; i++) {
-        if (products[i]["code"] == searchVal) {
-          result = products[i]
-          break;
-        }
-      }
-
-      if (result == "") {
-        showAlert("קוד לא תקין, גשו למורה!");
-        return;
-      }
-
-      if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-        showAlert("הי, כבר קנית את מתנה זו!");
-        return;
-      }
-      finishSession()
-    }
-
     function finishSession() {
       studentResult.tasks += result.name + ',';
       studentResult.tasksNumber += result.code + ',';
-
-      if (systemConfig.buy == 1) {
-        studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
-        if (studentResult.points < 0) {
-          showAlert("אין לך מספיק נקודות בחשבון !")
-          return;
-        }
-      }
-      else {
-        studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
-      }
+      studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
       saveData();
     }
 
@@ -237,12 +189,7 @@
           window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
         }
         document.getElementById("line1").innerHTML = "!הידד";
-        if (systemConfig.buy == 1) {
-          document.getElementById("line2").innerHTML = "רכשת בהצלחה " + result.name;
-        }
-        else {
-          document.getElementById("line2").innerHTML = "ביצעת את משימה" + " " + result.name;
-        }
+        document.getElementById("line2").innerHTML = "ביצעת את משימה" + " " + result.name;
         document.getElementById("line3").innerHTML = " כעת יש בחשבונך " + studentResult.points + " נקודות ";
 
         if (systemConfig.hasPrint == 1)
@@ -258,10 +205,7 @@
       var divName = "printableArea";
       document.getElementById("d1").innerHTML = studentResult.name;
       document.getElementById("d2").innerHTML = studentResult.grade;
-      if (systemConfig.buy)
-        document.getElementById("d3").innerHTML = "     זכאות למתנה" + ": " + result.name;
-      else
-        document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
+      document.getElementById("d3").innerHTML = "      משימה" + ": " + result.name;
       document.getElementById("d4").innerHTML = "     נקודות בחשבון" + ": " + studentResult.points;
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;

@@ -21,7 +21,7 @@ function login(page) {
     window.location.href = page + '.html';
 }
 
-function getBackground(device, color, step) {
+function getBackground(device, color, step="") {
     switch (device) {
         case "0": {
             return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
@@ -56,9 +56,8 @@ function getBackground(device, color, step) {
     }
 }
 
-
-function getPosition(type) {
-    switch (type) {
+function getPosition(color) {
+    switch (color) {
         case "1":
             return "#75DDB4";
         case "2":

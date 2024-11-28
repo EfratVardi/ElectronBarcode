@@ -21,7 +21,7 @@
         var products = ""
         var students = "";
         var fileName
-        var searchVal=""
+        var searchVal = ""
         var currentDate = getTodayDate();
         var swich
         var isInitialLoadTasks = true;
@@ -71,8 +71,10 @@
                 window.expose.SendExcel("sendReadExcel", fileName);
                 window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
                     if (data != 0) {
-                        uniqTasks = JSON.parse(data)
-                        createTasksGrid()
+                        if (systemConfig.device != "1") {
+                            uniqTasks = JSON.parse(data)
+                            createTasksGrid()
+                        }
                         if (systemConfig.hasBuy == 1) {
                             fileName = 'products'
                             window.expose.SendExcel("sendReadExcel", fileName);
@@ -96,7 +98,7 @@
             });
         }
 
-         document.addEventListener("keypress", function (e) {
+        document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
                 if (searchVal.length > 0) {
                     if (searchVal == '999999999')
@@ -312,7 +314,7 @@
             <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
         </div>
         <div class="text">
-            <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
+            <div id="line1">ברוכים הבאים לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
             <div class="row h-100">
                 <div class="col-4 d-flex flex-column mb-4">

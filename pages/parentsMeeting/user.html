@@ -70,7 +70,7 @@
           systemConfig = JSON.parse(data)
         }
         document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
         if (systemConfig.position.length > 0) {
           document.getElementById("position").innerHTML += ' ' + systemConfig.position
         }

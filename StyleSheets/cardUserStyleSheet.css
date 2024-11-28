@@ -21,7 +21,7 @@
 
 #line1 {
     font-size: 4vw;
-    color: #2e2c64;
+    color: black;
     font-family: 'printFont';
     line-height: 3.5vw;
     direction: rtl;
@@ -29,24 +29,23 @@
 
 #line2 {
     font-size: 2.5vw;
-    color: #623693;
+    color: black;
     font-family: 'printFont';
     direction: rtl;
 }
 
 #line3 {
     font-size: 2.5vw;
-    color: #623693;
+    color: black;
     font-family: 'printFont';
     direction: rtl;
 }
 
 #position {
-    font-size: 2.5vw;
-    width: 11vw;
+    font-size: 4vw;
+    width: 18vw;
     border-radius: 0px 50px 50px 0px;
-    font-family: 'printFont';
-    background-color: #E4B1B7;
+    font-family: "myFirstFont";
 }
 
 .row {
@@ -59,12 +58,11 @@
 }
 
 .card {
-    --bs-focus-ring-color: #623693;
-    border-color: #623693;
+    --bs-focus-ring-color: black;
+    border-color: black;
 }
 
 #cards {
     max-height: 30vW;
     overflow-y: auto;
-    /* Add vertical scroll if content exceeds the height */
 }

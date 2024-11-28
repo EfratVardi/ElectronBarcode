@@ -63,6 +63,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
+                document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
                 document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
                 if (systemConfig.position.length > 0) {
                     document.getElementById("position").innerHTML += ' ' + systemConfig.position
@@ -174,7 +175,8 @@
                 document.getElementById("line1").style.fontSize = '4vw';
                 systemConfig.device == "2" ?
                     document.getElementById("line2").innerHTML = "יש להעביר את הכרטיס המגנטי"
-                    : document.getElementById("line2").innerHTML = "יש לסרוק את הצ'יפ בקורא "
+                    : systemConfig.device == "4"? document.getElementById("line2").innerHTML = "יש לסרוק את הצ'יפ בקורא "
+                    : document.getElementById("line2").innerHTML = "יש לסרוק את הברקוד האישי "
             }
         }
 
@@ -206,7 +208,7 @@
             else {
                 studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
                 if (studentResult.points < 0) {
-                    showAlert("אין לך מספיק נקודות בחשבון !")
+                    showAlert("אין לך מספיק נקודות בחשבון!")
                     return;
                 }
             }
