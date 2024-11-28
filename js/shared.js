@@ -63,6 +63,9 @@ function getPosition(type) {
             return "#75DDB4";
         case "2":
             return "yellow";
+        case "3":
+        case "4":
+            return "white";
     }
 }
 
