@@ -112,12 +112,14 @@
 
     </script>
     <div class="background" id="background">
+        <div class="closeBtn">
+            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
+        </div>
         <div class="text">
             <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר להוסיף ולשנות מתנות</div>
             <br>
             <img style="margin-left: 10px;" onclick="newProducts()" src="../../resources/barcode/plus-light.svg" />
-            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
             <div id="productsGrid" style="width:100%" class="ag-theme-alpine"></div>
         </div>
     </div>

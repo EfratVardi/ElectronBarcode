@@ -126,13 +126,15 @@
 
     </script>
     <div class="background" id="background">
+        <div class="closeBtn">
+            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
+        </div>
         <div class="text">
             <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
             <img style="margin-left: 10px;" onclick="exportToExcel('ניקוד תלמידות')"
                 src="../../resources/barcode/download-simple-light.svg" />
             <img style="margin-left: 10px;" onclick="newStudent()" src="../../resources/barcode/plus-light.svg" />
-            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
             <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
         </div>
     </div>
