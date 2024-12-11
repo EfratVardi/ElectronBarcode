@@ -218,7 +218,7 @@
         }
 
         function toPrint() {
-            const dynamicHTML = `
+        const dynamicHTML = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -265,13 +265,11 @@
         </body>
         </html>
     `;
-
             window.expose.send("sendPrint", dynamicHTML);
             window.expose.receive("receivePrint", () => {
                 reset();
             });
         }
-
 
         function reset(time = 0) {
             setTimeout(function () {

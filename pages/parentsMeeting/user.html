@@ -4,100 +4,45 @@
 <head>
   <meta charset="utf-8" />
   <title>אסיפת הורים</title>
-  <style>
-    @font-face {
-      font-family: printFont;
-      src: url("../../fonts/FbMagnolia-Regular.otf");
-    }
-
-    #textContent {
-      font-family: printFont;
-      direction: rtl;
-      font-size: 20px;
-    }
-
-    #contact {
-      font-size: 10px;
-      font-family: Arial, Helvetica, sans-serif;
-      direction: rtl;
-    }
-
-    #title {
-      font-family: printFont;
-      direction: rtl;
-      font-size: 25px;
-    }
-
-    #header {
-      font-family: printFont;
-      direction: rtl;
-      font-size: 35px;
-    }
-  </style>
 </head>
 
 <body onload="onLoad()">
   <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link href="../../styleSheets/parentsMeetingStyleSheet.css" rel="stylesheet" />
-  <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
-  <script src="../../js/ag-grid-community.min.js"></script>
   <script src="../../js/jquery.min.js"></script>
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="../../js/shared.js"></script>
 
   <script>
-    var currentDate = getTodayDate()
-    var currentDateTime = getTodayDateTime()
-    var systemConfig = ""
-    var parents = ""
-    var searchVal=""
-    var step
+    var systemConfig = "";
+    var parents = "";
+    var searchVal = "";
+    var step;
+    var result = "";
+
     const Steps = {
       step1: "1",
       step2: "2",
       step3: "3"
-    }; var result = "";
+    };
 
     function onLoad() {
       step = Steps.step1;
-      fileName = 'systemConfig'
-      window.expose.SendExcel("sendReadExcel", fileName);
-      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-        if (data == 0) {
-          systemConfig = getDefaultConfig()
-        }
-        else {
-          systemConfig = JSON.parse(data)
-        }
-        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
-        if (systemConfig.position.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.position
-        }
-        else {
-          document.getElementById("position").style.display = "none";
-        }
-        fileName = 'parents'
-        window.expose.SendExcel("sendReadExcel", fileName);
-        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+      window.expose.SendExcel("sendReadExcel", "systemConfig");
+      window.expose.ReceiveExcel("receiveReadExcelsystemConfig", (data) => {
+        systemConfig = data == 0 ? getDefaultConfig() : JSON.parse(data);
+
+        window.expose.SendExcel("sendReadExcel", "parents");
+        window.expose.ReceiveExcel("receiveReadExcelparents", (data) => {
           if (data != 0) {
-            parents = JSON.parse(data)
+            parents = JSON.parse(data);
           }
-        })
-      })
+        });
+      });
     }
 
     document.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        if (searchVal.length > 0) {
-          if (step == Steps.step1) {
-            if (searchVal == '011429519')
-              login('../main/system')
-            else if (searchVal == '207594581')
-              login('../main/user')
-            else //כיתה או בת
-              searchInExcel();
-          }
+      if (e.key === "Enter" && searchVal.length > 0) {
+        if (step == Steps.step1) {
+          searchInExcel();
         }
       } else {
         searchVal += e.key;
@@ -105,56 +50,40 @@
     });
 
     function searchInExcel() {
-      for (var i = 0; i < parents.length; i++) {
-        if (parents[i]["tz"] == searchVal || parents[i]["tzParent"] == searchVal) {
-          result = parents[i];
-          break;
-        }
-      }
-      if (result == "") {
-        showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
-        return;
-      }
-      document.getElementById("line1").innerHTML = ""
+      result = parents.find(parent => parent.tz === searchVal || parent.tzParent === searchVal) || "";
 
-      if (result.tz == searchVal)
-        studentStart()
-      else if (result.tzParent == searchVal)
-        paretntStart()
+      if (result === "") {
+        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!");
+      } else {
+        result.tz === searchVal ? studentStart() : parentStart();
+      }
     }
 
-    function paretntStart() {
+    function parentStart() {
       step = Steps.step2;
-      document.getElementById("line2").innerHTML = " שלום אמא של " + result.name;
-      document.getElementById("line2").style.fontSize = "4.5vw"
+      document.getElementById("line2").innerHTML = "שלום אמא של " + result.name;
       document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
-      document.getElementById("text").style.top = "15%";
-      document.getElementById("content").value = result.text ? result.text : ""
-      document.getElementById("form").style.display = "inline"
+      document.getElementById("form").style.display = "block";
     }
 
     function studentStart() {
       step = Steps.step2;
       document.getElementById("line2").innerHTML = "שלום " + result.name;
-      document.getElementById("line3").innerHTML = "!ההדפסה של המכתב מאמא כבר מתחילה";
-      setTimeout(function () {
-        toPrint();
-      }, 2500);
+      document.getElementById("line3").innerHTML = "...המכתב מאמא מודפס עכשיו";
+      setTimeout(() => toPrint(), 2500);
     }
 
     function saveData() {
       result.text = document.getElementById("content").value;
-      for (var i = 0; i < parents.length; i++) {
-        if (parents[i]["tzParent"] == result.tzParent) {
-          parents[i] = result;
-          break;
-        }
+      const parentIndex = parents.findIndex(parent => parent.tzParent === result.tzParent);
+
+      if (parentIndex > -1) {
+        parents[parentIndex] = result;
       }
-      fileName = 'parents'
-      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(parents)]);
-      window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        document.getElementById("form").style.display = "none"
-        document.getElementById("text").style.top = "30%";
+
+      window.expose.SendExcel("sendWriteExcel", ["parents", JSON.stringify(parents)]);
+      window.expose.ReceiveExcel("receiveWriteExcelparents", () => {
+        document.getElementById("form").style.display = "none";
         document.getElementById("line2").innerHTML = "!המכתב נשמר";
         document.getElementById("line3").innerHTML = "...תודה רבה על שיתוף הפעולה";
         reset(2000);
@@ -162,84 +91,81 @@
     }
 
     function toPrint() {
-      var divName = "printableArea";
-      document.getElementById("textContent").innerHTML = result.text ? result.text : "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!";
-      var printContents = document.getElementById(divName).innerHTML;
-      var originalContents = document.body.innerHTML;
-      document.body.innerHTML = printContents;
-      setTimeout(function () {
-        window.expose.send("sendPrint", "");
-      }, 1000)
-      window.expose.receive("receivePrint", (data) => {
-        document.body.innerHTML = originalContents;
-        document.getElementById("line2").innerHTML = "!תודה רבה";
-        document.getElementById("line3").innerHTML = "...אל תשכחי לקחת את המכתב מהמדפסת";
+      const dynamicHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>Print</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+          }
+          #title {
+            font-size: 40px;
+            text-align: center;
+          }
+          #content div {
+            font-size: 20px;
+            margin: 10px 0;
+          }
+          #footer {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="title">פתק מאמא</div>
+        <br>
+        <div id="content">
+          <div>${result.name}</div>
+          <div>${systemConfig.position}</div>
+          <div>${result.text || "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!"}</div>
+        </div>
+        <br>
+        <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
+      </body>
+      </html>
+      `;
+
+      window.expose.send("sendPrint", dynamicHTML);
+      window.expose.receive("receivePrint", () => {
         reset(2500);
       });
     }
 
     function reset(time = 0) {
-      setTimeout(function () {
-        location.reload();
-      }, time);
+      setTimeout(() => location.reload(), time);
     }
 
     function showAlert(message) {
       document.querySelector(".modal-body").innerHTML = message;
-      $(document).ready(function () {
-        $('#modal').modal('show')
-      });
-      setTimeout(function () {
-        $(document).ready(function () {
-          $('#modal').modal('hide')
-        });
-      }, 2500);
-      reset(2500)
+      $("#modal").modal("show");
+      setTimeout(() => $("#modal").modal("hide"), 2500);
+      reset(2500);
     }
   </script>
-  <div id="printableArea" style="display: none;">
-    <div id="header">פתק מאמא</div>
-    <br />
-    <br />
-    <div id="title">ברגעים של נחת,</div>
-    <div id="title">כשהדיווחים באמתחת,</div>
-    <div id="title">רציתי להוסיף כמה מילים משלי-</div>
-    <div id="title">כי את הכל בשבילי!</div>
-    <br />
-    <br />
-    <div id="textContent"> </div>
-    <br /><br /><br />
-    <div id="contact">להזמנות: אפרת מלכה
-      0504167969 211efrat@gmail.com
-    </div>
+
+  <div id="text">
+    <div id="line1">ברוכה הבאה</div>
+    <div id="line2">אסיפת הורים תשפ"ד</div>
+    <div id="line3">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
+    <form id="form" style="display: none; direction: rtl;">
+      <textarea id="content" class="form-control" rows="6"></textarea>
+      <button type="button" onclick="saveData()" id="btnSave" class="form-control">שמירת המכתב</button>
+    </form>
   </div>
 
-  <div class="background" id="background">
-    <div class="text" id="text">
-      <div id="line1">ברוכה הבאה</div>
-      <div id="line2">אסיפת הורים תשפ"ד</div>
-      <div id="line3">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
-
-      <form id="form" style="display: none;direction: rtl;">
-        <div class="form-group col-md-10" style="padding-left: 16.666%; ">
-          <textarea id="content" class="form-control" rows="6"></textarea>
-        </div>
-        <div class="form-group col-md-8" style="padding-left: 33.33%; margin-top: 4%;">
-          <button type="button" onclick="saveData()" id="btnSave" class="form-control">
-            שמירת המכתב</button>
-        </div>
-      </form>
-
-    </div>
-    <div id="position">עמדה</div>
-  </div>
-
-  <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalLabel">הודעת מערכת</h5>
+          <h5 class="modal-title">הודעת מערכת</h5>
         </div>
         <div class="modal-body"></div>
       </div>

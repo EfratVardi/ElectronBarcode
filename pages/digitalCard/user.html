@@ -4,27 +4,6 @@
 <head>
   <meta charset="utf-8" />
   <title>תוכנית הברקודים</title>
-  <style>
-    @font-face {
-      font-family: printFont;
-      src: url("../../fonts/FbMagnolia-Regular.otf");
-    }
-
-    #title {
-      font-family: printFont;
-      direction: rtl;
-      font-size: 40px;
-    }
-
-    #d1,
-    #d2,
-    #d3,
-    #d4 {
-      font-family: printFont;
-      direction: rtl;
-      font-size: 20px;
-    }
-  </style>
 </head>
 
 <body onload="onLoad()">
@@ -40,7 +19,7 @@
     var currentDateTime = getTodayDateTime();
     var systemConfig = ""
     var products = ""
-    var searchVal=""
+    var searchVal = ""
     var result = "";
     var fileName
     const Steps = {
@@ -136,16 +115,56 @@
     }
 
     function toPrint() {
-      var divName = "printableArea";
-      document.getElementById("d2").innerHTML = "זכית ב" + result.name;
-      document.getElementById("d3").innerHTML = "יש לגשת לאחראית לקבלת המתנה";
-      document.body.innerHTML = document.getElementById(divName).innerHTML;;
-      setTimeout(function () {
-        window.expose.send("sendPrint", "");
-      }, 1000)
-      window.expose.receive("receivePrint", (data) => {
-        reset();
-      });
+      function toPrint() {
+        const dynamicHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8" />
+            <title>Print</title>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;;
+                    direction: rtl;
+                    margin: 0;
+                    padding: 0;
+                }
+                #title {
+                    font-size: 40px;
+                    text-align: center;
+                }
+                #content div {
+                    font-size: 20px;
+                    margin: 10px 0;
+                }
+                #footer {
+                    font-size: 10px;
+                    text-align: center;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="title">שובר</div>
+            <br>
+            <div id="content">
+                <div>>וואו, איזה כיף!!</div>
+                <div>"זכית ב"${result.name}</div>
+                <div>יש לגשת לאחראית לקבלת המתנה"</div>
+            </div>
+            <br>
+            <div id="title">>בהנאה!</div>
+            <br>
+            <br>
+            <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
+        </body>
+        </html>
+    `;
+        window.expose.send("sendPrint", dynamicHTML);
+        window.expose.receive("receivePrint", () => {
+          reset();
+        });
+      }
     }
 
     function reset(time = 0) {
@@ -169,20 +188,6 @@
     }
 
   </script>
-  <div id="printableArea" style="display: none;">
-    <div id="title">שובר </div>
-    <br />
-    <div id="d1">וואו, איזה כיף!!</div>
-    <div id="d2"> </div>
-    <div id="d3"> </div>
-    <div id="d4"> </div>
-    <br />
-    <div id="title">בהנאה!</div>
-    <br /><br /><br /><br />
-    <div id="d5" style="font-size:10px; font-family: Arial, Helvetica, sans-serif; direction: rtl;">להזמנות: אפרת מלכה
-      0504167969 211efrat@gmail.com
-    </div>
-  </div>
 
   <div class="background" id="background">
     <div class="text">
