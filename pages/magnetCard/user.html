@@ -109,9 +109,16 @@
 
                 const cardElement = document.createElement("a");
                 cardElement.classList.add("card", "focus-ring", "text-decoration-none", "rounded-2");
-                cardElement.addEventListener("click", function () {
-                    selectAction(cardData.code);
-                });
+                //     switch(result.type)
+                // {
+                //     case 1:{
+                //         button.onclick = () => selectAction(cardData.code);
+                //     }
+                //     case 2:{
+                //         button.onclick = () => openTest(cardData.code);
+                //     }
+                // }
+                // });
                 cardElement.href = '#'
 
                 const cardFooter = document.createElement("div");
@@ -277,6 +284,10 @@
             }, time);
         }
 
+        function r() {
+            window.location.href="test.html"
+        }
+
         function showAlert(message) {
             document.querySelector(".modal-body").innerHTML = message;
             $(document).ready(function () {
@@ -297,6 +308,7 @@
             <div id="line1">שלום...!</div>
             <div id="line2"></div>
             <div id="line3"></div>
+            <button onclick="r()"></button>
             <br>
             <br>
             <div class="row row-cols-md-6 g-4 justify-content-md-center" id="cards">
