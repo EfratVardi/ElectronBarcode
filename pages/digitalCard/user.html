@@ -114,7 +114,6 @@
       });
     }
 
-    function toPrint() {
       function toPrint() {
         const dynamicHTML = `
         <!DOCTYPE html>
@@ -148,12 +147,12 @@
             <div id="title">שובר</div>
             <br>
             <div id="content">
-                <div>>וואו, איזה כיף!!</div>
-                <div>"זכית ב"${result.name}</div>
-                <div>יש לגשת לאחראית לקבלת המתנה"</div>
+                <div>וואו, איזה כיף!!</div>
+                <div>זכית ב ${result.name}</div>
+                <div>יש לגשת לאחראית לקבלת המתנה</div>
             </div>
             <br>
-            <div id="title">>בהנאה!</div>
+            <div id="title">בהנאה!</div>
             <br>
             <br>
             <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
@@ -165,7 +164,6 @@
           reset();
         });
       }
-    }
 
     function reset(time = 0) {
       setTimeout(function () {
