@@ -68,40 +68,41 @@
     });
 
     function searchInExcel() {
-      for (var i = 0; i < products.length; i++) {
-        if (products[i]["code"] == searchVal) {
-          result = products[i];
-          break;
-        }
-      }
+      toPrint()
+      // for (var i = 0; i < products.length; i++) {
+      //   if (products[i]["code"] == searchVal) {
+      //     result = products[i];
+      //     break;
+      //   }
+      // }
 
-      let texts
-      if (result != "") {
-        step = Steps.step2;
-        if (result.used == "1") {
-          showAlert("הי, שובר זה כבר הודפס!");
-          return;
-        }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
-        texts = getWonTexts();
-        document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
-        document.getElementById("line2").innerHTML = "זכית ב" + result.name
-        saveData();
-      }
-      else {
-        step = Steps.step3;
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
-        texts = getLossTexts()
-        document.getElementById("line2").innerHTML = texts[Math.floor(Math.random() * texts.length)];
-        document.getElementById("line1").style.visibility = 'hidden';
-        reset(2500)
-      }
+      // let texts
+      // if (result != "") {
+      //   step = Steps.step2;
+      //   if (result.used == "1") {
+      //     showAlert("הי, שובר זה כבר הודפס!");
+      //     return;
+      //   }
+      //   document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
+      //   texts = getWonTexts();
+      //   document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+      //   document.getElementById("line2").innerHTML = "זכית ב" + result.name
+      //   saveData();
+      // }
+      // else {
+      //   step = Steps.step3;
+      //   document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
+      //   texts = getLossTexts()
+      //   document.getElementById("line2").innerHTML = texts[Math.floor(Math.random() * texts.length)];
+      //   document.getElementById("line1").style.visibility = 'hidden';
+      //   reset(2500)
+      // }
     }
 
     function saveData() {
       for (var i = 0; i < products.length; i++) {
         if (products[i]["code"] == result.code) {
-          products[i].used = 1
+          // products[i].used = 1
           break;
         }
       }
