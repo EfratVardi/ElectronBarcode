@@ -40,7 +40,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, 4);
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color);
             });
             fileName = 'students'
             window.expose.SendExcel("sendReadExcel", fileName);
