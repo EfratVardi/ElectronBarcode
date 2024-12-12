@@ -107,29 +107,11 @@ ipcMain.on("sendWriteExcel", (event, args) => {
   }
 });
 
-const baseFolderPath = path.join(__dirname, "resources");
 ipcMain.on("sendUploadBackground", (event, args) => {
 
-  const deviceType = args[0];
   const fileData = args[1];
-  let deviceFolderPath = "";
-  console.log(deviceType)
-  switch (deviceType) {
-    case "1":
-      deviceFolderPath = path.join(baseFolderPath, 'barcode');
-      break
-    case "2":
-    case "4":
-      deviceFolderPath = path.join(baseFolderPath, 'magnetCard');
-      break
-  }
-
-  // שמירת הקובץ בתיקייה המתאימה
-  const filePath = path.join(deviceFolderPath, 'personalBackground.png');
-  console.log(filePath)
-
   const buffer = Buffer.from(fileData, "base64");
-  fs.writeFile(filePath, buffer, (err) => {
+  fs.writeFile("personalBackground.png", buffer, (err) => {
     if (err) {
       console.log(err)
     }
