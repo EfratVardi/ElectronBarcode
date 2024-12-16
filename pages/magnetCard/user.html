@@ -210,9 +210,12 @@
                         case 1: {
                             updateLines("בחרת במשימה: " + result.name, "")
                             updateLinesByDevice()
+                            break;
                         }
                         case 2: {
+                            updateLines("בחרת במשימה: " + result.name, "")
                             openTest();
+                            break;
                         }
                     }
 
@@ -220,7 +223,7 @@
             }
 
             function openTest() {
-                step = Steps.step3;
+                document.getElementById("cards").style.display = "none"
                 currentTest = tests.find(test => test.id == result.code);
                 currentQuestionIndex = 0;
                 correctCount = 0;
@@ -286,6 +289,7 @@
             }
 
             function searchInExcel() {
+                document.getElementById("cards").style.display = "none"
                 step = Steps.step3
                 for (var i = 0; i < students.length; i++) {
                     if (students[i]["tz"] == searchVal) {

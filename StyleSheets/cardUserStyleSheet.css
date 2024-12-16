@@ -21,7 +21,7 @@
 
 #line1 {
     font-size: 4vw;
-    color: #ffffff;
+    color: #000000;
     font-family: 'printFont';
     line-height: 3.5vw;
     direction: rtl;
@@ -29,14 +29,14 @@
 
 #line2 {
     font-size: 2.5vw;
-    color: #ffffff;
+    color: #000000;
     font-family: 'printFont';
     direction: rtl;
 }
 
 #line3 {
     font-size: 2.5vw;
-    color: #ffffff;
+    color: #000000;
     font-family: 'printFont';
     direction: rtl;
 }
@@ -84,6 +84,10 @@
     background-color: #e2e6ea;
 }
 
+#questionContainer p strong {
+    font-size: 1.5rem; /* גודל מותאם לשאלה */
+}
+
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -94,6 +98,7 @@
 
 #timer {
     font-size: 1.5rem;
+    color: palevioletred;
 }
 
 #testName {
@@ -114,4 +119,8 @@
 
 .modal-dialog {
     pointer-events: all;
+}
+
+#triviaModal .modal-content {
+    height: 85%; /* התאמה אישית של הגובה */
 }
