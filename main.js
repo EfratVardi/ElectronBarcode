@@ -108,8 +108,7 @@ ipcMain.on("sendWriteExcel", (event, args) => {
 });
 
 ipcMain.on("sendUploadBackground", (event, args) => {
-
-  const fileData = args[1];
+  const fileData = args;
   const buffer = Buffer.from(fileData, "base64");
   fs.writeFile("personalBackground.png", buffer, (err) => {
     if (err) {

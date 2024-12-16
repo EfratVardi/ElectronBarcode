@@ -66,3 +66,52 @@
     max-height: 30vW;
     overflow-y: auto;
 }
+
+.answer-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s;
+}
+
+.answer-button:hover {
+    background-color: #e2e6ea;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+#timer {
+    font-size: 1.5rem;
+}
+
+#testName {
+    font-size: 1.3rem;
+}
+
+#questionProgress {
+    font-size: 1.5rem;
+}
+
+.modal-lg {
+    max-width: 800px;
+}
+
+.modal {
+    pointer-events: none;
+}
+
+.modal-dialog {
+    pointer-events: all;
+}

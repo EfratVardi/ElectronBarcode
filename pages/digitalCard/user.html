@@ -30,6 +30,7 @@
 
     function onLoad() {
       step = Steps.step1;
+      updateLines("יש לסרוק את כרטיס ההפתעה", "...אולי הכרטיס שלך יזכה")
       fileName = 'systemConfig'
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -84,16 +85,14 @@
         }
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
         texts = getWonTexts();
-        document.getElementById("line1").innerHTML = texts[Math.floor(Math.random() * texts.length)];
-        document.getElementById("line2").innerHTML = "זכית ב" + result.name
+        updateLines(texts[Math.floor(Math.random() * texts.length)], "זכית ב" + result.name)
         saveData();
       }
       else {
         step = Steps.step3;
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, 0, step)
         texts = getLossTexts()
-        document.getElementById("line2").innerHTML = texts[Math.floor(Math.random() * texts.length)];
-        document.getElementById("line1").style.visibility = 'hidden';
+        updateLines("", texts[Math.floor(Math.random() * texts.length)])
         reset(2500)
       }
     }
@@ -114,8 +113,8 @@
       });
     }
 
-      function toPrint() {
-        const dynamicHTML = `
+    function toPrint() {
+      const dynamicHTML = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -159,16 +158,21 @@
         </body>
         </html>
     `;
-        window.expose.send("sendPrint", dynamicHTML);
-        window.expose.receive("receivePrint", () => {
-          reset();
-        });
-      }
+      window.expose.send("sendPrint", dynamicHTML);
+      window.expose.receive("receivePrint", () => {
+        reset();
+      });
+    }
 
     function reset(time = 0) {
       setTimeout(function () {
         location.reload();
       }, time);
+    }
+
+    function updateLines(line1Text, line2Text) {
+      document.getElementById("line1").innerHTML = line1Text;
+      document.getElementById("line2").innerHTML = line2Text;
     }
 
     function showAlert(message) {
@@ -189,9 +193,9 @@
 
   <div class="background" id="background">
     <div class="text">
-      <span id="line1" class="rectangle-background1">יש לסרוק את כרטיס ההפתעה</span>
+      <span id="line1" class="rectangle-background1"></span>
       <p></p>
-      <span id="line2" class="rectangle-background2">...אולי הכרטיס שלך יזכה</span>
+      <span id="line2" class="rectangle-background2"></span>
       <br><br>
     </div>
   </div>

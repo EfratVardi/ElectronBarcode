@@ -14,7 +14,7 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "buy": false };
+    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0","hasTests": "0", "buy": false };
 }
 
 function login(page) {
@@ -70,7 +70,7 @@ function getPosition(color) {
 
 
 function getExcelFiles() {
-    return ["students", "uniqTasks", "products", "parents"];
+    return ["students", "uniqTasks", "products", "parents","tests"];
 }
 
 function getWonTexts() {

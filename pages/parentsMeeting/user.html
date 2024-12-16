@@ -115,8 +115,7 @@
         showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      document.getElementById("line1").innerHTML = ""
-
+      updateLines("") 
       if (result.tz == searchVal)
         studentStart()
       else if (result.tzParent == searchVal)
