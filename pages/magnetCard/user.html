@@ -104,7 +104,7 @@
                         updateLines("שלום...!", "יש לבחור מתנה לקנייה")
                     }
                     else {
-                        updateLines("שלום...!", "יש לבחור משימה מהרשימה")
+                        updateLines("שלום...!", "יש לבחור מהרשימה")
                     }
                     fileName = 'students'
                     window.expose.SendExcel("sendReadExcel", fileName);
@@ -203,17 +203,18 @@
                 if (step != Steps.step3) {
                     step = Steps.step2;
                     result = cardData;
-                    if (systemConfig.buy == 1)
+                    if (systemConfig.buy == 1) {
                         updateLines("בחרת במתנה: " + result.name, "")
-
+                        updateLinesByDevice()
+                    }
                     switch (result.type) {
                         case 1: {
-                            updateLines("בחרת במשימה: " + result.name, "")
+                            updateLines("בחרת ב: " + result.name, "")
                             updateLinesByDevice()
                             break;
                         }
                         case 2: {
-                            updateLines("בחרת במשימה: " + result.name, "")
+                            updateLines("בחרת ב: " + result.name, "")
                             openTest();
                             break;
                         }
@@ -380,7 +381,7 @@
                 <div>${studentResult.name}</div>
                 <div>${studentResult.grade}</div>
                 <div>${systemConfig.buy == 0
-                        ? "משימה: " + result.name
+                        ? "" + result.name
                         : "זכאות למתנה: " + result.name}</div>
                 <div>נקודות בחשבון: ${studentResult.points}</div>
             </div>
