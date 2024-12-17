@@ -61,6 +61,9 @@
     --bs-focus-ring-color: black;
     border-color: black;
 }
+.coll{
+opacity:30%;
+}
 
 #cards {
     max-height: 30vW;

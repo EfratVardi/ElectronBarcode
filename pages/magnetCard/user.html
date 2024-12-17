@@ -108,31 +108,44 @@
                 cardColumn.classList.add("col");
 
                 const cardElement = document.createElement("a");
-                cardElement.classList.add("card", "focus-ring", "text-decoration-none", "rounded-2");
-                cardElement.addEventListener("click", function () {
-                    selectAction(cardData.code);
-                });
-                cardElement.href = '#'
+
+                if (cardData.used == 1) {
+                    // הוספת class עבור כפתור מנוטרל
+                    cardElement.classList.add("disabled");
+                    // מניעת פעולת קליק
+                    cardElement.addEventListener("click", function (event) {
+                        event.preventDefault();
+                    });
+                    cardElement.classList.add("card", "text-decoration-none", "rounded-2","coll");
+
+                } else {
+                    cardElement.classList.add("card","focus-ring", "text-decoration-none", "rounded-2");
+                    cardElement.addEventListener("click", function () {
+                        selectAction(cardData.code);
+                    });
+                }
+
+                cardElement.href = '#';
 
                 const cardFooter = document.createElement("div");
                 cardFooter.classList.add("card-footer", "h-10");
 
                 const footerSmall = document.createElement("small");
                 footerSmall.classList.add("text-body-secondary");
-                footerSmall.textContent = cardData.points + ' נקודות'
+                footerSmall.textContent = cardData.points + ' נקודות';
 
                 const cardBody = document.createElement("div");
                 cardBody.classList.add("card-body");
 
                 const cardTitle = document.createElement("h5");
                 cardTitle.classList.add("card-title");
-                cardTitle.textContent = cardData.name
+                cardTitle.textContent = cardData.name;
                 const br = document.createElement("br");
 
                 cardBody.appendChild(cardTitle);
                 cardBody.appendChild(br);
                 cardElement.appendChild(cardBody);
-                cardFooter.appendChild(footerSmall)
+                cardFooter.appendChild(footerSmall);
                 cardElement.appendChild(cardFooter);
                 cardColumn.appendChild(cardElement);
                 cardContainer.appendChild(cardColumn);
@@ -195,6 +208,19 @@
         }
 
         function saveData() {
+            if (systemConfig.buy == 1) {
+                for (var i = 0; i < actions.length; i++) {
+                    if (actions[i]["code"] == result.code) {
+                        actions[i].used = 1
+                        break;
+                    }
+                }
+            }
+
+            fileName = 'products'
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(actions)]);
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
+
             for (var i = 0; i < students.length; i++) {
                 if (students[i]["tz"] == studentResult.tz) {
                     students[i] = studentResult;
@@ -218,7 +244,7 @@
         }
 
         function toPrint() {
-        const dynamicHTML = `
+            const dynamicHTML = `
         <!DOCTYPE html>
         <html>
         <head>
