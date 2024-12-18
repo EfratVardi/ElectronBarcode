@@ -99,30 +99,30 @@
             hasParents.addEventListener('change', function () {
                 const selectedOption = hasParents.value;
                 if (selectedOption == '1') {
-                    uploadParentsWrapper.style.visibility = "visible";
+                    uploadParentsWrapper.style.display = "unset";
                 }
                 else {
-                    uploadParentsWrapper.style.visibility = "hidden";
+                    uploadParentsWrapper.style.display = "none";
                 }
             });
 
             hasTests.addEventListener('change', function () {
                 const selectedOption = hasTests.value;
                 if (selectedOption == '1') {
-                    uploadTestsWrapper.style.visibility = "visible";
+                    uploadTestsWrapper.style.display = "unset";
                 }
                 else {
-                    uploadTestsWrapper.style.visibility = "hidden";
+                    uploadTestsWrapper.style.display = "none";
                 }
             });
 
             hasBuy.addEventListener('change', function () {
                 const selectedOption = hasBuy.value;
                 if (selectedOption == '1') {
-                    uploadProductsWrapper.style.visibility = "visible";
+                    uploadProductsWrapper.style.display = "unset";
                 }
                 else {
-                    uploadProductsWrapper.style.visibility = "hidden";
+                    uploadProductsWrapper.style.display = "none";
                 }
             });
 
@@ -130,18 +130,20 @@
                 const selectedOption = device.value;
                 const changeEvent = new Event('change');
                 if (selectedOption == '1') {
-                    typeWrapper.style.visibility = "visible";
-                    hasParentsWrapper.style.visibility = "visible";
-                    hasTestsWrapper.style.visibility = "hidden";
+                    typeWrapper.style.display = "unset";
+                    hasParentsWrapper.style.display = "unset";
+                    hasTestsWrapper.style.display = "none";
                     hasTests.value = "0";
                     hasTests.dispatchEvent(changeEvent);
                 }
                 else if (selectedOption == '2' || selectedOption == '4') {
-                    hasTestsWrapper.style.visibility = "visible";
+                    hasTestsWrapper.style.display = "unset";
+                    typeWrapper.style.display = "none";
+                    hasParentsWrapper.style.display = "none";
                 }
                 else {
-                    typeWrapper.style.visibility = "hidden";
-                    hasParentsWrapper.style.visibility = "hidden";
+                    typeWrapper.style.display = "none";
+                    hasParentsWrapper.style.display = "none";
                     type.value = "0";
                     hasParents.value = "0";
                     hasParents.dispatchEvent(changeEvent);
@@ -150,9 +152,9 @@
 
             color.addEventListener('change', function () {
                 if (color.value === '4') {
-                    uploadBackgroundWrapper.style.visibility = 'visible';
+                    uploadBackgroundWrapper.style.display = "unset";
                 } else {
-                    uploadBackgroundWrapper.style.visibility = 'hidden';
+                    uploadBackgroundWrapper.style.display = "none";
                 }
             });
 
@@ -347,7 +349,15 @@
                             <option value="4">עיצוב אישי</option>
                         </select>
                     </div>
-                    <div class="col-md-2" id="typeWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="typeWrapper" style="display: none;">
+                        <label for="type" class="form-label"> צבע כיתוב</label>
+                        <select class="form-control" id="type">
+                            <option value="0">בחר</option>
+                            <option value="1">שחור</option>
+                            <option value="2">לבן</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2" id="typeWrapper" style="display: none;">
                         <label for="type" class="form-label">סוג משחק</label>
                         <select class="form-control" id="type">
                             <option value="0">בחר</option>
@@ -355,14 +365,14 @@
                             <option value="2">כללי</option>
                         </select>
                     </div>
-                    <div class="col-md-1" id="hasParentsWrapper" style="visibility: hidden;">
+                    <div class="col-md-1" id="hasParentsWrapper" style="display: none;">
                         <label for="hasParents" class="form-label"> הורים</label>
                         <select class="form-control" id="hasParents">
                             <option value="0">בלי</option>
                             <option value="1">עם</option>
                         </select>
                     </div>
-                    <div class="col-md-1" id="hasTestsWrapper" style="visibility: hidden;">
+                    <div class="col-md-1" id="hasTestsWrapper" style="display: none;">
                         <label for="hasTests" class="form-label"> מבחנים</label>
                         <select class="form-control" id="hasTests">
                             <option value="0">בלי</option>
@@ -407,23 +417,23 @@
                         <label for="uploaduniqTasks" class="form-label">משימות </label>
                         <input type=file class="form-control" id="uploaduniqTasks" name="files[]">
                     </div>
-                    <div class="col-md-2" id="uploadProductsWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="uploadProductsWrapper" style="display: none;">
                         <label for="uploadProducts" class="form-label">מתנות </label>
                         <input type=file class="form-control" id="uploadProducts" name="files[]">
                     </div>
-                    <div class="col-md-2" id="uploadBackgroundWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="uploadBackgroundWrapper" style="display: none;">
                         <label for="uploadBackground" class="form-label">בחר רקע אישי</label>
                         <input type="file" class="form-control" id="uploadBackground" accept="image/png">
                     </div>
-                    <div class="col-md-2" id="uploadParentsWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="uploadParentsWrapper" style="display: none;">
                         <label for="uploadParents" class="form-label">הורים </label>
                         <input type=file class="form-control" id="uploadParents" name="files[]">
                     </div>
-                    <div class="col-md-2" id="uploadTestsWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="uploadTestsWrapper" style="display: none;">
                         <label for="uploadTest" class="form-label">מבחנים</label>
                         <input type="file" class="form-control" id="uploadTest">
                     </div>
-                    <div class="col-md-2" id="uploadPollsWrapper" style="visibility: hidden;">
+                    <div class="col-md-2" id="uploadPollsWrapper" style="display: none;">
                         <label for="uploadPolls" class="form-label">סקרים</label>
                         <input type="file" class="form-control" id="uploadPolls" accept="image/png">
                     </div>
