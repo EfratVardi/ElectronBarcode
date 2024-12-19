@@ -34,7 +34,9 @@
             { headerName: "תעודת זהות", field: "tz" },
             { headerName: "מספרי משימות", field: "tasksNumber", hide: true },
             { headerName: "נקודות", field: "points", editable: true },
-            { headerName: "שמות המשימות", field: "tasks" }];
+            { headerName: "שמות המשימות", field: "tasks" },
+            { headerName: "מספרי הגרלה", field: "products" }];
+
 
         var productsGridOptions
         var productsColumnDefs = [
@@ -51,7 +53,7 @@
         ];
 
         function onLoad() {
-            document.getElementById("line3").innerHTML+=localStorage.getItem("lotteryNumber")
+            document.getElementById("line3").innerHTML += localStorage.getItem("lotteryNumber")
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {

@@ -315,15 +315,25 @@
             }
 
             function finishSession() {
-                studentResult.tasks += result.name + ',';
-                studentResult.tasksNumber += result.code + ',';
-                if (systemConfig.buy == 0)
+
+                if (systemConfig.buy == 0) {
+                    studentResult.tasks += result.name + ',';
+                    studentResult.tasksNumber += result.code + ',';
                     studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
+                }
                 else {
-                    studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
-                    if (studentResult.points < 0) {
+                    const balance = parseInt(studentResult.points) - parseInt(result.points);
+                    if (balance < 0) {
                         showAlert("אין לך מספיק נקודות בחשבון!")
                         return;
+                    }
+                    else {
+                        studentResult.points = balance;
+                        lotteryNumber = parseInt(lotteryNumber) + 1
+                        localStorage.setItem("lotteryNumber", lotteryNumber)
+                        if (studentResult.products == null)
+                            studentResult.products = ""
+                        studentResult.products += lotteryNumber + ',';
                     }
                 }
                 saveData();
@@ -340,10 +350,7 @@
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
-                    if (systemConfig.buy == 1) {
-                        lotteryNumber = parseInt(lotteryNumber) + 1
-                        localStorage.setItem("lotteryNumber",lotteryNumber)
-                    }
+
                     if (systemConfig.hasPrint == 1)
                         setTimeout(function () {
                             toPrint();
@@ -389,7 +396,7 @@
                 <div>${studentResult.name}</div>
                 <div>${studentResult.grade}</div>
                 <div style="font-size: 30px;">${systemConfig.buy == 0
-                        ? "" 
+                        ? ""
                         : " מספר כרטיס הגרלה : " + lotteryNumber}</div>
                 <div>נקודות בחשבון: ${studentResult.points}</div>
             </div>
