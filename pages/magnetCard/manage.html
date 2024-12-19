@@ -51,6 +51,7 @@
         ];
 
         function onLoad() {
+            document.getElementById("line3").innerHTML+=localStorage.getItem("lotteryNumber")
             fileName = 'systemConfig'
             window.expose.SendExcel("sendReadExcel", fileName);
             window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -316,6 +317,7 @@
         <div class="text">
             <div id="line1">ברוכים הבאים לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
+            <div id="line3">המספר האחרון: </div>
             <div class="row h-100">
                 <div class="col-4 d-flex flex-column mb-4">
                     <div class="form-check form-switch mb-2" id="swich-sec">

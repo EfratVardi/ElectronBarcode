@@ -80,8 +80,14 @@
             let currentQuestionIndex = 0;
             let correctCount = 0;
             let timer;
+            var lotteryNumber
 
             function onLoad() {
+                lotteryNumber = localStorage.getItem("lotteryNumber");
+                if (lotteryNumber == null) {
+                    localStorage.setItem("lotteryNumber", 5880)
+                    lotteryNumber = localStorage.getItem("lotteryNumber");
+                }
                 step = Steps.step1;
                 fileName = 'systemConfig'
                 window.expose.SendExcel("sendReadExcel", fileName);
@@ -168,7 +174,7 @@
                     cardColumn.classList.add("col");
 
                     const cardElement = document.createElement("a");
-                    cardElement.classList.add("card", "focus-ring", "text-decoration-none", "rounded-2","h-100");
+                    cardElement.classList.add("card", "focus-ring", "text-decoration-none", "rounded-2", "h-100");
                     cardElement.addEventListener("click", function () {
                         selectAction(cardData);
                     });
@@ -334,6 +340,10 @@
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+                    if (systemConfig.buy == 1) {
+                        lotteryNumber = parseInt(lotteryNumber) + 1
+                        localStorage.setItem("lotteryNumber",lotteryNumber)
+                    }
                     if (systemConfig.hasPrint == 1)
                         setTimeout(function () {
                             toPrint();
@@ -378,9 +388,9 @@
             <div id="content">
                 <div>${studentResult.name}</div>
                 <div>${studentResult.grade}</div>
-                <div>${systemConfig.buy == 0
-                        ? "" + result.name
-                        : "זכאות למתנה: " + result.name}</div>
+                <div style="font-size: 30px;">${systemConfig.buy == 0
+                        ? "" 
+                        : " מספר כרטיס הגרלה : " + lotteryNumber}</div>
                 <div>נקודות בחשבון: ${studentResult.points}</div>
             </div>
             <br>
