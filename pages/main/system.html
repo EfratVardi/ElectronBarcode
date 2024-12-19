@@ -35,6 +35,8 @@
             const type = document.getElementById('type');
             const hasTestsWrapper = document.getElementById('hasTestsWrapper');
             const hasTests = document.getElementById('hasTests');
+            const timerWrapper = document.getElementById('timerWrapper');
+            const timer = document.getElementById('timer');
             const hasParentsWrapper = document.getElementById('hasParentsWrapper');
             const hasParents = document.getElementById('hasParents');
             const hasBuy = document.getElementById('hasBuy');
@@ -110,9 +112,12 @@
                 const selectedOption = hasTests.value;
                 if (selectedOption == '1') {
                     uploadTestsWrapper.style.display = "unset";
+                    timerWrapper.style.display = "unset";
                 }
                 else {
                     uploadTestsWrapper.style.display = "none";
+                    timerWrapper.style.display = "none";
+                    timer.value = "0";
                 }
             });
 
@@ -381,7 +386,7 @@
                     </div>
                     <div class="col-md-1" id="timerWrapper" style="display: none;">
                         <label for="timer" class="form-label">טיימר</label>
-                        <input type="number" class="form-control" id="timer">
+                        <input type="number" class="form-control" id="timer" value="0">
                     </div>
                 </div>
                 <div class="row">
