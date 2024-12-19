@@ -21,7 +21,6 @@
 
 #line1 {
     font-size: 4vw;
-    color: #000000;
     font-family: 'printFont';
     line-height: 3.5vw;
     direction: rtl;
@@ -29,14 +28,12 @@
 
 #line2 {
     font-size: 2.5vw;
-    color: #000000;
     font-family: 'printFont';
     direction: rtl;
 }
 
 #line3 {
     font-size: 2.5vw;
-    color: #000000;
     font-family: 'printFont';
     direction: rtl;
 }
