@@ -67,6 +67,8 @@
             var buffer = "";
             var fileName
             var step
+            var isModalOpen = false;
+            var questions
             const Steps = {
                 step1: "1",
                 step2: "2",
@@ -80,6 +82,7 @@
             let currentQuestionIndex = 0;
             let correctCount = 0;
             let timer;
+
 
             function onLoad() {
                 step = Steps.step1;
@@ -137,6 +140,8 @@
 
             document.addEventListener("keypress", function (e) {
                 document.activeElement.blur();
+
+                if (isModalOpen) return;
                 if (e.key === "Enter") {
                     if (buffer.length > 0) {
                         searchVal = buffer;
@@ -203,14 +208,16 @@
                 if (step != Steps.step3) {
                     step = Steps.step2;
                     result = cardData;
-                    if (systemConfig.buy == 1) {
-                        updateLines("בחרת במתנה: " + result.name, "")
-                        updateLinesByDevice()
-                    }
                     switch (result.type) {
                         case 1: {
-                            updateLines("בחרת ב: " + result.name, "")
-                            updateLinesByDevice()
+                            if (systemConfig.buy == 1) {
+                                updateLines("בחרת במתנה: " + result.name, "")
+                                updateLinesByDevice()
+                            }
+                            else {
+                                updateLines("בחרת ב: " + result.name, "")
+                                updateLinesByDevice()
+                            }
                             break;
                         }
                         case 2: {
@@ -224,11 +231,13 @@
             }
 
             function openTest() {
+                isModalOpen = true;
                 document.getElementById("cards").style.display = "none"
                 currentTest = tests.find(test => test.id == result.code);
                 currentQuestionIndex = 0;
                 correctCount = 0;
                 testNameElement.innerText = `${result.name}`;
+                questions = shuffleArray(currentTest.questions);
                 displayQuestion();
 
                 // Show Modal
@@ -236,19 +245,29 @@
                 triviaModal.show();
             }
 
+            // Function to shuffle the answers array
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                }
+                return array;
+            }
+
             function displayQuestion() {
-                const questionData = currentTest.questions[currentQuestionIndex];
+                const questionData = questions[currentQuestionIndex];
                 questionContainer.innerHTML = `
         <div class="mb-3">
-          <p><strong>${questionData.question}</strong></p>
-          ${questionData.answers.map((answer, i) => `
-            <div class="answer-button" onclick="submitAnswer(${i})">${answer}</div>
-          `).join('')}
+            <p><strong>${questionData.question}</strong></p>
+            ${questionData.answers.map((answer, i) => `
+                <div class="answer-button" onclick="submitAnswer(${i})">${answer}</div>
+            `).join('')}
         </div>
-      `;
+    `;
                 questionProgress.innerText = `${currentQuestionIndex + 1}/${currentTest.questions.length}`;
                 startTimer();
             }
+
 
             function startTimer() {
                 let timeLeft = 15;
@@ -280,6 +299,7 @@
             }
 
             function showResults() {
+                isModalOpen = false;
                 const score = correctCount * result.points;
                 updateLines("הציון שלך: " + score)
                 updateLinesByDevice()
