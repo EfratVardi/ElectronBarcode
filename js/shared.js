@@ -14,14 +14,14 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0","hasTests": "0","timer":"0", "buy": false };
+    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "hasTests": "0", "timer": "0", "buy": false };
 }
 
 function login(page) {
     window.location.href = page + '.html';
 }
 
-function getBackground(device, color, step="") {
+function getBackground(device, color, step = "") {
     switch (device) {
         case "0": {
             return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
@@ -68,9 +68,17 @@ function getPosition(color) {
     }
 }
 
+function getTextColor(color) {
+    switch (color) {
+        case "0":
+            return "#ffffff";
+        case "1":
+            return "#000000";
+    }
+}
 
 function getExcelFiles() {
-    return ["students", "uniqTasks", "products", "parents","tests"];
+    return ["students", "uniqTasks", "products", "parents", "tests"];
 }
 
 function getWonTexts() {
