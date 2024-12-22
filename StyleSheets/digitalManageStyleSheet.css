@@ -1,9 +1,4 @@
-﻿@font-face {
-    font-family: "myFirstFont";
-    src:url("../fonts/SecularOne-Regular.ttf");
-}
-
-.text {
+﻿.text {
     position: absolute;
     left: 10%;
     right: 10%;
@@ -15,7 +10,6 @@
     margin-left: auto;
     line-height: 2vw;
     color: white;
-    font-family: "myFirstFont";
 }
 
 #line1 {

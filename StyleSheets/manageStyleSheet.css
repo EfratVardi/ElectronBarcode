@@ -1,9 +1,4 @@
-﻿@font-face {
-    font-family: "myFirstFont";
-    src:url("../fonts/GanCLMBold.ttf");
-}
-
-.text {
+﻿.text {
     position: absolute;
     left: 10%;
     right: 10%;
@@ -14,7 +9,6 @@
     margin-right: auto;
     margin-left: auto;
     line-height: 2vw;
-    font-family: "myFirstFont";
 }
 
 #line1 {

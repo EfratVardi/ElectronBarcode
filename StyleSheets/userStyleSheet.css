@@ -1,14 +1,4 @@
-﻿@font-face {
-    font-family: "printFont";
-    src: url("../fonts/FbMagnolia-Regular.otf");
-}
-
-@font-face {
-    font-family: "myFirstFont";
-    src: url("../fonts/GanCLMBold.ttf");
-}
-
-.text {
+﻿.text {
     position: absolute;
     left: 10%;
     top: 20%;
@@ -18,15 +8,15 @@
     margin-right: auto;
     margin-left: auto;
     line-height: 4vw;
-    font-family: "myFirstFont";
 }
 
 #line1 {
-    font-size: 5.5vw;
+    font-size: 5vw;
+    font-weight: 800;
 }
 
 #line2 {
-    font-size: 3.5vw;}
+    font-size: 3vw;}
 
 #line3 {
     font-size: 2vw;
@@ -36,5 +26,4 @@
     font-size: 4vw;
     width: 18vw;
     border-radius: 0px 50px 50px 0px;
-    font-family: "myFirstFont";
 }
