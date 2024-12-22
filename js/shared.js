@@ -14,7 +14,7 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "hasTests": "0", "timer": "0", "buy": false };
+    return { "date": getYesterdayDate(), "position": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "hasTests": "0", "timer": "10", "buy": false };
 }
 
 function login(page) {
@@ -71,9 +71,9 @@ function getPosition(color) {
 function getTextColor(color) {
     switch (color) {
         case "0":
-            return "#ffffff";
-        case "1":
             return "#000000";
+        case "1":
+            return "#ffffff";
     }
 }
 

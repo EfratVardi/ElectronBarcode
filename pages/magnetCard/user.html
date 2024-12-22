@@ -66,12 +66,15 @@
             var searchVal = ""
             var buffer = "";
             var fileName
+            var isModalOpen = false;
+            var questions
             var step
             const Steps = {
                 step1: "1",
                 step2: "2",
                 step3: "3"
             };
+
             const questionContainer = document.getElementById('questionContainer');
             const questionProgress = document.getElementById('questionProgress');
             const testNameElement = document.getElementById('testName');
@@ -136,6 +139,7 @@
             }
 
             document.addEventListener("keypress", function (e) {
+                if (isModalOpen) return;
                 document.activeElement.blur();
                 if (e.key === "Enter") {
                     if (buffer.length > 0) {
@@ -222,20 +226,30 @@
             }
 
             function openTest() {
+                isModalOpen = true;
                 document.getElementById("cards").style.display = "none"
                 currentTest = tests.find(test => test.id == result.code);
                 currentQuestionIndex = 0;
                 correctCount = 0;
                 testNameElement.innerText = `${result.name}`;
+                questions = shuffleArray(currentTest.questions);
                 displayQuestion();
 
                 // Show Modal
                 const triviaModal = new bootstrap.Modal(document.getElementById('triviaModal'));
                 triviaModal.show();
             }
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                }
+                return array;
+            }
+
 
             function displayQuestion() {
-                const questionData = currentTest.questions[currentQuestionIndex];
+                const questionData = questions[currentQuestionIndex];
                 questionContainer.innerHTML = `
         <div class="mb-3">
           <p><strong>${questionData.question}</strong></p>
@@ -278,6 +292,7 @@
             }
 
             function showResults() {
+                isModalOpen = false;
                 const score = correctCount * result.points;
                 updateLines("הציון שלך: " + score)
                 updateLinesByDevice()
