@@ -31,44 +31,46 @@
       step2: "2",
       step3: "3"
     };
+    var classesPoints = ""
+    var defaultClassesPoints = [
+      { "code": 100, "name": "כיתה ט'1", "points": 0 },
+      { "code": 101, "name": "כיתה ט'2", "points": 0 },
+      { "code": 102, "name": "כיתה ט'3", "points": 0 },
+      { "code": 103, "name": "כיתה י'1", "points": 0 },
+      { "code": 104, "name": "כיתה י'2", "points": 0 },
+      { "code": 105, "name": "כיתה י'3", "points": 0 },
+      { "code": 106, "name": "כיתה יא'1", "points": 0 },
+      { "code": 107, "name": "כיתה יא'2", "points": 0 }
+    ];
 
     function onLoad() {
+      classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
+      if (classesPoints == null) {
+        localStorage.setItem("classesPoints", JSON.stringify(defaultClassesPoints));
+        classesPoints = defaultClassesPoints;
+      }
       step = Steps.step1;
-      updateLines("!...שלום", "יש לתקף את הכרטיס האישי בסורק הברקוד") 
-      fileName = 'systemConfig'
+      updateLines("?...מי הכיתה המנצחת", "");
+      fileName = 'systemConfig';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
         if (data == 0) {
-          systemConfig = getDefaultConfig()
+          systemConfig = getDefaultConfig();
+        } else {
+          systemConfig = JSON.parse(data);
         }
-        else {
-          systemConfig = JSON.parse(data)
-        }
-        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
+        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step);
         document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
-
-        if (systemConfig.position.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.position
-        }
-        else {
-          document.getElementById("position").style.display = "none";
-        }
-      })
-      fileName = 'students'
+      });
+      fileName = 'students';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
         if (data != 0) {
-          students = JSON.parse(data)
-          fileName = 'uniqTasks'
-          window.expose.SendExcel("sendReadExcel", fileName);
-          window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-            if (data != 0) {
-              uniqTasks = JSON.parse(data)
-            }
-          })
-        };
+          students = JSON.parse(data);
+        }
       });
+
+      renderClassCards(); // Render cards for the classes
     }
 
     document.addEventListener("keypress", function (e) {
@@ -78,17 +80,13 @@
           buffer = "";
           if (step == Steps.step1) {
             if (searchVal == '999999999')
-              login('../main/manage')
+              login('../main/manage');
             else if (searchVal == '011429519')
-              login('../main/system')
+              login('../main/system');
             else if (searchVal == '207594581')
-              login('../parentsMeeting/user')
+              login('../parentsMeeting/user');
             else
-              searchInExcel();//בת
-          }
-          else if (step == Steps.step2) {
-            //משימה רגילה/כללית
-            updateTask();
+              searchInExcel(); //בת
           }
         }
       } else {
@@ -97,7 +95,7 @@
     });
 
     function searchInExcel() {
-      step = Steps.step2
+      step = Steps.step2;
       for (var i = 0; i < students.length; i++) {
         if (students[i]["tz"] == searchVal) {
           studentResult = students[i];
@@ -105,131 +103,23 @@
         }
       }
       if (studentResult == "") {
-        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
+        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!");
         return;
       }
-      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
-      updateLines("(: שלום  " + studentResult.name, "יש לסרוק את הברקוד לעדכון משימה","עד כה צברת " + studentResult.points + " נקודות") 
-    }
-
-    function updateTask() {
-      step = Steps.step3;
-      for (var i = 0; i < uniqTasks.length; i++) {
-        if (uniqTasks[i]["code"] == searchVal) {
-          result = uniqTasks[i]
-          break;
-        }
-      }
-      if (result == "") {
-        showAlert("קוד לא תקין, גשו למורה!")
-        return;
-      }
-
-      if (systemConfig.type == "1") {
-        if (result.used == 1) {
-          showAlert("הי, משימה זו כבר תוקפה!");
-          return;
-        }
-      }
-      else if (systemConfig.type == "2")
-        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-          showAlert("הי, אסור להגיש משימה פעמיים!");
-          return;
-        }
-      finishSession()
-    }
-
-    function finishSession() {
-      studentResult.tasks += result.name + ',';
-      studentResult.tasksNumber += result.code + ',';
-      studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
       saveData();
     }
 
     function saveData() {
-      for (var i = 0; i < students.length; i++) {
-        if (students[i]["tz"] == studentResult.tz) {
-          students[i] = studentResult;
+      for (var i = 0; i < classesPoints.length; i++) {
+        if (classesPoints[i]["code"] == studentResult.class) {
+          classesPoints[i]["points"] += 30;
+          updateLines("(: כל הכבוד  " + classesPoints[i]["name"], "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
+          localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
+          renderClassCards(); // Update the cards dynamically
           break;
         }
       }
-      fileName = 'students'
-      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-      window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        if (systemConfig.type == 1) {
-          for (var i = 0; i < uniqTasks.length; i++) {
-            if (uniqTasks[i]["code"] == result.code) {
-              uniqTasks[i].used = 1
-              break;
-            }
-          }
-          fileName = 'uniqTasks'
-          window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-          window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
-        }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step);
-        updateLines( "ביצעת את משימה" + " " + result.name, " כעת יש בחשבונך " + studentResult.points + " נקודות ","...לא לשכוח לקחת את האישור מהמדפסת") 
-        if (systemConfig.hasPrint == 1)
-          setTimeout(function () {
-            toPrint();
-          }, 2000);
-        else
-          reset(2000);
-      });
-    }
-
-    function toPrint() {
-      const dynamicHTML = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8" />
-            <title>Print</title>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;;
-                    direction: rtl;
-                    margin: 0;
-                    padding: 0;
-                }
-                #title {
-                    font-size: 40px;
-                    text-align: center;
-                }
-                #content div {
-                    font-size: 20px;
-                    margin: 10px 0;
-                }
-                #footer {
-                    font-size: 10px;
-                    text-align: center;
-                    margin-top: 20px;
-                }
-            </style>
-        </head>
-        <body>
-            <div id="title">אישור</div>
-            <br>
-            <div id="content">
-                <div>${studentResult.name}</div>
-                <div>${studentResult.grade}</div>
-                <div>${systemConfig.buy == 0
-          ? "משימה: " + result.name
-          : "זכאות למתנה: " + result.name}</div>
-                <div>נקודות בחשבון: ${studentResult.points}</div>
-            </div>
-            <br>
-            <div id="title">בהצלחה!</div>
-            <br>
-            <br>
-            <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
-        </body>
-        </html>
-    `;
-      window.expose.send("sendPrint", dynamicHTML);
-      window.expose.receive("receivePrint", () => {
-        reset(1800);
-      });
+      reset(2000);
     }
 
     function reset(time = 0) {
@@ -247,17 +137,44 @@
     function showAlert(message) {
       document.querySelector(".modal-body").innerHTML = message;
       $(document).ready(function () {
-        $('#modal').modal('show')
+        $('#modal').modal('show');
       });
       setTimeout(function () {
         $(document).ready(function () {
-          $('#modal').modal('hide')
+          $('#modal').modal('hide');
         });
-        reset(0)
-      }
-        , 2500);
+        reset(0);
+      }, 2500);
     }
 
+    function renderClassCards() {
+      const cardsContainer = document.getElementById('cards-container');
+      cardsContainer.innerHTML = ''; // Clear existing cards
+      classesPoints.forEach(classData => {
+        const card = document.createElement('div');
+        card.className = 'card m-2';
+        card.style.width = '18rem';
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = 'card-title';
+        cardTitle.textContent = classData.name;
+        cardTitle.style.fontSize = '2vw';
+
+        const cardText = document.createElement('p');
+        cardText.className = 'card-text';
+        cardText.textContent = `${classData.points}`;
+        cardText.style.color = "#DF2569"
+        cardText.style.fontSize = '3vw';
+
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardText);
+        card.appendChild(cardBody);
+        cardsContainer.appendChild(card);
+      });
+    }
   </script>
 
   <div class="background" id="background">
@@ -266,9 +183,14 @@
       <div id="line2"></div>
       <div id="line3"></div>
       <br><br>
+      <div id="cards-container" class="d-flex flex-wrap justify-content-center mt-4"
+        style="direction: rtl; border: solid; border-color: #DF2569;"></div>
+      <button class="btn" onclick="login('../parentsMeeting/user')"> גרפולוגיה</button>
     </div>
-    <div id="position">עמדה</div>
   </div>
+
+  <!-- Cards Container -->
+
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

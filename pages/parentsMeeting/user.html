@@ -50,7 +50,7 @@
     var currentDateTime = getTodayDateTime()
     var systemConfig = ""
     var parents = ""
-    var searchVal=""
+    var searchVal = ""
     var step
     const Steps = {
       step1: "1",
@@ -117,7 +117,7 @@
         showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      updateLines("") 
+      updateLines("")
       if (result.tz == searchVal)
         studentStart()
       else if (result.tzParent == searchVal)
@@ -136,8 +136,9 @@
 
     function studentStart() {
       step = Steps.step2;
-      document.getElementById("line2").innerHTML = "שלום " + result.name;
-      document.getElementById("line3").innerHTML = "!ההדפסה של המכתב מאמא כבר מתחילה";
+
+      document.getElementById("line1").innerHTML = result.name + " " + result.grade;
+      document.getElementById("line2").innerHTML = result.text
       setTimeout(function () {
         toPrint();
       }, 2500);
@@ -192,12 +193,14 @@
         </style>
       </head>
       <body>
-        <div id="title">פתק מאמא</div>
+        <div id="title"><b>קבלה</b></div>
         <br>
         <div id="content">
           <div>${result.name}</div>
-          <div>${systemConfig.position}</div>
-          <div>${result.text || "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!"}</div>
+          <div>${result.grade}</div>
+          <br>
+          <div><b>משפט מהגרפולוגית:</b></div>
+          <div>${result.text}</div>
         </div>
         <br>
         <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
@@ -217,6 +220,12 @@
       }, time);
     }
 
+    function updateLines(line1Text, line2Text, line3Text = "") {
+      document.getElementById("line1").innerHTML = line1Text;
+      document.getElementById("line2").innerHTML = line2Text;
+      document.getElementById("line3").innerHTML = line3Text;
+    }
+
     function showAlert(message) {
       document.querySelector(".modal-body").innerHTML = message;
       $(document).ready(function () {
@@ -233,9 +242,9 @@
 
   <div class="background" id="background">
     <div class="text" id="text">
-      <div id="line1">ברוכה הבאה</div>
-      <div id="line2">אסיפת הורים תשפ"ד</div>
-      <div id="line3">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
+      <div id="line1">  </div>
+      <div id="line2"> עולות ביוקר</div>
+      <div id="line3"> </div>
 
       <form id="form" style="display: none;direction: rtl;">
         <div class="form-group col-md-10" style="padding-left: 16.666%; ">
