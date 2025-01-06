@@ -138,6 +138,7 @@
       step = Steps.step2;
 
       document.getElementById("line1").innerHTML = result.name + " " + result.grade;
+      document.getElementById("line2").style.fontSize='6vw'
       document.getElementById("line2").innerHTML = result.text
       setTimeout(function () {
         toPrint();
@@ -193,7 +194,7 @@
         </style>
       </head>
       <body>
-        <div id="title"><b>קבלה</b></div>
+        <div id="title"><b>במיוחד בשבילך</b></div>
         <br>
         <div id="content">
           <div>${result.name}</div>
@@ -210,7 +211,7 @@
 
       window.expose.send("sendPrint", dynamicHTML);
       window.expose.receive("receivePrint", () => {
-        reset(2500);
+        reset(3500);
       });
     }
 
@@ -243,8 +244,10 @@
   <div class="background" id="background">
     <div class="text" id="text">
       <div id="line1">  </div>
-      <div id="line2"> עולות ביוקר</div>
-      <div id="line3"> </div>
+      <div id="line2">  </div>
+      
+
+      <div id="line3"> עולות ביוקר</div>
 
       <form id="form" style="display: none;direction: rtl;">
         <div class="form-group col-md-10" style="padding-left: 16.666%; ">
