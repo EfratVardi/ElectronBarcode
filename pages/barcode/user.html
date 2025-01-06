@@ -153,7 +153,10 @@
       classesPoints.forEach(classData => {
         const card = document.createElement('div');
         card.className = 'card m-2';
-        card.style.width = '18rem';
+        card.style.width = '12rem';
+        card.style.border="solid"
+        card.style.borderColor = "#DF2569"
+
 
         const cardBody = document.createElement('div');
         cardBody.className = 'card-body';
@@ -166,8 +169,9 @@
         const cardText = document.createElement('p');
         cardText.className = 'card-text';
         cardText.textContent = `${classData.points}`;
-        cardText.style.color = "#DF2569"
         cardText.style.fontSize = '3vw';
+        cardText.style.color = "#DF2569"
+
 
         cardBody.appendChild(cardTitle);
         cardBody.appendChild(cardText);
@@ -184,7 +188,7 @@
       <div id="line3"></div>
       <br><br>
       <div id="cards-container" class="d-flex flex-wrap justify-content-center mt-4"
-        style="direction: rtl; border: solid; border-color: #DF2569;"></div>
+        style="direction: rtl;"></div>
       <button class="btn" onclick="login('../parentsMeeting/user')"> גרפולוגיה</button>
     </div>
   </div>
