@@ -26,7 +26,7 @@
         </div>
         <div id="position">עמדה</div>
 
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" style="color: black;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -109,7 +109,7 @@
                         updateLines("שלום...!", "יש לבחור מתנה לקנייה")
                     }
                     else {
-                        updateLines("שלום...!", "יש לבחור מהרשימה")
+                        updateLines("שלום...!", "יש לבחור נקודות לטעינה")
                     }
                     fileName = 'students'
                     window.expose.SendExcel("sendReadExcel", fileName);
@@ -150,6 +150,8 @@
                         if (step == Steps.step1) {
                             if (searchVal == '999999999')
                                 login('../main/manage')
+                            if (searchVal == '111111111')
+                                login('../parentsMeeting/user')
                             else if (searchVal == '011429519')
                                 login('../main/system')
                             else {

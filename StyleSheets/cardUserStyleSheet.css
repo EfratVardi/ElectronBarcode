@@ -1,7 +1,7 @@
 ﻿.text {
     position: absolute;
     left: 5%;
-    top: 10%;
+    top: 23%;
     bottom: 10%;
     width: 90%;
     text-align: center;
@@ -92,11 +92,11 @@
     font-size: 1.5rem;
 }
 
-.modal-lg {
+/* .modal-lg {
     max-width: 800px;
 }
 
-.modal {
+.modal2 {
     pointer-events: none;
 }
 
@@ -106,4 +106,4 @@
 
 #triviaModal .modal-content {
     height: 85%; /* התאמה אישית של הגובה */
-}
+/* } */ 

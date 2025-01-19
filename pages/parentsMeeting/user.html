@@ -49,8 +49,8 @@
     var currentDate = getTodayDate()
     var currentDateTime = getTodayDateTime()
     var systemConfig = ""
-    var parents = ""
-    var searchVal=""
+    var students = ""
+    var searchVal = ""
     var step
     const Steps = {
       step1: "1",
@@ -79,11 +79,11 @@
         else {
           document.getElementById("position").style.display = "none";
         }
-        fileName = 'parents'
+        fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
           if (data != 0) {
-            parents = JSON.parse(data)
+            students = JSON.parse(data)
           }
         })
       })
@@ -95,7 +95,7 @@
           if (step == Steps.step1) {
             if (searchVal == '011429519')
               login('../main/system')
-            else if (searchVal == '207594581')
+            else if (searchVal == '111111111')
               login('../main/user')
             else //כיתה או בת
               searchInExcel();
@@ -107,9 +107,10 @@
     });
 
     function searchInExcel() {
-      for (var i = 0; i < parents.length; i++) {
-        if (parents[i]["tz"] == searchVal || parents[i]["tzParent"] == searchVal) {
-          result = parents[i];
+      step = Steps.step2;
+      for (var i = 0; i < students.length; i++) {
+        if (students[i]["tz"] == searchVal) {
+          result = students[i];
           break;
         }
       }
@@ -117,13 +118,19 @@
         showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      updateLines("") 
-      if (result.tz == searchVal)
-        studentStart()
-      else if (result.tzParent == searchVal)
-        paretntStart()
-    }
+      if (result.points >= 170)
+        updateLines(result.name, "!ברוכה הבאה לשמורה", "!...מוזמנת להיכנס")
+      else
+      updateLines(result.name ,"...מצטערים", "אין לך מספיק נקודות בחשבון")
 
+      reset(3000);
+    }
+    function updateLines(line1Text, line2Text, line3Text = "") {
+      if (line1Text != "*")
+        document.getElementById("line1").innerHTML = line1Text;
+      document.getElementById("line2").innerHTML = line2Text;
+      document.getElementById("line3").innerHTML = line3Text;
+    }
     function paretntStart() {
       step = Steps.step2;
       document.getElementById("line2").innerHTML = " שלום אמא של " + result.name;
@@ -233,9 +240,9 @@
 
   <div class="background" id="background">
     <div class="text" id="text">
-      <div id="line1">ברוכה הבאה</div>
-      <div id="line2">אסיפת הורים תשפ"ד</div>
-      <div id="line3">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
+      <div id="line1">כדי להיכנס לשמורה</div>
+      <div id="line2">העבירי את הצ'יפ בקורא</div>
+      <div id="line3"></div>
 
       <form id="form" style="display: none;direction: rtl;">
         <div class="form-group col-md-10" style="padding-left: 16.666%; ">
