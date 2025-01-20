@@ -35,7 +35,7 @@ function getBackground(device, color, step = "") {
                 case "3":
                     return "url('../../resources/barcode/ravKavBackground.png')";
                 case "4":
-                    return "url('../../../../personalBackground.png')";
+                    return "url('../../resources/barcode/personalBackground.png')";
             }
         };
         case "2":
@@ -47,7 +47,7 @@ function getBackground(device, color, step = "") {
                     case "3":
                         return "url('../../resources/magnetCard/ravKavBackground.png')";
                     case "4":
-                        return "url('../../../../personalBackground.png')";
+                        return "url('../../resources/magnetCard/personalBackground.png')";
                 };
             };
         case "3": {
