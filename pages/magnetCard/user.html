@@ -26,7 +26,7 @@
         </div>
         <div id="position">עמדה</div>
 
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" style="color: black;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -185,7 +185,7 @@
 
                     const footerSmall = document.createElement("small");
                     footerSmall.classList.add("text-body-secondary");
-                    footerSmall.textContent = cardData.points + ' נקודות'
+                    footerSmall.textContent = cardData.points + ' קולות'
 
                     const cardBody = document.createElement("div");
                     cardBody.classList.add("card-body");
@@ -334,7 +334,7 @@
                 else {
                     studentResult.points = parseInt(studentResult.points) - parseInt(result.points);
                     if (studentResult.points < 0) {
-                        showAlert("אין לך מספיק נקודות בחשבון!")
+                        showAlert("אין לך מספיק קולות בחשבון!")
                         return;
                     }
                 }
@@ -351,7 +351,7 @@
                 fileName = 'students'
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+                    updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " קולות", "בהצלחה!")
                     if (systemConfig.hasPrint == 1)
                         setTimeout(function () {
                             toPrint();
@@ -399,7 +399,7 @@
                 <div>${systemConfig.buy == 0
                         ? "" + result.name
                         : "זכאות למתנה: " + result.name}</div>
-                <div>נקודות בחשבון: ${studentResult.points}</div>
+                <div>קולות בחשבון: ${studentResult.points}</div>
             </div>
             <br>
             <div id="title">בהצלחה!</div>

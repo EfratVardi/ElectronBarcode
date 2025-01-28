@@ -26,9 +26,10 @@
 }
 
 #position {
-    font-size: 4vw;
+    font-size: 3vw;
     width: 18vw;
     border-radius: 0px 50px 50px 0px;
+    color: black;
 }
 
 .row {
