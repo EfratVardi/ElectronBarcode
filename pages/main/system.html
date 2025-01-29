@@ -164,14 +164,12 @@
                 }
             });
 
-            // Handle background file upload
             uploadBackground.addEventListener('change', function (event) {
                 const file = event.target.files[0];
                 if (file && file.type === 'image/png') {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const data = e.target.result;
-                        // Send the file to the backend for saving
                         window.expose.send("sendUploadBackground", data);
                         window.expose.receive("recieveUploadBackground", (data) => {
                             location.reload()
@@ -395,8 +393,8 @@
                         <input type="date" class="form-control" id="date">
                     </div>
                     <div class="col-md-1">
-                        <label for="position" class="form-label">עמדה</label>
-                        <input type="number" class="form-control" id="position">
+                        <label for="numPosition" class="form-label">עמדה</label>
+                        <input type="number" class="form-control" id="numPosition">
                     </div>
                     <div class="col-md-1">
                         <label for="hasPrint" class="form-label">הדפסה</label>

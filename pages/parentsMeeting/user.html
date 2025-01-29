@@ -50,7 +50,7 @@
     var currentDateTime = getTodayDateTime()
     var systemConfig = ""
     var parents = ""
-    var searchVal=""
+    var searchVal = ""
     var step
     const Steps = {
       step1: "1",
@@ -69,12 +69,13 @@
         else {
           systemConfig = JSON.parse(data)
         }
-        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)
+        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
+        document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
         document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
 
-        if (systemConfig.position.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.position
+        if (systemConfig.numPosition.length > 0) {
+          document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
         }
         else {
           document.getElementById("position").style.display = "none";
@@ -117,7 +118,6 @@
         showAlert(" הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      updateLines("") 
       if (result.tz == searchVal)
         studentStart()
       else if (result.tzParent == searchVal)
@@ -126,9 +126,8 @@
 
     function paretntStart() {
       step = Steps.step2;
-      document.getElementById("line2").innerHTML = " שלום אמא של " + result.name;
+      updateLines(""," שלום אמא של " + result.name,"כתבי כאן כמה מילים טובות לביתך")
       document.getElementById("line2").style.fontSize = "4.5vw"
-      document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
       document.getElementById("text").style.top = "15%";
       document.getElementById("content").value = result.text ? result.text : ""
       document.getElementById("form").style.display = "inline"
@@ -136,8 +135,7 @@
 
     function studentStart() {
       step = Steps.step2;
-      document.getElementById("line2").innerHTML = "שלום " + result.name;
-      document.getElementById("line3").innerHTML = "!ההדפסה של המכתב מאמא כבר מתחילה";
+      updateLines("","שלום " + result.name,"!המכתב מאמא מודפס עכשיו. בהנאה");
       setTimeout(function () {
         toPrint();
       }, 2500);
@@ -156,8 +154,7 @@
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
         document.getElementById("form").style.display = "none"
         document.getElementById("text").style.top = "30%";
-        document.getElementById("line2").innerHTML = "!המכתב נשמר";
-        document.getElementById("line3").innerHTML = "...תודה רבה על שיתוף הפעולה";
+        updateLines("","!המכתב נשמר","...תודה רבה על שיתוף הפעולה")
         reset(2000);
       });
     }
@@ -211,6 +208,13 @@
       });
     }
 
+    function updateLines(line1Text, line2Text, line3Text = "") {
+      if (line1Text != "*")
+        document.getElementById("line1").innerHTML = line1Text;
+      document.getElementById("line2").innerHTML = line2Text;
+      document.getElementById("line3").innerHTML = line3Text;
+    }
+
     function reset(time = 0) {
       setTimeout(function () {
         location.reload();
@@ -251,7 +255,7 @@
     <div id="position">עמדה</div>
   </div>
 
-  <div class="modal fade" style="direction: rtl" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

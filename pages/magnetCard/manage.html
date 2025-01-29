@@ -40,14 +40,40 @@
         var productsColumnDefs = [
             { checkboxSelection: true },
             { headerName: "שם", field: "name", editable: true },
-            { headerName: "נקודות", field: "points", editable: true }
+            { headerName: "נקודות", field: "points", editable: true },
+            {
+                headerName: "תיקוף מרובה",
+                field: "multiple",
+                cellRenderer: function (params) {
+                    return `<input type="checkbox" ${params.value ? 'checked' : ''} />`;
+                },
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: [0, 1]
+                },
+                editable: true,
+                cellStyle: { textAlign: 'center' }
+            }
         ];
 
         var tasksGridOptions
         var tasksColumnDefs = [
             { checkboxSelection: true },
             { headerName: "שם", field: "name", editable: true },
-            { headerName: "נקודות", field: "points", editable: true }
+            { headerName: "נקודות", field: "points", editable: true },
+            {
+                headerName: "תיקוף מרובה",
+                field: "multiple",
+                cellRenderer: function (params) {
+                    return `<input type="checkbox" ${params.value ? 'checked' : ''} />`;
+                },
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: [0, 1]
+                },
+                editable: true,
+                cellStyle: { textAlign: 'center' }
+            }
         ];
 
         function onLoad() {
@@ -123,6 +149,7 @@
                 defaultColDef: {
                     sortable: true,
                 },
+                 onCellClicked: cellClickedTask,
                 onCellEditingStopped: editTask,
                 onRowSelected: onTaskRowSelected,
                 onFirstDataRendered: onTasksFirstRendered,
@@ -142,10 +169,10 @@
                 defaultColDef: {
                     sortable: true,
                 },
+                onCellClicked: cellClickedProduct,
                 onCellEditingStopped: editProduct,
                 onRowSelected: onProductsRowSelected,
                 onFirstDataRendered: onProductsFirstRendered,
-
             };
             var productsGridDiv = document.querySelector('#productsGrid');
             new agGrid.Grid(productsGridDiv, productsGridOptions);
@@ -198,6 +225,22 @@
             });
         }
 
+        function cellClickedTask(params) {
+            if (params.colDef.field === 'multiple') {
+                params.data.multiple = params.data.multiple === 1 ? 0 : 1;
+                params.api.refreshCells({ rowNodes: [params.node] });
+                editTask()
+            }
+        }
+
+        function cellClickedProduct(params) {
+            if (params.colDef.field === 'multiple') {
+                params.data.multiple = params.data.multiple === 1 ? 0 : 1;
+                params.api.refreshCells({ rowNodes: [params.node] });
+                editProduct()
+            }
+        }
+
         function editTask(params) {
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
@@ -242,7 +285,7 @@
         function newTask() {
             const code = uniqTasks[uniqTasks.length - 1].code + 1;
             uniqTasks.push({
-                name: '------', code: code, points: 0, multiple: true
+                name: '------', code: code, points: 0, multiple: true, type: 1
             })
             fileName = 'uniqTasks'
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
@@ -254,7 +297,7 @@
         function newProduct() {
             const code = products[products.length - 1].code + 1;
             products.push({
-                name: '------', code: code, points: 0, multiple: true
+                name: '------', code: code, points: 0, multiple: false, type: 1
             })
             fileName = 'products'
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
