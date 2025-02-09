@@ -8,7 +8,8 @@
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "reset": "git reset --hard",
-    "build": "electron-builder --help"
+    "build": "electron-builder --help",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": "https://github.com/EfratVardi/ElectronBarcode.git",
   "keywords": [
@@ -18,17 +19,23 @@
   "author": "Efrat Malka",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.0.0",
+    "electron": "^34.1.0",
     "electron-builder": "^22.8.0",
+    "electron-rebuild": "^3.2.9",
     "nodemon": "^2.0.0"
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
-    "jquery": "^3.6.3"
+    "jquery": "^3.6.3",
+    "sqlite3": "5.1.6"
   },
   "build": {
     "extraResources": [
       "./extraResources/**"
+    ],
+    "asarUnpack": [
+      "node_modules/sqlite3",
+      "node_modules/sqlite3/build/Release"
     ]
   }
 }

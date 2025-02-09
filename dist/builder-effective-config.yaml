@@ -4,5 +4,8 @@ directories:
 extraResources:
   - filter:
       - ./extraResources/**
+asarUnpack:
+  - node_modules/sqlite3
+  - node_modules/sqlite3/build/Release
 files: []
-electronVersion: 9.4.4
+electronVersion: 34.1.0

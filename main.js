@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, session, dialog } = require('electron')
 const fs = require('fs')
 let mainWindow
 const path = require('path');
+const db = require('./DB/dataBase'); // חיבור למסד הנתונים
 
 function createWindow() {
   let ses = session.defaultSession
