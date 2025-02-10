@@ -55,7 +55,6 @@ function initializeDatabase() {
     });
 }
 
-// פונקציה להוספת ערכי ברירת מחדל אם אין נתונים בטבלה
 function insertDefaultSystemValues() {
     db.get(`SELECT COUNT(*) as count FROM system`, (err, row) => {
         if (err) {
