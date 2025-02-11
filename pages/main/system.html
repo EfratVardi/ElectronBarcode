@@ -6,12 +6,11 @@
     <title>הגדרות המערכת</title>
 </head>
 
-<body onload="onLoad()">
+<body>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="../../styleSheets/systemStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
     <script src="../../js/ag-grid-community.min.js"></script>
-    <script src="../../js/uniqTasks-ag-grid.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/xlsx.full.min.js"></script>
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -27,7 +26,7 @@
         var fileName
         var searchVal = ""
 
-        function onLoad() {
+        window.addEventListener('DOMContentLoaded', () => {
             const device = document.getElementById('device');
             const color = document.getElementById('color');
             const typeWrapper = document.getElementById('typeWrapper');
@@ -51,53 +50,7 @@
             const uploadPollsWrapper = document.getElementById('uploadPollsWrapper');
             const uploadPolls = document.getElementById('uploadPolls');
 
-            fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                document.getElementById("background").style.backgroundImage = getBackground("1", "1");
-
-                Object.entries(systemConfig).forEach(x => {
-                    if (x[0] != 'buy')
-                        document.getElementById(x[0]).value = x[1]
-                })
-                const changeEvent = new Event('change');
-                device.dispatchEvent(changeEvent);
-                hasBuy.dispatchEvent(changeEvent);
-                hasParents.dispatchEvent(changeEvent);
-                hasTests.dispatchEvent(changeEvent);
-                color.dispatchEvent(changeEvent);
-                textColor.dispatchEvent(changeEvent);
-            })
-
-            fileName = 'students'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    students = JSON.parse(data);
-                }
-            })
-
-            fileName = 'uniqTasks'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    uniqTasks = JSON.parse(data)
-                }
-            })
-
-            fileName = 'products'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    products = JSON.parse(data)
-                }
-            })
+            window.expose.getSystemSettings();  // שליחה ל-preload.js
 
             hasParents.addEventListener('change', function () {
                 const selectedOption = hasParents.value;
@@ -150,14 +103,14 @@
                 else {
                     typeWrapper.style.display = "none";
                     hasParentsWrapper.style.display = "none";
-                    type.value = "0";
-                    hasParents.value = "0";
+                    type.value = 1;
+                    hasParents.value = 0;
                     hasParents.dispatchEvent(changeEvent);
                 }
             });
 
             color.addEventListener('change', function () {
-                if (color.value === '4') {
+                if (color.value === 4) {
                     uploadBackgroundWrapper.style.display = "unset";
                 } else {
                     uploadBackgroundWrapper.style.display = "none";
@@ -180,7 +133,38 @@
                     alert("אנא בחר קובץ PNG.");
                 }
             });
-        }
+        });
+
+        // קבלת ההגדרות מ-`preload.js`
+        window.expose.receiveSystemSettings((data) => {
+            console.log("✅ נתוני המערכת:", data);
+
+            document.getElementById('numPosition').value = data.numPosition;
+            document.getElementById('hasPrint').value = data.hasPrint;
+            document.getElementById('hasBuy').value = data.hasBuy;
+            document.getElementById('device').value = data.device;
+            document.getElementById('color').value = data.color;
+            document.getElementById('type').value = data.type;
+            document.getElementById('hasParents').value = data.hasParents;
+            document.getElementById('hasTests').value = data.hasTests;
+            document.getElementById('timer').value = data.timer;
+            document.getElementById('textColor').value = data.textColor;
+            document.getElementById('date').value = data.date;
+
+            const changeEvent = new Event('change');
+            device.dispatchEvent(changeEvent);
+            hasBuy.dispatchEvent(changeEvent);
+            hasParents.dispatchEvent(changeEvent);
+            hasTests.dispatchEvent(changeEvent);
+            color.dispatchEvent(changeEvent);
+            textColor.dispatchEvent(changeEvent);
+        });
+
+        // במקרה של שגיאה
+        window.expose.receiveSystemSettingsError((error) => {
+            console.error('❌ לא ניתן לטעון את הגדרות המערכת:', error);
+        });
+
 
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
@@ -301,25 +285,34 @@
             }
         }
 
+        // קוד HTML והפונקציה שתקרא בעת עדכון הנתונים
         function update() {
-            Object.entries(systemConfig).forEach(x => {
-                var key = x[0]
-                if (key != 'buy')
-                    systemConfig[key] = document.getElementById(x[0]).value;
-                else {
-                    systemConfig[key] = 0;
+            const updatedValues = {
+                date: document.getElementById('date').value,
+                numPosition: document.getElementById('numPosition').value,
+                hasPrint: document.getElementById('hasPrint').value,
+                hasBuy: document.getElementById('hasBuy').value,
+                device: document.getElementById('device').value,
+                color: document.getElementById('color').value,
+                type: document.getElementById('type').value,
+                hasParents: document.getElementById('hasParents').value,
+                hasTests: document.getElementById('hasTests').value,
+                timer: document.getElementById('timer').value,
+                textColor: document.getElementById('textColor').value
+            };
+
+            // שליחה ל-preload.js
+            window.expose.updateSystemSettings(updatedValues);
+
+            // קבלת התשובה אם העדכון הצליח
+            window.expose.receiveUpdatedSystemSettings((response) => {
+                if (response.success) {
+                    console.log('✅ הגדרות המערכת עודכנו בהצלחה');
+                    // location.reload();  // טעינה מחדש
+                } else {
+                    console.error('❌ שגיאה בעדכון הגדרות המערכת:', response.error);
                 }
-            })
-
-            fileName = "systemConfig"
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(systemConfig)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                location.reload()
             });
-        }
-
-        function exportUniqTasks() {
-            ExportUniqTasks()
         }
     </script>
 
@@ -336,50 +329,47 @@
                     <div class="col-md-2">
                         <label for="device" class="form-label">סוג מכשיר</label>
                         <select class="form-control" id="device">
-                            <option value="0">בחר</option>
-                            <option value="1">סורק ברקוד</option>
-                            <option value="2">כרטיס מגנטי</option>
-                            <option value="3">כרטיס גירוד</option>
-                            <option value="4">צ'יפים</option>
+                            <option value=1>סורק ברקוד</option>
+                            <option value=2>כרטיס מגנטי</option>
+                            <option value=3>כרטיס גירוד</option>
+                            <option value=4>צ'יפים</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label for="color" class="form-label">עיצוב</label>
                         <select class="form-control" id="color">
-                            <option value="0">בחר</option>
-                            <option value="1">ורוד</option>
-                            <option value="2">ירוק</option>
-                            <option value="3">רב קו</option>
-                            <option value="4">עיצוב אישי</option>
+                            <option value=1>ורוד</option>
+                            <option value=2>ירוק</option>
+                            <option value=3>רב קו</option>
+                            <option value=4>עיצוב אישי</option>
                         </select>
                     </div>
-                    <div class="col-md-2" id="textColorWrapper" >
+                    <div class="col-md-2" id="textColorWrapper">
                         <label for="textColor" class="form-label"> צבע כיתוב</label>
                         <select class="form-control" id="textColor">
-                            <option value="0">לבן</option>
-                            <option value="1">שחור</option>
+                            <option value=0>לבן</option>
+                            <option value=1>שחור</option>
                         </select>
                     </div>
                     <div class="col-md-2" id="typeWrapper" style="display: none;">
                         <label for="type" class="form-label">סוג משחק</label>
                         <select class="form-control" id="type">
-                            <option value="0">בחר</option>
-                            <option value="1">אישי</option>
-                            <option value="2">כללי</option>
+                            <option value=1>אישי</option>
+                            <option value=2>כללי</option>
                         </select>
                     </div>
                     <div class="col-md-1" id="hasParentsWrapper" style="display: none;">
                         <label for="hasParents" class="form-label"> הורים</label>
                         <select class="form-control" id="hasParents">
-                            <option value="0">בלי</option>
-                            <option value="1">עם</option>
+                            <option value=0>בלי</option>
+                            <option value=1>עם</option>
                         </select>
                     </div>
                     <div class="col-md-1" id="hasTestsWrapper" style="display: none;">
                         <label for="hasTests" class="form-label"> מבחנים</label>
                         <select class="form-control" id="hasTests">
-                            <option value="0">בלי</option>
-                            <option value="1">עם</option>
+                            <option value=0>בלי</option>
+                            <option value=1>עם</option>
                         </select>
                     </div>
                     <div class="col-md-1" id="timerWrapper" style="display: none;">
@@ -399,15 +389,15 @@
                     <div class="col-md-1">
                         <label for="hasPrint" class="form-label">הדפסה</label>
                         <select class="form-control" id="hasPrint">
-                            <option value="1">עם</option>
-                            <option value="0">בלי</option>
+                            <option value=1>עם</option>
+                            <option value=0>בלי</option>
                         </select>
                     </div>
                     <div class="col-md-1">
                         <label for="hasBuy" class="form-label">קניה</label>
                         <select class="form-control" id="hasBuy">
-                            <option value="0">בלי</option>
-                            <option value="1">עם</option>
+                            <option value=0>בלי</option>
+                            <option value=1>עם</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -446,10 +436,6 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">
-                        <label class="form-label">.</label>
-                        <button onclick="exportUniqTasks()" class="form-control"> משימות</button>
-                    </div>
                     <div class="col-md-2">
                         <label class="form-label">.</label>
                         <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>

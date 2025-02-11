@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, session, dialog } = require('electron')
 const fs = require('fs')
 let mainWindow
 const path = require('path');
-const db = require('./DB/dataBase'); 
+const db = require('./DB/dataBase');
 
 function createWindow() {
   let ses = session.defaultSession
@@ -116,6 +116,26 @@ ipcMain.on("sendUploadBackground", (event, args) => {
       console.log(err)
     }
     mainWindow.webContents.send("recieveUploadBackground", 1);
+  });
+});
+
+ipcMain.on('get-system-settings', (event) => {
+  db.getSystemSettings((err, data) => {
+      if (err) {
+          event.reply('system-settings-error', err);
+      } else {
+          event.reply('system-settings', data);  // מחזירים את הנתונים
+      }
+  });
+});
+
+ipcMain.on('update-system-settings', (event, updatedValues) => {
+  db.updateSystemConfig(updatedValues, (err) => {
+      if (err) {
+          event.reply('updated-system-settings', { success: false, error: err.message });
+      } else {
+          event.reply('updated-system-settings', { success: true });
+      }
   });
 });
 

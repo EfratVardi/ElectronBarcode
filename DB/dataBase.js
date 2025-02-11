@@ -63,7 +63,7 @@ function insertDefaultSystemValues() {
             db.run(`
                 INSERT INTO system (date, numPosition, hasPrint, hasBuy, device, color, type, hasParents, hasTests, timer, buy, textColor)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `, [getYesterdayDate(), "", true, true, 0, 0, 0, false, false, 10, false, 0], (err) => {
+            `, [getYesterdayDate(), "", true, true, 1, 1, 1, false, false, 10, false, 0], (err) => {
                 if (err) {
                     console.error('❌ שגיאה בהוספת ערכי ברירת מחדל לטבלת system:', err.message);
                 } else {
@@ -74,4 +74,56 @@ function insertDefaultSystemValues() {
     });
 }
 
-module.exports = db;
+// פונקציה לשליפת הגדרות המערכת
+function getSystemSettings(callback) {
+    const query = `SELECT * FROM system LIMIT 1`;
+    db.get(query, (err, row) => {
+        if (err) {
+            console.error('❌ שגיאה בטעינת ערכי הגדרות המערכת:', err.message);
+            callback(err, null);
+        } else {
+            console.log('✅ ערכי הגדרות מערכת נטענו בהצלחה:', row);
+            callback(null, row);  // מחזירים את הערכים לממשק
+        }
+    });
+}
+
+// בקובץ db.js
+function updateSystemConfig(updatedValues, callback) {
+    const query = `
+        UPDATE system
+        SET
+            date = ?,
+            numPosition = ?,
+            hasPrint = ?,
+            hasBuy = ?,
+            device = ?,
+            color = ?,
+            type = ?,
+            hasParents = ?,
+            hasTests = ?,
+            timer = ?,
+            buy = ?,
+            textColor = ?
+        WHERE id = 1
+    `;
+    
+    db.run(query, Object.values(updatedValues), (err) => {
+        if (err) {
+            console.error('❌ Error updating system settings:', err.message);
+            callback(err);
+        } else {
+            console.log('✅ System settings updated successfully.');
+            callback(null);  // Success callback
+        }
+    });
+}
+
+
+module.exports = {
+    db,
+    getSystemSettings,
+    insertDefaultSystemValues,
+    initializeDatabase,
+    updateSystemConfig
+};
