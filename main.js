@@ -124,7 +124,7 @@ ipcMain.on('get-system-settings', (event) => {
       if (err) {
           event.reply('system-settings-error', err);
       } else {
-          event.reply('system-settings', data);  // מחזירים את הנתונים
+          event.reply('recieve-system-settings', data);  // מחזירים את הנתונים
       }
   });
 });
@@ -132,7 +132,17 @@ ipcMain.on('get-system-settings', (event) => {
 ipcMain.on('update-system-settings', (event, updatedValues) => {
   db.updateSystemConfig(updatedValues, (err) => {
       if (err) {
-          event.reply('updated-system-settings', { success: false, error: err.message });
+          event.reply('recieve-update-system-settings', { success: false, error: err.message });
+      } else {
+          event.reply('recieve-update-system-settings', { success: true });
+      }
+  });
+});
+
+ipcMain.on('update-system-settings', (event, updatedValues) => {
+  db.insertDataFromExcel(updatedValues, (err) => {
+      if (err) {
+          event.reply('insert-data', { success: false, error: err.message });
       } else {
           event.reply('updated-system-settings', { success: true });
       }

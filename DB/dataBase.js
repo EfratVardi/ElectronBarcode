@@ -2,15 +2,12 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-// קביעת נתיב מסד הנתונים
 const dbPath = path.join(process.env.APPDATA || path.join(process.env.HOME, 'AppData', 'Roaming'), 'accumulatingpoints', 'database.sqlite');
 
-// יצירת התיקייה אם אינה קיימת
 if (!fs.existsSync(path.dirname(dbPath))) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 }
 
-// פתיחת חיבור למסד הנתונים
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('❌ שגיאה בפתיחת מסד הנתונים:', err.message);
@@ -51,6 +48,58 @@ function initializeDatabase() {
         } else {
             console.log('Create System Table');
             insertDefaultSystemValues();
+        }
+    });
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS students (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tz TEXT NOT NULL,
+            name TEXT NOT NULL,
+            grade TEXT,
+            points INTEGER DEFAULT 0,
+            position INTEGER
+        )
+    `, (err) => {
+        if (err) {
+            console.error('❌ Error creating students table:', err.message);
+        } else {
+            console.log('✅ Created students table');
+        }
+    });
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL,
+            name TEXT NOT NULL,
+            points INTEGER DEFAULT 0,
+            type TEXT,
+            class BOOLEAN DEFAULT false,
+            multiple BOOLEAN DEFAULT false
+        )
+    `, (err) => {
+        if (err) {
+            console.error('❌ Error creating tasks table:', err.message);
+        } else {
+            console.log('✅ Created tasks table');
+        }
+    });
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL,
+            name TEXT NOT NULL,
+            points INTEGER DEFAULT 0,
+            type TEXT,
+            multiple BOOLEAN DEFAULT false
+        )
+    `, (err) => {
+        if (err) {
+            console.error('❌ Error creating products table:', err.message);
+        } else {
+            console.log('✅ Created products table');
         }
     });
 }
@@ -107,7 +156,7 @@ function updateSystemConfig(updatedValues, callback) {
             textColor = ?
         WHERE id = 1
     `;
-    
+
     db.run(query, Object.values(updatedValues), (err) => {
         if (err) {
             console.error('❌ Error updating system settings:', err.message);
@@ -119,11 +168,59 @@ function updateSystemConfig(updatedValues, callback) {
     });
 }
 
+function insertDataFromExcel(table, data) {
+    // נמחק את כל הנתונים הקיימים בטבלה
+    db.run(`DELETE FROM ${table}`, (err) => {
+        if (err) {
+            console.error(`❌ Error deleting from ${table}:`, err.message);
+            return;
+        }
+
+        let query = '';
+        let placeholders = '';
+        let columns = [];
+
+        // התאמת הפונקציה לפי שם הטבלה
+        if (table === 'students') {
+            columns = ['tz', 'name', 'grade', 'points', 'position'];
+            placeholders = data.map(() => '(?, ?, ?, ?, ?)').join(',');
+            query = `
+                INSERT INTO students (tz, name, grade, points, position)
+                VALUES ${placeholders}
+            `;
+        } else if (table === 'tasks') {
+            columns = ['code', 'name', 'points', 'type', 'class', 'multiple'];
+            placeholders = data.map(() => '(?, ?, ?, ?, ?, ?)').join(',');
+            query = `
+                INSERT INTO tasks (code, name, points, type, class, multiple)
+                VALUES ${placeholders}
+            `;
+        } else if (table === 'products') {
+            columns = ['code', 'name', 'points', 'type', 'multiple'];
+            placeholders = data.map(() => '(?, ?, ?, ?, ?)').join(',');
+            query = `
+                INSERT INTO products (code, name, points, type, multiple)
+                VALUES ${placeholders}
+            `;
+        }
+
+        // המרת המידע ל-flatArray עבור ה-INSERT
+        const flatData = data.flat();
+        db.run(query, flatData, (err) => {
+            if (err) {
+                console.error(`❌ Error inserting data into ${table}:`, err.message);
+            } else {
+                console.log(`✅ Data inserted into ${table} table`);
+            }
+        });
+    });
+}
 
 module.exports = {
     db,
     getSystemSettings,
     insertDefaultSystemValues,
     initializeDatabase,
-    updateSystemConfig
+    updateSystemConfig,
+    insertDataFromExcel
 };

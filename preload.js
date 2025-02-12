@@ -4,10 +4,10 @@ const ipc = require('electron').ipcRenderer
 
 contextBridge.exposeInMainWorld('expose', {
     send: (channel, data) => {
-            ipcRenderer.send(channel, data);
+        ipcRenderer.send(channel, data);
     },
     receive: (channel, func) => {
-            ipcRenderer.on(channel, (event, ...args) => func(...args));
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
     },
     SendExcel: (channel, data) => {
         ipcRenderer.send(channel, data);
@@ -16,8 +16,8 @@ contextBridge.exposeInMainWorld('expose', {
         ipcRenderer.on(channel, (event, ...args) => func(...args));
     },
 
-     // לשלוח בקשה לקבלת נתוני המערכת
-     getSystemSettings: () => {
+    // לשלוח בקשה לקבלת נתוני המערכת
+    getSystemSettings: () => {
         ipcRenderer.send('get-system-settings'); // שליחת בקשה לקבלת ההגדרות
     },
 
@@ -26,20 +26,26 @@ contextBridge.exposeInMainWorld('expose', {
         ipcRenderer.on('system-settings', (event, data) => func(data));  // מחזירים את הנתונים
     },
 
-    // במקרה של שגיאה בטעינה
     receiveSystemSettingsError: (func) => {
         ipcRenderer.on('system-settings-error', (event, error) => func(error)); // קבלת שגיאה
     },
 
     updateSystemSettings: (data) => {
-        console.log("efrat")
         ipcRenderer.send('update-system-settings', data);
     },
 
-    receiveUpdatedSystemSettings: (callback) => {
-        ipcRenderer.on('updated-system-settings', callback);
+    receiveUpdateSystemSettings: (callback) => {
+        ipcRenderer.on('receive-update-system-settings', callback);
     },
-    
+
+    insertData: (fileName, fileData) => {
+        ipcRenderer.send('insert-data', { fileName, fileData });
+    },
+
+    receiveInsertData: (callback) => {
+        ipcRenderer.on('receive-insert-data', callback);
+    },
+
     appClose: () => {
         ipc.send('close')
     }

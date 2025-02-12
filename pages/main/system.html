@@ -26,6 +26,18 @@
         var fileName
         var searchVal = ""
 
+        document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
+
+        function handleExcelFile(fileName, data) {
+            const fileData = XLSX.read(data, { type: 'array' });
+            const sheetName = fileData.SheetNames[0];
+            const sheet = fileData.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(sheet);
+            insertDataFromExcel(fileName, jsonData);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const device = document.getElementById('device');
             const color = document.getElementById('color');
@@ -50,7 +62,7 @@
             const uploadPollsWrapper = document.getElementById('uploadPollsWrapper');
             const uploadPolls = document.getElementById('uploadPolls');
 
-            window.expose.getSystemSettings();  // שליחה ל-preload.js
+            window.expose.getSystemSettings(); // שליחה ל-preload.js
 
             hasParents.addEventListener('change', function () {
                 const selectedOption = hasParents.value;
@@ -165,7 +177,6 @@
             console.error('❌ לא ניתן לטעון את הגדרות המערכת:', error);
         });
 
-
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
                 if (searchVal.length > 0) {
@@ -182,31 +193,16 @@
         });
 
         function checkFileName(fileName) {
-            for (let i = 0; i < excelFiles.length; i++) {
-                if (fileName.startsWith(excelFiles[i])) {
-                    return excelFiles[i];
-                }
-            }
+            for (let i = 0; i < excelFiles.length; i++) { if (fileName.startsWith(excelFiles[i])) { return excelFiles[i]; } }
             return "";
-        }
-
-        function handleFileSelect(event) {
-            var file = event.target.files[0];
-            var reader = new FileReader();
+        } function handleFileSelect(event) {
+            var file = event.target.files[0]; var reader = new FileReader();
             reader.onload = function (e) {
-                var data = e.target.result;
-                const workbook = XLSX.read(data, { type: 'array' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const name = checkFileName(file.name)
-                let json_object;
-                if (name == "tests") {
-                    json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet));
-                }
-                else {
+                var data = e.target.result; const workbook = XLSX.read(data, { type: 'array' }); const
+                    sheetName = workbook.SheetNames[0]; const sheet = workbook.Sheets[sheetName]; const name = checkFileName(file.name)
+                let json_object; if (name == "tests") { json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet)); } else {
                     json_object = JSON.stringify(XLSX.utils.sheet_to_json(sheet));
-                }
-                if (name != "") {
+                } if (name != "") {
                     fileName = name;
                     window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
                     window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
@@ -247,36 +243,27 @@
             if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
                 if (students.length > 0 && uniqTasks.length > 0) {
                     for (var i = 0; i < students.length; i++) {
-                        students[i].points = 0
-                        students[i].tasksNumber = ','
+                        students[i].points = 0 students[i].tasksNumber = ','
                         students[i].tasks = ','
-                    }
-                    fileName = "students"
-                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        if (systemConfig.type == 1) {
-                            for (var i = 0; i < uniqTasks.length; i++) {
-                                uniqTasks[i].used = 0
+                    } fileName = "students" window.expose.SendExcel("sendWriteExcel", [fileName,
+                        JSON.stringify(students)]); window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                            if (systemConfig.type == 1) {
+                                for (var i = 0; i < uniqTasks.length; i++) { uniqTasks[i].used = 0 } fileName = "uniqTasks"
+                                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+                                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                                    // alert("!הקבצים אופסו בהצלחה")
+                                    location.reload()
+                                });
                             }
-                            fileName = "uniqTasks"
-                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                // alert("!הקבצים אופסו בהצלחה")
+                            else {
                                 location.reload()
-                            });
-                        }
-                        else {
-                            location.reload()
-                        }
+                            }
 
-                    });
+                        });
                 }
             }
             else {
-                for (var i = 0; i < products.length; i++) {
-                    products[i].used = 0
-                }
-                fileName = "products"
+                for (var i = 0; i < products.length; i++) { products[i].used = 0 } fileName = "products"
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     // alert("!הקבצים אופסו בהצלחה")
@@ -308,7 +295,7 @@
             window.expose.receiveUpdatedSystemSettings((response) => {
                 if (response.success) {
                     console.log('✅ הגדרות המערכת עודכנו בהצלחה');
-                    // location.reload();  // טעינה מחדש
+                    // location.reload(); // טעינה מחדש
                 } else {
                     console.error('❌ שגיאה בעדכון הגדרות המערכת:', response.error);
                 }
@@ -435,12 +422,12 @@
                         <input type="file" class="form-control" id="uploadPolls" accept="image/png">
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-2">
                         <label class="form-label">.</label>
                         <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
                     </div>
-                </div>
+                </div> -->
             </form>
             <br />
             <div id="tasksGrid"></div>
@@ -453,12 +440,8 @@
     </div>
 
     <script>
-        document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadParents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadTest').addEventListener('change', handleFileSelect, false);
-
     </script>
 </body>
 
