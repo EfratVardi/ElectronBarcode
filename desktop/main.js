@@ -14,12 +14,15 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('../shared/pages/main/user.html')
-  mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
 
   if (!app.isPackaged) {
+    mainWindow.loadFile('../shared/pages/main/user.html')
     mainWindow.menuBarVisible = true
+  }
+  else{
+    mainWindow.loadFile('/shared/pages/main/user.html')
+    mainWindow.menuBarVisible = false
   }
 
   ses.on('will-download', (e, downloadItem, webContents) => {
