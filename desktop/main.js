@@ -21,7 +21,7 @@ function createWindow() {
     mainWindow.menuBarVisible = true
   }
   else{
-    mainWindow.loadFile('/shared/pages/main/user.html')
+    mainWindow.loadFile('shared/pages/main/user.html')
     mainWindow.menuBarVisible = false
   }
 
