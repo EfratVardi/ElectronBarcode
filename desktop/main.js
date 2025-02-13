@@ -14,7 +14,7 @@ function createWindow() {
       preload: __dirname + '/preload.js'
     }
   })
-  mainWindow.loadFile('pages/main/user.html')
+  mainWindow.loadFile('../shared/pages/main/user.html')
   mainWindow.menuBarVisible = false
   mainWindow.fullScreen = true;
 
