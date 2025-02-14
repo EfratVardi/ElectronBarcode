@@ -62,7 +62,6 @@ app.on('ready', createWindow)
 ipcMain.on("sendPrint", (event, args) => {
   let printWindow = new BrowserWindow({ show: false });
   printWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(args));
-
   printWindow.webContents.once('did-finish-load', () => {
     printWindow.webContents.print(
       { silent: true, printBackground: true },
