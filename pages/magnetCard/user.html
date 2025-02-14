@@ -412,7 +412,7 @@
     `;
             window.expose.send("sendPrint", dynamicHTML);
             window.expose.receive("receivePrint", () => {
-                // reset();
+                reset();
             });
         }
 
