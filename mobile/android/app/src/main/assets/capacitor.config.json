@@ -1,5 +1,11 @@
 {
 	"appId": "com.example.accumulatingpoints",
 	"appName": "AccumulatingPoints",
-	"webDir": "www"
+	"webDir": "www",
+	"server": {
+		"allowNavigation": [
+			"capacitor://localhost",
+			"http://localhost"
+		]
+	}
 }

@@ -1,1 +1,28 @@
-<div>hii!!!</div>
+<body>
+    <h1>משתמשים:</h1>
+    <ul id="user-list"></ul>
+
+    <script type="module">
+        import { saveData, readData } from './fileManager.js';
+
+        async function setupFileStorage() {
+            let users = await readData();
+
+            // אם אין נתונים, נוסיף משתמש לדוגמה
+            if (users.length === 0) {
+                users.push({ id: 1, name: "אפרת", points: 100 });
+                await saveData(users);
+            }
+
+            // הצגת הנתונים על המסך
+            const userList = document.getElementById("user-list");
+            users.forEach(user => {
+                const li = document.createElement("li");
+                li.textContent = `${user.id}: ${user.name} - ${user.points} נקודות`;
+                userList.appendChild(li);
+            });
+        }
+
+        setupFileStorage();
+    </script>
+</body>
