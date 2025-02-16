@@ -7,12 +7,13 @@
 </head>
 
 <body onload="onLoad()">
-     <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link href="../../styleSheets/cardUserStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
     <script src="../../js/jquery.min.js"></script>
-  <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/shared.js"></script>
+    <script src="../../js/fileSystem.js"></script>
 
     <div class="background" id="background">
         <div class="text">
@@ -36,7 +37,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal for Trivia Test -->
     <div class="modal fade" id="triviaModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
         aria-labelledby="triviaModalLabel" aria-hidden="true">
@@ -84,61 +84,45 @@
         let correctCount = 0;
         let timer;
 
-        function onLoad() {
+        async function onLoad() {
             step = Steps.step1;
             fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
-                document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
-                document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
+            systemConfig = await readFile(fileName);
+            if (!systemConfig) {
+                systemConfig = getDefaultConfig()
+            }
+            else {
+                systemConfig = JSON.parse(systemConfig)
+            }
+            document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
+            document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
+            document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
+            document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
 
-                if (systemConfig.numPosition.length > 0) {
-                    document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
+            if (systemConfig.numPosition.length > 0) {
+                document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
+            }
+            else {
+                document.getElementById("position").style.display = "none";
+            }
+            if (systemConfig.buy) {
+                updateLines("שלום...!", "יש לבחור מתנה לקנייה")
+            }
+            else {
+                updateLines("שלום...!", "יש לבחור מהרשימה")
+            }
+            fileName = 'students'
+            students = await readFile(fileName);
+            if (students) {
+                students = JSON.parse(students);
+                systemConfig.buy ?
+                    fileName = 'products' : fileName = 'uniqTasks';
+                actions = await readFile(fileName);
+                if (actions) {
+                    actions = JSON.parse(actions)
+                    createCards()
                 }
-                else {
-                    document.getElementById("position").style.display = "none";
-                }
-                if (systemConfig.buy) {
-                    updateLines("שלום...!", "יש לבחור מתנה לקנייה")
-                }
-                else {
-                    updateLines("שלום...!", "יש לבחור מהרשימה")
-                }
-                fileName = 'students'
-                window.expose.SendExcel("sendReadExcel", fileName);
-                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                    if (data != 0) {
-                        students = JSON.parse(data)
-                        systemConfig.buy ?
-                            fileName = 'products' : fileName = 'uniqTasks';
-                        window.expose.SendExcel("sendReadExcel", fileName);
-                        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                            if (data != 0) {
-                                actions = JSON.parse(data)
-                                createCards()
-                            }
-                        })
-
-                        if (systemConfig.hasTests == "1") {
-                            fileName = 'tests';
-                            window.expose.SendExcel("sendReadExcel", fileName);
-                            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                                if (data != 0) {
-                                    tests = JSON.parse(data)
-                                }
-                            })
-                        }
-                    }
-                });
-            })
+            }
         }
 
         document.addEventListener("keypress", function (e) {
@@ -150,9 +134,9 @@
                     buffer = "";
                     if (step == Steps.step1) {
                         if (searchVal == '999999999')
-                            login('../main/manage')
+                            login('../../pages/main/manage')
                         else if (searchVal == '011429519')
-                            login('../main/system')
+                            login('../../pages/main/system')
                         else {
                             showAlert("יש לבחור לפני התיקוף!");
                             return;
@@ -251,7 +235,6 @@
             return array;
         }
 
-
         function displayQuestion() {
             const questionData = questions[currentQuestionIndex];
             questionContainer.innerHTML = `
@@ -342,7 +325,7 @@
             saveData();
         }
 
-        function saveData() {
+        async function saveData() {
             for (var i = 0; i < students.length; i++) {
                 if (students[i]["tz"] == studentResult.tz) {
                     students[i] = studentResult;
@@ -350,16 +333,14 @@
                 }
             }
             fileName = 'students'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
-                if (systemConfig.hasPrint == 1)
-                    setTimeout(function () {
-                        toPrint();
-                    }, 2500);
-                else
-                    reset(2500);
-            });
+            await writeFile(fileName, JSON.stringify(students));
+            updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+            if (systemConfig.hasPrint == 1)
+                setTimeout(function () {
+                    toPrint();
+                }, 2500);
+            else
+                reset(2500);
         }
 
         function toPrint() {
@@ -443,10 +424,10 @@
                 $('#modal').modal('show')
             });
             setTimeout(function () {
-            $(document).ready(function () {
-                $('#modal').modal('hide')
-            });
-            reset(0)
+                $(document).ready(function () {
+                    $('#modal').modal('hide')
+                });
+                reset(0)
             }
                 , 2500);
         }

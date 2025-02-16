@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>צבירת נקודות</title>
+</head>
+
+<body onload="onLoad()">
+    <script src="../../js/shared.js"></script>
+    <script src="../../js/fileSystem.js"></script>
+
+    <script>
+        var systemConfig = ""
+        var currentDate = getTodayDate();
+        var fileName
+
+        async function onLoad() {
+            fileName = 'systemConfig'
+            systemConfig = await readFile(fileName);
+            if (!systemConfig) {
+                systemConfig = getDefaultConfig()
+            }
+            else {
+                systemConfig = JSON.parse(systemConfig)
+            }
+            if (currentDate > systemConfig.date)
+                login('expired')
+            else if (systemConfig.device == 2 || systemConfig.device == 4 || systemConfig.device == "1" && systemConfig.buy == 1)
+                login("../../pages/magnetCard/user")
+            else if (systemConfig.device == 1)
+                login("../../pages/barcode/user")
+            else if (systemConfig.device == 3)
+                login("../../pages/digitalCard/user")
+        }
+    </script>
+
+</html>

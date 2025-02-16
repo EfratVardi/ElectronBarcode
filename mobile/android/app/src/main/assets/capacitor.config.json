@@ -7,5 +7,6 @@
 			"capacitor://localhost",
 			"http://localhost"
 		]
-	}
+	},
+	"bundledWebRuntime": true
 }

@@ -7,13 +7,14 @@
 </head>
 
 <body onload="onLoad()">
-     <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link href="../../styleSheets/cardManageStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
     <script src="../../js/ag-grid-community.min.js"></script>
     <script src="../../js/jquery.min.js"></script>
-  <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
     <script src="../../js/shared.js"></script>
+    <script src="../../js/fileSystem.js"></script>
 
     <script>
         var uniqTasks = ""
@@ -76,54 +77,47 @@
             }
         ];
 
-        function onLoad() {
+        async function onLoad() {
             fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
-                document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
+            systemConfig = await readFile(fileName);
+            if (!systemConfig) {
+                systemConfig = getDefaultConfig()
+            }
+            else {
+                systemConfig = JSON.parse(systemConfig)
+            }
+            document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
+            document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
 
-                swich = document.getElementById("swich");
-                swich_sec = document.getElementById("swich-sec");
-                systemConfig.hasBuy != 1 ?
-                    swich_sec.style.display = 'none' :
-                    swich.checked = systemConfig.buy
-                showLabel()
-                fileName = 'uniqTasks'
-                window.expose.SendExcel("sendReadExcel", fileName);
-                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                    if (data != 0) {
-                        if (systemConfig.device != "1") {
-                            uniqTasks = JSON.parse(data)
-                            createTasksGrid()
-                        }
-                        if (systemConfig.hasBuy == 1) {
-                            fileName = 'products'
-                            window.expose.SendExcel("sendReadExcel", fileName);
-                            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                                if (data != 0) {
-                                    products = JSON.parse(data)
-                                    createProductsGrid()
-                                }
-                            })
-                        }
-                    }
-                })
-            });
-            fileName = 'students'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    students = JSON.parse(data)
-                    createStudentsGrid()
+            swich = document.getElementById("swich");
+            swich_sec = document.getElementById("swich-sec");
+            systemConfig.hasBuy != 1 ?
+                swich_sec.style.display = 'none' :
+                swich.checked = systemConfig.buy
+            showLabel()
+            fileName = 'uniqTasks'
+            uniqTasks = await readFile(fileName);
+            if (uniqTasks) {
+                uniqTasks = JSON.parse(uniqTasks);
+                if (systemConfig.device != "1") {
+                    uniqTasks = JSON.parse(data)
+                    createTasksGrid()
                 }
-            });
+                if (systemConfig.hasBuy == 1) {
+                    fileName = 'products'
+                    products = await readFile(products);
+                    if (products) {
+                        products = JSON.parse(products);
+                        createProductsGrid()
+                    }
+                }
+            }
+            fileName = 'students'
+            students = await readFile(fileName);
+            if (students) {
+                students = JSON.parse(students);
+                createStudentsGrid()
+            }
         }
 
         document.addEventListener("keypress", function (e) {
@@ -149,7 +143,7 @@
                 defaultColDef: {
                     sortable: true,
                 },
-                 onCellClicked: cellClickedTask,
+                onCellClicked: cellClickedTask,
                 onCellEditingStopped: editTask,
                 onRowSelected: onTaskRowSelected,
                 onFirstDataRendered: onTasksFirstRendered,
@@ -241,72 +235,59 @@
             }
         }
 
-        function editTask(params) {
+        async function editTask(params) {
             fileName = 'uniqTasks'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-            });
+            await writeFile(fileName, JSON.stringify(uniqTasks));
         }
 
-        function editProduct(params) {
+        async function editProduct(params) {
             fileName = 'products'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-            });
+            await writeFile(fileName, JSON.stringify(products));
         }
 
-        function editStudent(params) {
+        async function editStudent(params) {
             fileName = 'students'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-            });
+            await writeFile(fileName, JSON.stringify(students));
         }
 
-        function onTaskRowSelected(event) {
+        async function onTaskRowSelected(event) {
             if (!isInitialLoadTasks) {
                 event.node.data.show = event.node.isSelected();
                 fileName = 'uniqTasks'
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                });
+                await writeFile(fileName, JSON.stringify(uniqTasks));
             }
         }
 
-        function onProductsRowSelected(event) {
+        async function onProductsRowSelected(event) {
             if (!isInitialLoadProducts) {
                 event.node.data.show = event.node.isSelected();
                 fileName = 'products'
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                });
+                await writeFile(fileName, JSON.stringify(products));
             }
         }
 
-        function newTask() {
+        async function newTask() {
             const code = uniqTasks[uniqTasks.length - 1].code + 1;
             uniqTasks.push({
                 name: '------', code: code, points: 0, multiple: true, type: 1
             })
             fileName = 'uniqTasks'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                location.reload()
-            });
+            await writeFile(fileName, JSON.stringify(uniqTasks));
+            location.reload();
         }
 
-        function newProduct() {
+       async function newProduct() {
             const code = products[products.length - 1].code + 1;
             products.push({
                 name: '------', code: code, points: 0, multiple: false, type: 1
             })
             fileName = 'products'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                location.reload()
-            });
+            fileName = 'products'
+            await writeFile(fileName, JSON.stringify(products));
+            location.reload();
         }
 
-        function newStudent() {
+        async function newStudent() {
             if (students.length > 0) {
                 var tz = Math.floor(Math.random() * (399999999 - 200000000 + 1) + 200000000)
                 for (var i = 0; i < students.length; i++) {
@@ -320,10 +301,7 @@
                     points: 0, tasks: ",", tasksNumber: ","
                 })
                 fileName = 'students'
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    location.reload()
-                });
+                await writeFile(fileName, JSON.stringify(students));
             }
         }
 

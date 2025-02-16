@@ -14,5 +14,8 @@
     "@capacitor/cli": "^7.0.1",
     "@capacitor/core": "^7.0.1",
     "@capacitor/filesystem": "^7.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.1.0"
   }
 }

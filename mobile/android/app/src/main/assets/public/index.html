@@ -1,28 +1,19 @@
-<body>
-    <h1>משתמשים:</h1>
-    <ul id="user-list"></ul>
+<!DOCTYPE html>
+<html>
 
-    <script type="module">
-        import { saveData, readData } from './fileManager.js';
+<head>
+    <meta charset="utf-8" />
+    <title>צבירת נקודות</title>
+</head>
 
-        async function setupFileStorage() {
-            let users = await readData();
-
-            // אם אין נתונים, נוסיף משתמש לדוגמה
-            if (users.length === 0) {
-                users.push({ id: 1, name: "אפרת", points: 100 });
-                await saveData(users);
-            }
-
-            // הצגת הנתונים על המסך
-            const userList = document.getElementById("user-list");
-            users.forEach(user => {
-                const li = document.createElement("li");
-                li.textContent = `${user.id}: ${user.name} - ${user.points} נקודות`;
-                userList.appendChild(li);
-            });
+<body onload="onload()">
+    <script>
+        function onload()
+        {
+            window.location.href = '../pages/main/user.html'
         }
-
-        setupFileStorage();
     </script>
+
 </body>
+
+</html>

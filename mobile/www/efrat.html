@@ -1,1 +1,31 @@
-<div>efrat</div>
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitor Filesystem</title>
+</head>
+<body>
+    <button onclick="writeFile()">כתוב קובץ</button>
+
+    <script>
+      
+
+        async function writeFile() {
+            try {
+                const Filesystem = window.Capacitor.Plugins.Filesystem;
+                await Filesystem.writeFile({
+                    path: 'myFile.txt',
+                    data: 'תוכן בעברית',
+                    directory:"DOCUMENTS",
+                    encoding: "utf8"
+                });
+
+                console.log('✅ קובץ נכתב בהצלחה!');
+            } catch (error) {
+                console.error('❌ שגיאה בכתיבת הקובץ:', error);
+            }
+        }
+    </script>
+</body>
+</html>
