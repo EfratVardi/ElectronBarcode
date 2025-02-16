@@ -119,18 +119,9 @@
             }
         }
 
-        document.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                if (searchVal.length > 0) {
-                    if (searchVal == '999999999')
-                        login("../main/user")
-                    if (searchVal == '011429519')
-                        login("../main/system")
-                }
-            } else {
-                searchVal += e.key;
-            }
-        });
+        function returnBack() {
+            login("../main/user")
+        }
 
         function createTasksGrid() {
             tasksGridOptions = {
@@ -275,12 +266,11 @@
             location.reload();
         }
 
-       async function newProduct() {
+        async function newProduct() {
             const code = products[products.length - 1].code + 1;
             products.push({
                 name: '------', code: code, points: 0, multiple: false, type: 1
             })
-            fileName = 'products'
             fileName = 'products'
             await writeFile(fileName, JSON.stringify(products));
             location.reload();
@@ -316,12 +306,10 @@
             showLabel()
         }
 
-        function updateSystemConfig() {
+        async function updateSystemConfig() {
             systemConfig.buy = swich.checked
             fileName = 'systemConfig'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(systemConfig)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-            });
+            await writeFile(fileName, JSON.stringify(systemConfig));
         }
 
         function showLabel() {
@@ -332,9 +320,9 @@
 
     </script>
     <div class="background" id="background">
-        <!-- <div class="closeBtn">
-            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
-        </div> -->
+        <div class="closeBtn">
+            <img onclick="returnBack()" src="../../resources/barcode/x-light.svg" />
+        </div>
         <div class="text">
             <div id="line1">ברוכים הבאים לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
@@ -345,7 +333,7 @@
                             onchange="swichChange()">
                         <label class="form-check-label" for="swich"></label>
                     </div>
-                    <!-- <div id="tasksSec" class="h-50 mb-2" style="text-align: right; visibility: hidden;">
+                    <div id="tasksSec" class="h-50 mb-2" style="text-align: right; visibility: hidden;">
                         <label> רשימת המשימות</label>
                         <img onclick="newTask()" src="../../resources/barcode/plus-light.svg" class="cursor-pointer" />
                         <div id="tasksGrid" class="ag-theme-alpine ag-theme-quartz"></div>
@@ -355,15 +343,15 @@
                         <img onclick="newProduct()" src="../../resources/barcode/plus-light.svg"
                             class="cursor-pointer" />
                         <div id="productsGrid" class="ag-theme-alpine"></div>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="col-8 d-flex flex-column mb-4">
-                    <div style="text-align: right;">
+                    <!-- <div style="text-align: right;">
                         <img onclick="exportToExcel('ניקוד תלמידות')"
                             src="../../resources/barcode/download-simple-light.svg" class="cursor-pointer" />
                         <img onclick="newStudent()" src="../../resources/barcode/plus-light.svg"
                             class="cursor-pointer" />
-                    </div>
+                    </div> -->
                     <div id="studentsGrid" class="ag-theme-alpine w-100 h-100"></div>
                 </div>
             </div>

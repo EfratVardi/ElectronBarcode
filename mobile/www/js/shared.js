@@ -71,9 +71,9 @@ function getPosition(color) {
 function getTextColor(color) {
     switch (color) {
         case "0":
-            return "#ffffff";
+            return "#e7797b";
         case "1":
-            return "#000000";
+            return "#e7797b";
     }
 }
 

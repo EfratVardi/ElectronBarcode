@@ -133,7 +133,7 @@
                     searchVal = buffer;
                     buffer = "";
                     if (step == Steps.step1) {
-                        if (searchVal == '999999999')
+                        if (searchVal == '0008281159')
                             login('../../pages/main/manage')
                         else if (searchVal == '011429519')
                             login('../../pages/main/system')
@@ -334,13 +334,8 @@
             }
             fileName = 'students'
             await writeFile(fileName, JSON.stringify(students));
-            updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
-            if (systemConfig.hasPrint == 1)
-                setTimeout(function () {
-                    toPrint();
-                }, 2500);
-            else
-                reset(2500);
+           await updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+            reset(2500);
         }
 
         function toPrint() {
