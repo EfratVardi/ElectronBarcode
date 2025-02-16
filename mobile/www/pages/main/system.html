@@ -11,7 +11,6 @@
     <link href="../../styleSheets/systemStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
     <script src="../../js/ag-grid-community.min.js"></script>
-    <script src="../../js/uniqTasks-ag-grid.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/xlsx.full.min.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
@@ -28,7 +27,7 @@
         var fileName
         var searchVal = ""
 
-        function onLoad() {
+        async function onLoad() {
             const device = document.getElementById('device');
             const color = document.getElementById('color');
             const typeWrapper = document.getElementById('typeWrapper');
@@ -53,52 +52,44 @@
             const uploadPolls = document.getElementById('uploadPolls');
 
             fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                document.getElementById("background").style.backgroundImage = getBackground("1", "1");
+            systemConfig = await readFile(fileName);
+            if (!systemConfig) {
+                systemConfig = getDefaultConfig()
+            }
+            else {
+                systemConfig = JSON.parse(systemConfig)
+            }
+            document.getElementById("background").style.backgroundImage = getBackground("1", "1");
 
-                Object.entries(systemConfig).forEach(x => {
-                    if (x[0] != 'buy')
-                        document.getElementById(x[0]).value = x[1]
-                })
-                const changeEvent = new Event('change');
-                device.dispatchEvent(changeEvent);
-                hasBuy.dispatchEvent(changeEvent);
-                hasParents.dispatchEvent(changeEvent);
-                hasTests.dispatchEvent(changeEvent);
-                color.dispatchEvent(changeEvent);
-                textColor.dispatchEvent(changeEvent);
+            Object.entries(systemConfig).forEach(x => {
+                if (x[0] != 'buy')
+                    document.getElementById(x[0]).value = x[1]
             })
+            const changeEvent = new Event('change');
+            device.dispatchEvent(changeEvent);
+            hasBuy.dispatchEvent(changeEvent);
+            hasParents.dispatchEvent(changeEvent);
+            hasTests.dispatchEvent(changeEvent);
+            color.dispatchEvent(changeEvent);
+            textColor.dispatchEvent(changeEvent);
 
             fileName = 'students'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    students = JSON.parse(data);
-                }
-            })
+            students = await readFile(fileName);
+            if (students) {
+                students = JSON.parse(students);
+            }
 
             fileName = 'uniqTasks'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    uniqTasks = JSON.parse(data)
-                }
-            })
+            uniqTasks = await readFile(fileName);
+            if (uniqTasks) {
+                uniqTasks = JSON.parse(uniqTasks);
+            }
 
-            fileName = 'products'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data != 0) {
-                    products = JSON.parse(data)
-                }
-            })
+            // fileName = 'products'
+            // products = await readFile(fileName);
+            // if (products) {
+            //     products = JSON.parse(products);
+            // }
 
             hasParents.addEventListener('change', function () {
                 const selectedOption = hasParents.value;
@@ -166,20 +157,20 @@
             });
 
             uploadBackground.addEventListener('change', function (event) {
-                const file = event.target.files[0];
-                if (file && file.type === 'image/png') {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const data = e.target.result;
-                        window.expose.send("sendUploadBackground", data);
-                        window.expose.receive("recieveUploadBackground", (data) => {
-                            location.reload()
-                        });
-                    };
-                    reader.readAsArrayBuffer(file);
-                } else {
-                    alert("אנא בחר קובץ PNG.");
-                }
+                // const file = event.target.files[0];
+                // if (file && file.type === 'image/png') {
+                //     const reader = new FileReader();
+                //     reader.onload = function (e) {
+                //         const data = e.target.result;
+                //         window.expose.send("sendUploadBackground", data);
+                //         window.expose.receive("recieveUploadBackground", (data) => {
+                //             location.reload()
+                //         });
+                //     };
+                //     reader.readAsArrayBuffer(file);
+                // } else {
+                //     alert("אנא בחר קובץ PNG.");
+                // }
             });
         }
 
@@ -207,10 +198,10 @@
             return "";
         }
 
-        function handleFileSelect(event) {
+        async function handleFileSelect(event) {
             var file = event.target.files[0];
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = async function (e) {
                 var data = e.target.result;
                 const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
@@ -225,10 +216,8 @@
                 }
                 if (name != "") {
                     fileName = name;
-                    window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        location.reload()
-                    });
+                    await writeFile(fileName, json_object);
+                    location.reload()
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -260,7 +249,7 @@
             return JSON.stringify(Object.values(tests));
         }
 
-        function resetExcel() {
+        async function resetExcel() {
             if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
                 if (students.length > 0 && uniqTasks.length > 0) {
                     for (var i = 0; i < students.length; i++) {
@@ -268,41 +257,33 @@
                         students[i].tasksNumber = ','
                         students[i].tasks = ','
                     }
-                    fileName = "students"
-                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        if (systemConfig.type == 1) {
-                            for (var i = 0; i < uniqTasks.length; i++) {
-                                uniqTasks[i].used = 0
-                            }
-                            fileName = "uniqTasks"
-                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                // alert("!הקבצים אופסו בהצלחה")
-                                location.reload()
-                            });
+                    fileName = 'students'
+                    await writeFile(fileName, JSON.stringify(students));
+                    if (systemConfig.type == 1) {
+                        for (var i = 0; i < uniqTasks.length; i++) {
+                            uniqTasks[i].used = 0
                         }
-                        else {
-                            location.reload()
-                        }
+                        fileName = "uniqTasks"
+                        await writeFile(fileName, JSON.stringify(uniqTasks));
+                        location.reload()
+                    }
+                    else {
+                        location.reload()
+                    }
 
-                    });
                 }
             }
             else {
                 for (var i = 0; i < products.length; i++) {
                     products[i].used = 0
                 }
-                fileName = "products"
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    // alert("!הקבצים אופסו בהצלחה")
-                    location.reload()
-                });
+                fileName = 'products'
+                await writeFile(fileName, JSON.stringify(products));
+                location.reload()
             }
         }
 
-        function update() {
+        async function update() {
             Object.entries(systemConfig).forEach(x => {
                 var key = x[0]
                 if (key != 'buy')
@@ -312,11 +293,9 @@
                 }
             })
 
-            fileName = "systemConfig"
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(systemConfig)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                location.reload()
-            });
+            fileName = "uniqTasks"
+            await writeFile(fileName, JSON.stringify(uniqTasks));
+            location.reload()
         }
 
         function exportUniqTasks() {
@@ -325,9 +304,6 @@
     </script>
 
     <div class="background" id="background">
-        <div class="closeBtn">
-            <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
-        </div>
         <div class="text">
             <div id="line1">הגדרות המערכת</div>
             <div id="line3"></div>

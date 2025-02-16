@@ -98,9 +98,8 @@
             fileName = 'uniqTasks'
             uniqTasks = await readFile(fileName);
             if (uniqTasks) {
-                uniqTasks = JSON.parse(uniqTasks);
                 if (systemConfig.device != "1") {
-                    uniqTasks = JSON.parse(data)
+                    uniqTasks = JSON.parse(uniqTasks);
                     createTasksGrid()
                 }
                 if (systemConfig.hasBuy == 1) {
@@ -333,9 +332,9 @@
 
     </script>
     <div class="background" id="background">
-        <div class="closeBtn">
+        <!-- <div class="closeBtn">
             <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
-        </div>
+        </div> -->
         <div class="text">
             <div id="line1">ברוכים הבאים לממשק ניהול</div>
             <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
@@ -346,7 +345,7 @@
                             onchange="swichChange()">
                         <label class="form-check-label" for="swich"></label>
                     </div>
-                    <div id="tasksSec" class="h-50 mb-2" style="text-align: right; visibility: hidden;">
+                    <!-- <div id="tasksSec" class="h-50 mb-2" style="text-align: right; visibility: hidden;">
                         <label> רשימת המשימות</label>
                         <img onclick="newTask()" src="../../resources/barcode/plus-light.svg" class="cursor-pointer" />
                         <div id="tasksGrid" class="ag-theme-alpine ag-theme-quartz"></div>
@@ -356,7 +355,7 @@
                         <img onclick="newProduct()" src="../../resources/barcode/plus-light.svg"
                             class="cursor-pointer" />
                         <div id="productsGrid" class="ag-theme-alpine"></div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-8 d-flex flex-column mb-4">
                     <div style="text-align: right;">
