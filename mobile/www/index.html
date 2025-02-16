@@ -8,41 +8,9 @@
 
 <body>
     <script>
-    
-        function start1() {
-            window.location.href = '../pages/main/user.html'
-
-        }
-        async function start2() {
-            try {
-                if (window.Capacitor && window.Capacitor.Plugins.KioskMode) {
-                    await window.Capacitor.Plugins.KioskMode.enable();
-                    console.log("✅ מצב קיוסק הופעל");
-                } else {
-                    console.error("❌ פלאגין KioskMode לא נמצא");
-                }
-            } catch (error) {
-                console.error("❌ שגיאה בהפעלת מצב קיוסק:", error);
-            }
-        }
-
-        async function start3() {
-            try {
-                if (window.Capacitor && window.Capacitor.Plugins.StatusBar) {
-                    await window.Capacitor.Plugins.StatusBar.hide();
-                }
-                if (window.Capacitor && window.Capacitor.Plugins.NavigationBar) {
-                    await window.Capacitor.Plugins.NavigationBar.hide();
-                }
-            } catch (error) {
-                console.error("❌ שגיאה בהסתרת הממשק:", error);
-            }
-        }
-
+        window.location.href = '../pages/main/user.html'
     </script>
-    <button onclick="start1()">מעבר</button>
-    <button onclick="start2()">קיוסק</button>
-    <button onclick="start3()">חיצים</button>
+
 </body>
 
 </html>
