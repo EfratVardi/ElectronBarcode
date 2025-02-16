@@ -1,6 +1,6 @@
 {
 	"appId": "com.example.accumulatingpoints",
-	"appName": "AccumulatingPoints",
+	"appName": "צבירת נקודות",
 	"webDir": "www",
 	"server": {
 		"allowNavigation": [
