@@ -34,7 +34,7 @@
 
     function onLoad() {
       step = Steps.step1;
-      updateLines("!...שלום", "יש לתקף את הכרטיס האישי בסורק הברקוד") 
+      updateLines("!...ברוך הבא", "העבר את הצ'יפ לטעינה")
       fileName = 'systemConfig'
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -44,19 +44,11 @@
         else {
           systemConfig = JSON.parse(data)
         }
-        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
-        document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
-
         document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
-        document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
-
-        if (systemConfig.numPosition.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
-        }
-        else {
-          document.getElementById("position").style.display = "none";
-        }
+        document.querySelector(".line1").style.color = '#F9B81C'
+        document.querySelector(".line2").style.color = '#214785'
       })
+
       fileName = 'students'
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -88,10 +80,6 @@
             else
               searchInExcel();//בת
           }
-          else if (step == Steps.step2) {
-            //משימה רגילה/כללית
-            updateTask();
-          }
         }
       } else {
         buffer += e.key;
@@ -110,14 +98,15 @@
         showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
         return;
       }
-      document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
-      updateLines("(: שלום  " + studentResult.name, "יש לסרוק את הברקוד לעדכון משימה","עד כה צברת " + studentResult.points + " נקודות") 
+      updateTask()
+      // document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step)
+      // updateLines("(: שלום  " + studentResult.name, "יש לסרוק את הברקוד לעדכון משימה","עד כה צברת " + studentResult.points + " נקודות") 
     }
 
     function updateTask() {
       step = Steps.step3;
       for (var i = 0; i < uniqTasks.length; i++) {
-        if (uniqTasks[i]["code"] == searchVal) {
+        if (uniqTasks[i]["code"] == systemConfig.numPosition) {
           result = uniqTasks[i]
           break;
         }
@@ -126,24 +115,10 @@
         showAlert("קוד לא תקין, גשו למורה!")
         return;
       }
-
-      if (systemConfig.type == "1") {
-        if (result.used == 1) {
-          showAlert("הי, משימה זו כבר תוקפה!");
-          return;
-        }
-      }
-      else if (systemConfig.type == "2")
-        if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-          showAlert("הי, אסור להגיש משימה פעמיים!");
-          return;
-        }
       finishSession()
     }
 
     function finishSession() {
-      studentResult.tasks += result.name + ',';
-      studentResult.tasksNumber += result.code + ',';
       studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
       saveData();
     }
@@ -158,19 +133,8 @@
       fileName = 'students'
       window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        if (systemConfig.type == 1) {
-          for (var i = 0; i < uniqTasks.length; i++) {
-            if (uniqTasks[i]["code"] == result.code) {
-              uniqTasks[i].used = 1
-              break;
-            }
-          }
-          fileName = 'uniqTasks'
-          window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-          window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => { });
-        }
-        document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color, step);
-        updateLines( "ביצעת את משימה" + " " + result.name, " כעת יש בחשבונך " + studentResult.points + " נקודות ","...לא לשכוח לקחת את האישור מהמדפסת") 
+
+        updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
         if (systemConfig.hasPrint == 1)
           setTimeout(function () {
             toPrint();

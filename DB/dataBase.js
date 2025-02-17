@@ -68,23 +68,6 @@ function initializeDatabase() {
         }
     });
 
-    db.run(`
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            code TEXT NOT NULL,
-            name TEXT NOT NULL,
-            points INTEGER DEFAULT 0,
-            type TEXT,
-            class BOOLEAN DEFAULT false,
-            multiple BOOLEAN DEFAULT false
-        )
-    `, (err) => {
-        if (err) {
-            console.error('❌ Error creating tasks table:', err.message);
-        } else {
-            console.log('✅ Created tasks table');
-        }
-    });
 
     db.run(`
         CREATE TABLE IF NOT EXISTS products (
