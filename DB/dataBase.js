@@ -10,9 +10,9 @@ if (!fs.existsSync(path.dirname(dbPath))) {
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('❌ שגיאה בפתיחת מסד הנתונים:', err.message);
+        console.error('שגיאה בפתיחת מסד הנתונים:', err.message);
     } else {
-        console.log('✅ חיבור למסד הנתונים בוצע בהצלחה:', dbPath);
+        console.log('חיבור למסד הנתונים בוצע בהצלחה:', dbPath);
         initializeDatabase();
     }
 });
@@ -62,9 +62,9 @@ function initializeDatabase() {
         )
     `, (err) => {
         if (err) {
-            console.error('❌ Error creating students table:', err.message);
+            console.error('Error creating students table:', err.message);
         } else {
-            console.log('✅ Created students table');
+            console.log('Created students table');
         }
     });
 
@@ -80,9 +80,9 @@ function initializeDatabase() {
         )
     `, (err) => {
         if (err) {
-            console.error('❌ Error creating tasks table:', err.message);
+            console.error('Error creating tasks table:', err.message);
         } else {
-            console.log('✅ Created tasks table');
+            console.log('Created tasks table');
         }
     });
 
@@ -97,9 +97,9 @@ function initializeDatabase() {
         )
     `, (err) => {
         if (err) {
-            console.error('❌ Error creating products table:', err.message);
+            console.error('Error creating products table:', err.message);
         } else {
-            console.log('✅ Created products table');
+            console.log('Created products table');
         }
     });
 }
@@ -107,16 +107,16 @@ function initializeDatabase() {
 function insertDefaultSystemValues() {
     db.get(`SELECT COUNT(*) as count FROM system`, (err, row) => {
         if (err) {
-            console.error('❌ שגיאה בבדיקת קיומם של נתונים בטבלת system:', err.message);
+            console.error('שגיאה בבדיקת קיומם של נתונים בטבלת system:', err.message);
         } else if (row.count === 0) {
             db.run(`
                 INSERT INTO system (date, numPosition, hasPrint, hasBuy, device, color, type, hasParents, hasTests, timer, buy, textColor)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [getYesterdayDate(), "", true, true, 1, 1, 1, false, false, 10, false, 0], (err) => {
                 if (err) {
-                    console.error('❌ שגיאה בהוספת ערכי ברירת מחדל לטבלת system:', err.message);
+                    console.error('שגיאה בהוספת ערכי ברירת מחדל לטבלת system:', err.message);
                 } else {
-                    console.log('✅ הוזנו ערכי ברירת מחדל לטבלת system.');
+                    console.log('הוזנו ערכי ברירת מחדל לטבלת system.');
                 }
             });
         }
@@ -128,10 +128,10 @@ function getSystemSettings(callback) {
     const query = `SELECT * FROM system LIMIT 1`;
     db.get(query, (err, row) => {
         if (err) {
-            console.error('❌ שגיאה בטעינת ערכי הגדרות המערכת:', err.message);
+            console.error('שגיאה בטעינת ערכי הגדרות המערכת:', err.message);
             callback(err, null);
         } else {
-            console.log('✅ ערכי הגדרות מערכת נטענו בהצלחה:', row);
+            console.log('ערכי הגדרות מערכת נטענו בהצלחה:', row);
             callback(null, row);  // מחזירים את הערכים לממשק
         }
     });
@@ -159,10 +159,10 @@ function updateSystemConfig(updatedValues, callback) {
 
     db.run(query, Object.values(updatedValues), (err) => {
         if (err) {
-            console.error('❌ Error updating system settings:', err.message);
+            console.error('Error updating system settings:', err.message);
             callback(err);
         } else {
-            console.log('✅ System settings updated successfully.');
+            console.log('System settings updated successfully.');
             callback(null);  // Success callback
         }
     });
@@ -208,9 +208,9 @@ function insertDataFromExcel(table, data) {
         const flatData = data.flat();
         db.run(query, flatData, (err) => {
             if (err) {
-                console.error(`❌ Error inserting data into ${table}:`, err.message);
+                console.error(`Error inserting data into ${table}:`, err.message);
             } else {
-                console.log(`✅ Data inserted into ${table} table`);
+                console.log(`Data inserted into ${table} table`);
             }
         });
     });
