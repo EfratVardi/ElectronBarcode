@@ -262,45 +262,7 @@
         }
 
         function resetExcel() {
-            if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
-                if (students.length > 0 && uniqTasks.length > 0) {
-                    for (var i = 0; i < students.length; i++) {
-                        students[i].points = 0
-                        students[i].tasksNumber = ','
-                        students[i].tasks = ','
-                    }
-                    fileName = "students"
-                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        if (systemConfig.type == 1) {
-                            for (var i = 0; i < uniqTasks.length; i++) {
-                                uniqTasks[i].used = 0
-                            }
-                            fileName = "uniqTasks"
-                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                // alert("!הקבצים אופסו בהצלחה")
-                                location.reload()
-                            });
-                        }
-                        else {
-                            location.reload()
-                        }
-
-                    });
-                }
-            }
-            else {
-                for (var i = 0; i < products.length; i++) {
-                    products[i].used = 0
-                }
-                fileName = "products"
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    // alert("!הקבצים אופסו בהצלחה")
-                    location.reload()
-                });
-            }
+            localStorage.removeItem("classesPoints");
         }
 
         function update() {

@@ -33,15 +33,10 @@
     };
     var classesPoints = ""
     var defaultClassesPoints = [
-      { "code": 100, "name": "כיתה ט'1", "points": 0 },
-      { "code": 101, "name": "כיתה ט'2", "points": 0 },
-      { "code": 102, "name": "כיתה ט'3", "points": 0 },
-      { "code": 103, "name": "כיתה י'1", "points": 0 },
-      { "code": 104, "name": "כיתה י'2", "points": 0 },
-      { "code": 105, "name": "כיתה י'3", "points": 0 },
-      { "code": 106, "name": "כיתה יא'1", "points": 0 },
-      { "code": 107, "name": "כיתה יא'2", "points": 0 }
-    ];
+      { "code": 100, "name": "כיתה ט", "points": 0 },
+      { "code": 101, "name": "כיתה י", "points": 0 },
+      { "code": 102, "name": "כיתה יא", "points": 0 },
+      { "code": 102, "name": "כיתה יב", "points": 0 }]
 
     function onLoad() {
       classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
@@ -50,7 +45,7 @@
         classesPoints = defaultClassesPoints;
       }
       step = Steps.step1;
-      updateLines("?...מי הכיתה המנצחת", "");
+      updateLines("!ברוכות הבאות","?...מי הכיתה המנצחת");
       fileName = 'systemConfig';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -112,10 +107,10 @@
     function saveData() {
       for (var i = 0; i < classesPoints.length; i++) {
         if (classesPoints[i]["code"] == studentResult.class) {
-          classesPoints[i]["points"] += 30;
+          classesPoints[i]["points"] += 10;
           updateLines("(: כל הכבוד  " + classesPoints[i]["name"], "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
-          renderClassCards(); // Update the cards dynamically
+          renderClassCards(); 
           break;
         }
       }
@@ -153,9 +148,9 @@
       classesPoints.forEach(classData => {
         const card = document.createElement('div');
         card.className = 'card m-2';
-        card.style.width = '12rem';
-        card.style.border="solid"
-        card.style.borderColor = "#DF2569"
+        card.style.width = '25rem';
+        card.style.border = "solid"
+        card.style.borderColor = "palevioletred"
 
 
         const cardBody = document.createElement('div');
@@ -164,13 +159,15 @@
         const cardTitle = document.createElement('h5');
         cardTitle.className = 'card-title';
         cardTitle.textContent = classData.name;
-        cardTitle.style.fontSize = '2vw';
+        cardTitle.style.fontSize = '3vw';
 
         const cardText = document.createElement('p');
         cardText.className = 'card-text';
+        cardText.className = 'blink-text';
+
         cardText.textContent = `${classData.points}`;
-        cardText.style.fontSize = '3vw';
-        cardText.style.color = "#DF2569"
+        cardText.style.fontSize = '4vw';
+        cardText.style.color = "palevioletred"
 
 
         cardBody.appendChild(cardTitle);
@@ -186,10 +183,8 @@
       <div id="line1"></div>
       <div id="line2"></div>
       <div id="line3"></div>
-      <br><br>
-      <div id="cards-container" class="d-flex flex-wrap justify-content-center mt-4"
-        style="direction: rtl;"></div>
-      <button class="btn" onclick="login('../parentsMeeting/user')"> גרפולוגיה</button>
+      <br>
+      <div id="cards-container" class="d-flex flex-wrap justify-content-center mt-4" style="direction: rtl;"></div>
     </div>
   </div>
 
