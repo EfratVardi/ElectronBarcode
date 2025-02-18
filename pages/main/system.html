@@ -60,8 +60,6 @@
 
             window.expose.getSystemSettings();
             window.expose.receiveSystemSettings((data) => {
-                console.log("data:", data);
-
                 document.getElementById('numPosition').value = data.numPosition;
                 document.getElementById('hasPrint').value = data.hasPrint;
                 document.getElementById('hasBuy').value = data.hasBuy;
@@ -73,7 +71,7 @@
                 document.getElementById('timer').value = data.timer;
                 document.getElementById('textColor').value = data.textColor;
                 document.getElementById('date').value = data.date;
-                alert("come")
+                
                 const changeEvent = new Event('change');
                 device.dispatchEvent(changeEvent);
                 hasBuy.dispatchEvent(changeEvent);

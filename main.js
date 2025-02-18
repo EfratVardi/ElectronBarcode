@@ -139,12 +139,12 @@ ipcMain.on('updateSystemSettings', (event, updatedValues) => {
   });
 });
 
-ipcMain.on('update-system-settings', (event, updatedValues) => {
+ipcMain.on('insertData', (event, updatedValues) => {
   db.insertDataFromExcel(updatedValues, (err) => {
       if (err) {
-          event.reply('insert-data', { success: false, error: err.message });
+          event.reply('receiveInsertData', { success: false, error: err.message });
       } else {
-          event.reply('updated-system-settings', { success: true });
+          event.reply('receiveInsertData', { success: true });
       }
   });
 });
