@@ -22,12 +22,11 @@
 
 .rectangle-background1 {
     background-color: #0CC0DF; 
-    padding-left: 15px; 
-    padding-right: 15px; 
+    padding:15px;
 }
 
 .rectangle-background2 {
     background-color: #FED140; 
-    padding-left: 20px; 
-    padding-right: 20px;
+    padding:20px;
+
  }
