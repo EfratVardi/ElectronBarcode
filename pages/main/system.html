@@ -43,7 +43,6 @@
             const hasTests = document.getElementById('hasTests');
             const timerWrapper = document.getElementById('timerWrapper');
             const timer = document.getElementById('timer');
-            const date = document.getElementById('date');
             const textColor = document.getElementById('textColor');
             const hasParentsWrapper = document.getElementById('hasParentsWrapper');
             const hasParents = document.getElementById('hasParents');
@@ -63,7 +62,7 @@
             window.expose.receiveSystemSettings((data) => {
                 console.log("data:", data);
 
-                document.getElementById('numPosition').value = 6
+                document.getElementById('numPosition').value = data.numPosition;
                 document.getElementById('hasPrint').value = data.hasPrint;
                 document.getElementById('hasBuy').value = data.hasBuy;
                 document.getElementById('device').value = data.device;
@@ -74,7 +73,7 @@
                 document.getElementById('timer').value = data.timer;
                 document.getElementById('textColor').value = data.textColor;
                 document.getElementById('date').value = data.date;
-
+                alert("come")
                 const changeEvent = new Event('change');
                 device.dispatchEvent(changeEvent);
                 hasBuy.dispatchEvent(changeEvent);
@@ -89,87 +88,87 @@
                 console.error('לא ניתן לטעון את הגדרות המערכת:', error);
             });
 
-            //     hasParents.addEventListener('change', function () {
-            //         const selectedOption = hasParents.value;
-            //         if (selectedOption == '1') {
-            //             uploadParentsWrapper.style.display = "unset";
-            //         }
-            //         else {
-            //             uploadParentsWrapper.style.display = "none";
-            //         }
-            //     });
+            hasParents.addEventListener('change', function () {
+                const selectedOption = hasParents.value;
+                if (selectedOption == '1') {
+                    uploadParentsWrapper.style.display = "unset";
+                }
+                else {
+                    uploadParentsWrapper.style.display = "none";
+                }
+            });
 
-            //     hasTests.addEventListener('change', function () {
-            //         const selectedOption = hasTests.value;
-            //         if (selectedOption == '1') {
-            //             uploadTestsWrapper.style.display = "unset";
-            //             timerWrapper.style.display = "unset";
-            //         }
-            //         else {
-            //             uploadTestsWrapper.style.display = "none";
-            //             timerWrapper.style.display = "none";
-            //             timer.value = "0";
-            //         }
-            //     });
+            hasTests.addEventListener('change', function () {
+                const selectedOption = hasTests.value;
+                if (selectedOption == '1') {
+                    uploadTestsWrapper.style.display = "unset";
+                    timerWrapper.style.display = "unset";
+                }
+                else {
+                    uploadTestsWrapper.style.display = "none";
+                    timerWrapper.style.display = "none";
+                    timer.value = "0";
+                }
+            });
 
-            //     hasBuy.addEventListener('change', function () {
-            //         const selectedOption = hasBuy.value;
-            //         if (selectedOption == '1') {
-            //             uploadProductsWrapper.style.display = "unset";
-            //         }
-            //         else {
-            //             uploadProductsWrapper.style.display = "none";
-            //         }
-            //     });
+            hasBuy.addEventListener('change', function () {
+                const selectedOption = hasBuy.value;
+                if (selectedOption == '1') {
+                    uploadProductsWrapper.style.display = "unset";
+                }
+                else {
+                    uploadProductsWrapper.style.display = "none";
+                }
+            });
 
-            //     device.addEventListener('change', function () {
-            //         const selectedOption = device.value;
-            //         const changeEvent = new Event('change');
-            //         if (selectedOption == '1') {
-            //             typeWrapper.style.display = "unset";
-            //             hasParentsWrapper.style.display = "unset";
-            //             hasTestsWrapper.style.display = "none";
-            //             hasTests.value = "0";
-            //             hasTests.dispatchEvent(changeEvent);
-            //         }
-            //         else if (selectedOption == '2' || selectedOption == '4') {
-            //             hasTestsWrapper.style.display = "unset";
-            //             typeWrapper.style.display = "none";
-            //             hasParentsWrapper.style.display = "none";
-            //         }
-            //         else {
-            //             typeWrapper.style.display = "none";
-            //             hasParentsWrapper.style.display = "none";
-            //             type.value = 1;
-            //             hasParents.value = 0;
-            //             hasParents.dispatchEvent(changeEvent);
-            //         }
-            //     });
+            device.addEventListener('change', function () {
+                const selectedOption = device.value;
+                const changeEvent = new Event('change');
+                if (selectedOption == '1') {
+                    typeWrapper.style.display = "unset";
+                    hasParentsWrapper.style.display = "unset";
+                    hasTestsWrapper.style.display = "none";
+                    hasTests.value = "0";
+                    hasTests.dispatchEvent(changeEvent);
+                }
+                else if (selectedOption == '2' || selectedOption == '4') {
+                    hasTestsWrapper.style.display = "unset";
+                    typeWrapper.style.display = "none";
+                    hasParentsWrapper.style.display = "none";
+                }
+                else {
+                    typeWrapper.style.display = "none";
+                    hasParentsWrapper.style.display = "none";
+                    type.value = 1;
+                    hasParents.value = 0;
+                    hasParents.dispatchEvent(changeEvent);
+                }
+            });
 
-            //     color.addEventListener('change', function () {
-            //         if (color.value === 4) {
-            //             uploadBackgroundWrapper.style.display = "unset";
-            //         } else {
-            //             uploadBackgroundWrapper.style.display = "none";
-            //         }
-            //     });
+            color.addEventListener('change', function () {
+                if (color.value === 4) {
+                    uploadBackgroundWrapper.style.display = "unset";
+                } else {
+                    uploadBackgroundWrapper.style.display = "none";
+                }
+            });
 
-            //     uploadBackground.addEventListener('change', function (event) {
-            //         const file = event.target.files[0];
-            //         if (file && file.type === 'image/png') {
-            //             const reader = new FileReader();
-            //             reader.onload = function (e) {
-            //                 const data = e.target.result;
-            //                 window.expose.send("sendUploadBackground", data);
-            //                 window.expose.receive("recieveUploadBackground", (data) => {
-            //                     location.reload()
-            //                 });
-            //             };
-            //             reader.readAsArrayBuffer(file);
-            //         } else {
-            //             alert("אנא בחר קובץ PNG.");
-            //         }
-            //     });
+            uploadBackground.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file && file.type === 'image/png') {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const data = e.target.result;
+                        window.expose.send("sendUploadBackground", data);
+                        window.expose.receive("recieveUploadBackground", (data) => {
+                            location.reload()
+                        });
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    alert("אנא בחר קובץ PNG.");
+                }
+            });
         });
 
 

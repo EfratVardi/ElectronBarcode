@@ -119,22 +119,22 @@ ipcMain.on("sendUploadBackground", (event, args) => {
   });
 });
 
-ipcMain.on('get-system-settings', (event) => {
+ipcMain.on('getSystemSettings', (event) => {
   db.getSystemSettings((err, data) => {
       if (err) {
-          event.reply('system-settings-error', err);
+          event.reply('receiveSystemSettingsError', err);
       } else {
-          event.reply('recieve-system-settings', data);  // מחזירים את הנתונים
+          event.reply('receiveSystemSettings', data);  // מחזירים את הנתונים
       }
   });
 });
 
-ipcMain.on('update-system-settings', (event, updatedValues) => {
+ipcMain.on('updateSystemSettings', (event, updatedValues) => {
   db.updateSystemConfig(updatedValues, (err) => {
       if (err) {
-          event.reply('recieve-update-system-settings', { success: false, error: err.message });
+          event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
       } else {
-          event.reply('recieve-update-system-settings', { success: true });
+          event.reply('receiveUpdateSystemSettings', { success: true });
       }
   });
 });
