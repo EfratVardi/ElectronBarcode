@@ -119,33 +119,48 @@ ipcMain.on("sendUploadBackground", (event, args) => {
   });
 });
 
-ipcMain.on('get-system-settings', (event) => {
+ipcMain.on('getSystemSettings', (event) => {
   db.getSystemSettings((err, data) => {
-      if (err) {
-          event.reply('system-settings-error', err);
-      } else {
-          event.reply('recieve-system-settings', data);  // מחזירים את הנתונים
-      }
+    if (err) {
+      event.reply('receiveSystemSettingsError', err);
+    } else {
+      event.reply('receiveSystemSettings', data);
+    }
   });
 });
 
-ipcMain.on('update-system-settings', (event, updatedValues) => {
-  db.updateSystemConfig(updatedValues, (err) => {
+ipcMain.on('updateSystemSettings', (event, updatedValues) => {
+  db.updateSystemSettings
+    (updatedValues, (err) => {
       if (err) {
-          event.reply('recieve-update-system-settings', { success: false, error: err.message });
+        event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
       } else {
-          event.reply('recieve-update-system-settings', { success: true });
+        event.reply('receiveUpdateSystemSettings', { success: true });
       }
+    });
+});
+
+ipcMain.on('insertStudents', (event, fileData) => {
+  let parsedData = JSON.parse(fileData);
+
+  db.insertStudents(parsedData, (err) => {
+    if (err) {
+      event.reply("receiveInsertStudents", { success: false, error: err.message });
+    } else {
+      event.reply("receiveInsertStudents", { success: true });
+    }
   });
 });
 
-ipcMain.on('update-system-settings', (event, updatedValues) => {
-  db.insertDataFromExcel(updatedValues, (err) => {
-      if (err) {
-          event.reply('insert-data', { success: false, error: err.message });
-      } else {
-          event.reply('updated-system-settings', { success: true });
-      }
+ipcMain.on('insertTasks', (event, fileData) => {
+  let parsedData = JSON.parse(fileData);
+
+  db.insertTasks(parsedData, (err) => {
+    if (err) {
+      event.reply("receiveInsertTasks", { success: false, error: err.message });
+    } else {
+      event.reply("receiveInsertTasks", { success: true });
+    }
   });
 });
 

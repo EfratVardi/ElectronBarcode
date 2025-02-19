@@ -14,7 +14,7 @@ function getTodayDateTime() {
 }
 
 function getDefaultConfig() {
-    return { "date": getTodayDate(), "numPosition": "", "hasPrint": "1", "hasBuy": "0", "device": "0", "color": "0", "type": "0", "hasParents": "0", "hasTests": "0", "timer": "10", "buy": false, "textColor":0 };
+    return { "date": getTodayDate(), "numPosition": "", "hasPrint": "1", "hasBuy": "0", "device": "1", "color": "0", "type": "0", "hasParents": "0", "hasTests": "0", "timer": "10", "buy": false, "textColor":0 };
 }
 
 function login(page) {
@@ -35,7 +35,7 @@ function getBackground(device, color, step = "") {
                 case "3":
                     return "url('../../resources/barcode/ravKavBackground.png')";
                 case "4":
-                    return "url('../../personalBackground.png')";
+                    return "url('../../resources/barcode/personalBackground.png')";
             }
         };
         case "2":

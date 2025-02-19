@@ -14,24 +14,18 @@
         var fileName
 
         function onLoad() {
-            fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                if (currentDate > systemConfig.date)
-                    login('expired')
-                else if (systemConfig.device == 2 || systemConfig.device == 4 || systemConfig.device == "1" && systemConfig.buy == 1)
-                    login("../magnetCard/user")
-                else if (systemConfig.device == 1)
-                    login("../barcode/user")
-                else if (systemConfig.device == 3)
-                    login("../digitalCard/user")
-            })
+
+            systemConfig = getDefaultConfig()
+
+            if (currentDate > systemConfig.date)
+                login('expired')
+            else if (systemConfig.device == 2 || systemConfig.device == 4 || systemConfig.device == "1" && systemConfig.buy == 1)
+                login("../magnetCard/user")
+            else if (systemConfig.device == 1)
+                login("../barcode/user")
+            else if (systemConfig.device == 3)
+                login("../digitalCard/user")
+        
         }
     </script>
 

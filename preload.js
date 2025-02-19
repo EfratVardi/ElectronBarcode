@@ -18,32 +18,40 @@ contextBridge.exposeInMainWorld('expose', {
 
     // לשלוח בקשה לקבלת נתוני המערכת
     getSystemSettings: () => {
-        ipcRenderer.send('get-system-settings'); // שליחת בקשה לקבלת ההגדרות
+        ipcRenderer.send('getSystemSettings'); // שליחת בקשה לקבלת ההגדרות
     },
 
     // קבלת הגדרות מערכת
     receiveSystemSettings: (func) => {
-        ipcRenderer.on('system-settings', (event, data) => func(data));  // מחזירים את הנתונים
+        ipcRenderer.on('receiveSystemSettings', (event, data) => func(data));  // מחזירים את הנתונים
     },
 
     receiveSystemSettingsError: (func) => {
-        ipcRenderer.on('system-settings-error', (event, error) => func(error)); // קבלת שגיאה
+        ipcRenderer.on('receiveSystemSettingsError', (event, error) => func(error)); // קבלת שגיאה
     },
 
     updateSystemSettings: (data) => {
-        ipcRenderer.send('update-system-settings', data);
+        ipcRenderer.send('updateSystemSettings', data);
     },
 
     receiveUpdateSystemSettings: (callback) => {
-        ipcRenderer.on('receive-update-system-settings', callback);
+        ipcRenderer.on('receiveUpdateSystemSettings', callback);
     },
 
-    insertData: (fileName, fileData) => {
-        ipcRenderer.send('insert-data', { fileName, fileData });
+    insertStudents: (fileData) => {
+        ipcRenderer.send('insertStudents', fileData );
     },
 
-    receiveInsertData: (callback) => {
-        ipcRenderer.on('receive-insert-data', callback);
+    receiveInsertStudents: (callback) => {
+        ipcRenderer.on('receiveInsertStudents', callback);
+    },
+
+    insertTasks: (fileData) => {
+        ipcRenderer.send('insertTasks', fileData );
+    },
+
+    receiveInsertTasks: (callback) => {
+        ipcRenderer.on('receiveInsertTasks', callback);
     },
 
     appClose: () => {

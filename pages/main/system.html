@@ -184,7 +184,7 @@
             return "";
         }
 
-        function handleFileSelect(event) {
+        function handleFileSelect(event, fileName) {
             var file = event.target.files[0]; var reader = new FileReader();
             reader.onload = function (e) {
                 var data = e.target.result;
@@ -199,10 +199,17 @@
                 else {
                     json_object = JSON.stringify(XLSX.utils.sheet_to_json(sheet));
                 }
-                if (name != "") {
+
+                if (fileName == 'students') {
                     window.expose.insertStudents(json_object);
                     window.expose.receiveInsertStudents((data) => {
-                            location.reload();
+                        location.reload();
+                    });
+                }
+                else if (fileName == 'tasks') {
+                    window.expose.insertTasks(json_object);
+                    window.expose.receiveInsertTasks((data) => {
+                        location.reload();
                     });
                 }
             };
@@ -235,47 +242,6 @@
             return JSON.stringify(Object.values(tests));
         }
 
-        function resetExcel() {
-            if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
-                if (students.length > 0 && uniqTasks.length > 0) {
-                    for (var i = 0; i < students.length; i++) {
-                        students[i].points = 0
-                        students[i].tasksNumber = ','
-                        students[i].tasks = ','
-                    }
-                    fileName = "students"
-                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        if (systemConfig.type == 1) {
-                            for (var i = 0; i < uniqTasks.length; i++) {
-                                uniqTasks[i].used = 0
-                            }
-                            fileName = "uniqTasks"
-                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                // alert("!הקבצים אופסו בהצלחה")
-                                location.reload()
-                            });
-                        }
-                        else {
-                            location.reload()
-                        }
-
-                    });
-                }
-            }
-            else {
-                for (var i = 0; i < products.length; i++) {
-                    products[i].used = 0
-                }
-                fileName = "products"
-                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                    // alert("!הקבצים אופסו בהצלחה")
-                    location.reload()
-                });
-            }
-        }
 
         // קוד HTML והפונקציה שתקרא בעת עדכון הנתונים
         function update() {
@@ -302,6 +268,11 @@
                     console.error('שגיאה בעדכון הגדרות המערכת:', response.error);
                 }
             });
+        }
+
+        function taskType() {
+            let typeTask = document.getElementById("typeTask").value;
+            localStorage.setItem("typeTask", typeTask)
         }
     </script>
 
@@ -423,16 +394,17 @@
                         <label for="uploadPolls" class="form-label">סקרים</label>
                         <input type="file" class="form-control" id="uploadPolls" accept="image/png">
                     </div>
-                </div>
-                <!-- <div class="row">
-                    <div class="col-md-2">
-                        <label class="form-label">.</label>
-                        <button id="reset" onclick="resetExcel()" class="form-control"> איפוס </button>
+                    <div class="col-md-1">
+                        <label for="typeTask" class="form-label">איזה משימה</label>
+                        <input type="number" class="form-control" id="typeTask">
                     </div>
-                </div> -->
+                    <div class="col-md-1">
+                        <button class="form-control" onclick="taskType()">שמירה</button>
+                    </div>
+                </div>
+
             </form>
             <br />
-            <div id="tasksGrid"></div>
             <div>
                 התקנת דרייבר למדפסת |
                 למחוק את קובץ ההתקנה |
@@ -444,8 +416,8 @@
     <script>
         document.getElementById('uploadParents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadTest').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadStudents').addEventListener('change', (event) => handleFileSelect(event, "students"), false);
+        document.getElementById('uploaduniqTasks').addEventListener('change', (event) => handleFileSelect(event, "tasks"), false);
         document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
     </script>
 </body>

@@ -175,7 +175,6 @@ function insertStudents(data, callback) {
                 console.error("Error deleting students data:", err.message);
                 return callback(err);
             }
-            console.log("Old student records deleted.");
 
             const query = `
                 INSERT INTO students (tz, name, grade, points, position)
@@ -190,10 +189,37 @@ function insertStudents(data, callback) {
 
             stmt.finalize((err) => {
                 if (err) {
-                    console.error("Error inserting students:", err.message);
                     callback(err);
                 } else {
-                    console.log("Students inserted successfully.");
+                    callback(null);
+                }
+            });
+        });
+    });
+}
+
+function insertTasks(data, callback) {
+    db.serialize(() => {
+        db.run("DELETE FROM tasks", (err) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const query = `
+                INSERT INTO Tasks (code, name, points, type, class, multiple)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+
+            const stmt = db.prepare(query);
+
+            data.forEach(task => {
+                stmt.run(task.code, task.name, task.points, task.type, task.class, task.multiple);
+            });
+
+            stmt.finalize((err) => {
+                if (err) {
+                    callback(err);
+                } else {
                     callback(null);
                 }
             });
@@ -208,5 +234,6 @@ module.exports = {
     insertDefaultSystemValues,
     initializeDatabase,
     updateSystemSettings,
-    insertStudents
+    insertStudents,
+    insertTasks
 };
