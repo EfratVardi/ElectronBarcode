@@ -13,6 +13,16 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.error('שגיאה בפתיחת מסד הנתונים:', err.message);
     } else {
         console.log('חיבור למסד הנתונים בוצע בהצלחה:', dbPath);
+        db.run("PRAGMA journal_mode = WAL;", (err) => {
+            if (err) {
+                console.error("Error enabling WAL mode:", err.message);
+            } else {
+                console.log("WAL mode enabled");
+            }
+        });
+
+        // הפעלת סנכרון חזק (מונע שחיתות)
+        db.run("PRAGMA synchronous = NORMAL;");
         initializeDatabase();
     }
 });
