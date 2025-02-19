@@ -276,9 +276,16 @@
             });
         }
 
-        function taskType() {
-            let typeTask = document.getElementById("typeTask").value;
-            localStorage.setItem("typeTask", typeTask)
+        function localSettings() {
+            var localSettings = {
+                "name": document.getElementById("taskName").value,
+                "code": document.getElementById("taskCode").value
+            }
+            fileName = 'localSettings'
+            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(localSettings)])
+            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                location.reload()
+            });
         }
     </script>
 
@@ -399,6 +406,10 @@
                     <div class="col-md-2" id="uploadPollsWrapper" style="display: none;">
                         <label for="uploadPolls" class="form-label">סקרים</label>
                         <input type="file" class="form-control" id="uploadPolls" accept="image/png">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="typeTask" class="form-label">איזה משימה</label>
+                        <input type="number" class="form-control" id="typeTask">
                     </div>
                     <div class="col-md-1">
                         <label for="typeTask" class="form-label">איזה משימה</label>

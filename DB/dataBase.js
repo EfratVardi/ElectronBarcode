@@ -283,11 +283,13 @@ function updateStudent(tz, points, callback) {
 }
 
 function getStudentByTz(tz, callback) {
+    const cleanTz = tz.replace(/^0+/, '');
+
     const query = `
         SELECT * FROM students WHERE tz = ?
     `;
 
-    db.get(query, [tz], (err, row) => {
+    db.get(query, [cleanTz], (err, row) => {
         if (err) {
             callback(err, null);
         } else {

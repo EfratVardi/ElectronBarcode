@@ -27,7 +27,7 @@
       opacity: 1;
     }
     50% {
-      opacity: 0;
+      opacity: 0.5;
     }
   }
   
@@ -35,6 +35,6 @@
     font-size: 24px;
     font-weight: bold;
     color: #F9B81C;
-    animation: blink 1s infinite;
+    animation: blink 2s infinite;
   }
   

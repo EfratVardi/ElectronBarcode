@@ -342,20 +342,18 @@
                 body {
                     font-family: 'Arial', sans-serif;;
                     direction: rtl;
-                    margin: 0;
-                    padding: 0;
+                    text-align: left
                 }
                 #title {
-                    font-size: 40px;
-                    text-align: center;
+                    font-size: 50px;
+                    padding-left:80px
                 }
                 #content div {
-                    font-size: 20px;
-                    margin: 10px 0;
+                    font-size: 25px;
+                     padding-left:50px;
                 }
                 #footer {
                     font-size: 10px;
-                    text-align: center;
                     margin-top: 20px;
                 }
             </style>
@@ -368,7 +366,8 @@
                 <div>${studentResult.grade}</div>
                 <div>${systemConfig.buy == 0
                     ? "" + result.name
-                    : "זכאות למתנה: " + result.name}</div>
+                    : "זכאות למתנה: "}</div>
+                  <div>${result.name}</div>
                 <div>נקודות בחשבון: ${studentResult.points}</div>
             </div>
             <br>
