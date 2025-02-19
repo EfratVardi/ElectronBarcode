@@ -59,7 +59,7 @@
         systemConfig = data;
         document.getElementById("background").style.backgroundImage = "url('../../resources/barcode/personalBackground.png')"
         document.getElementById("line1").style.color = '#F9B81C'
-        document.getElementById("line2").style.color = '#214785'
+        document.getElementById("").style.color = '#214785'
         document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
         document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
         if (systemConfig.numPosition.length > 0) {
@@ -132,7 +132,7 @@
       window.expose.updateStudent(studentResult.tz, studentResult.points);
       window.expose.receiveUpdateStudentResponse((response) => {
         if (response.success) {
-          updateLines("כל הכבוד" + " " + studentResult.name, result.name+"!"+" "+"יש בחשבונך"+" "+studentResult.points+" "+"נקודות"+".", "הוצא את הקבלה והכנס לתיבת ההגרלה")
+          updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
           if (systemConfig.hasPrint == 1)
             setTimeout(function () {
               toPrint();
