@@ -121,33 +121,47 @@ ipcMain.on("sendUploadBackground", (event, args) => {
 
 ipcMain.on('getSystemSettings', (event) => {
   db.getSystemSettings((err, data) => {
-      if (err) {
-          event.reply('receiveSystemSettingsError', err);
-      } else {
-          event.reply('receiveSystemSettings', data);  // מחזירים את הנתונים
-      }
+    if (err) {
+      event.reply('receiveSystemSettingsError', err);
+    } else {
+      event.reply('receiveSystemSettings', data);  
+    }
   });
 });
 
 ipcMain.on('updateSystemSettings', (event, updatedValues) => {
-  db.updateSystemConfig(updatedValues, (err) => {
+  db.updateSystemSettings
+    (updatedValues, (err) => {
       if (err) {
-          event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
+        event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
       } else {
-          event.reply('receiveUpdateSystemSettings', { success: true });
+        event.reply('receiveUpdateSystemSettings', { success: true });
       }
+    });
+});
+
+ipcMain.on('insertStudents', (event, fileData) => {
+  let parsedData;
+  try {
+    parsedData = JSON.parse(fileData);
+    if (!Array.isArray(parsedData)) {
+      throw new Error("Parsed data is not an array.");
+    }
+  } catch (error) {
+    console.error("Error parsing JSON data:", error.message);
+    event.reply("insertStudentsResponse", { success: false, error: "Invalid JSON format or data is not an array" });
+    return;
+  }
+
+  db.insertStudents(parsedData, (err) => {
+    if (err) {
+      event.reply("receiveInsertStudents", { success: false, error: err.message });
+    } else {
+      event.reply("receiveInsertStudents", { success: true });
+    }
   });
 });
 
-ipcMain.on('insertData', (event, updatedValues) => {
-  db.insertDataFromExcel(updatedValues, (err) => {
-      if (err) {
-          event.reply('receiveInsertData', { success: false, error: err.message });
-      } else {
-          event.reply('receiveInsertData', { success: true });
-      }
-  });
-});
 
 ipcMain.on('close', () => {
   app.quit()

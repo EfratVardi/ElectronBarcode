@@ -138,7 +138,7 @@ function getSystemSettings(callback) {
 }
 
 // בקובץ db.js
-function updateSystemConfig(updatedValues, callback) {
+function updateSystemSettings(updatedValues, callback) {
     const query = `
         UPDATE system
         SET
@@ -168,59 +168,45 @@ function updateSystemConfig(updatedValues, callback) {
     });
 }
 
-function insertDataFromExcel(table, data) {
-    // נמחק את כל הנתונים הקיימים בטבלה
-    db.run(`DELETE FROM ${table}`, (err) => {
-        if (err) {
-            console.error(`❌ Error deleting from ${table}:`, err.message);
-            return;
-        }
-
-        let query = '';
-        let placeholders = '';
-        let columns = [];
-
-        // התאמת הפונקציה לפי שם הטבלה
-        if (table === 'students') {
-            columns = ['tz', 'name', 'grade', 'points', 'position'];
-            placeholders = data.map(() => '(?, ?, ?, ?, ?)').join(',');
-            query = `
-                INSERT INTO students (tz, name, grade, points, position)
-                VALUES ${placeholders}
-            `;
-        } else if (table === 'tasks') {
-            columns = ['code', 'name', 'points', 'type', 'class', 'multiple'];
-            placeholders = data.map(() => '(?, ?, ?, ?, ?, ?)').join(',');
-            query = `
-                INSERT INTO tasks (code, name, points, type, class, multiple)
-                VALUES ${placeholders}
-            `;
-        } else if (table === 'products') {
-            columns = ['code', 'name', 'points', 'type', 'multiple'];
-            placeholders = data.map(() => '(?, ?, ?, ?, ?)').join(',');
-            query = `
-                INSERT INTO products (code, name, points, type, multiple)
-                VALUES ${placeholders}
-            `;
-        }
-
-        // המרת המידע ל-flatArray עבור ה-INSERT
-        const flatData = data.flat();
-        db.run(query, flatData, (err) => {
+function insertStudents(data, callback) {
+    db.serialize(() => {
+        db.run("DELETE FROM students", (err) => {
             if (err) {
-                console.error(`Error inserting data into ${table}:`, err.message);
-            } else {
-                console.log(`Data inserted into ${table} table`);
+                console.error("Error deleting students data:", err.message);
+                return callback(err);
             }
+            console.log("Old student records deleted.");
+
+            const query = `
+                INSERT INTO students (tz, name, grade, points, position)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+
+            const stmt = db.prepare(query);
+
+            data.forEach(student => {
+                stmt.run(student.tz, student.name, student.grade, student.points || 0, student.position || null);
+            });
+
+            stmt.finalize((err) => {
+                if (err) {
+                    console.error("Error inserting students:", err.message);
+                    callback(err);
+                } else {
+                    console.log("Students inserted successfully.");
+                    callback(null);
+                }
+            });
         });
     });
 }
 
+
+
 module.exports = {
-    db,
     getSystemSettings,
     insertDefaultSystemValues,
     initializeDatabase,
-    updateSystemConfig,
-    insertDataFromExcel
+    updateSystemSettings,
+    insertStudents
 };

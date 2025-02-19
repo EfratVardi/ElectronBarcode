@@ -26,14 +26,6 @@
         var fileName
         var searchVal = ""
 
-        function handleExcelFile(fileName, data) {
-            const fileData = XLSX.read(data, { type: 'array' });
-            const sheetName = fileData.SheetNames[0];
-            const sheet = fileData.Sheets[sheetName];
-            const jsonData = XLSX.utils.sheet_to_json(sheet);
-            insertDataFromExcel(fileName, jsonData);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             const device = document.getElementById('device');
             const color = document.getElementById('color');
@@ -71,7 +63,7 @@
                 document.getElementById('timer').value = data.timer;
                 document.getElementById('textColor').value = data.textColor;
                 document.getElementById('date').value = data.date;
-                
+
                 const changeEvent = new Event('change');
                 device.dispatchEvent(changeEvent);
                 hasBuy.dispatchEvent(changeEvent);
@@ -79,6 +71,8 @@
                 hasTests.dispatchEvent(changeEvent);
                 color.dispatchEvent(changeEvent);
                 textColor.dispatchEvent(changeEvent);
+                document.getElementById("background").style.backgroundImage = getBackground("1", "1");
+
             });
 
             // במקרה של שגיאה
@@ -193,15 +187,22 @@
         function handleFileSelect(event) {
             var file = event.target.files[0]; var reader = new FileReader();
             reader.onload = function (e) {
-                var data = e.target.result; const workbook = XLSX.read(data, { type: 'array' }); const
-                    sheetName = workbook.SheetNames[0]; const sheet = workbook.Sheets[sheetName]; const name = checkFileName(file.name)
-                let json_object; if (name == "tests") { json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet)); } else {
+                var data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const name = checkFileName(file.name)
+                let json_object;
+                if (name == "tests") {
+                    json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet));
+                }
+                else {
                     json_object = JSON.stringify(XLSX.utils.sheet_to_json(sheet));
-                } if (name != "") {
-                    fileName = name;
-                    window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        location.reload()
+                }
+                if (name != "") {
+                    window.expose.insertStudents(json_object);
+                    window.expose.receiveInsertStudents((data) => {
+                            location.reload();
                     });
                 }
             };
@@ -289,17 +290,14 @@
                 hasParents: document.getElementById('hasParents').value,
                 hasTests: document.getElementById('hasTests').value,
                 timer: document.getElementById('timer').value,
+                buy: 0,
                 textColor: document.getElementById('textColor').value
             };
 
-            // שליחה ל-preload.js
             window.expose.updateSystemSettings(updatedValues);
-
-            // קבלת התשובה אם העדכון הצליח
             window.expose.receiveUpdatedSystemSettings((response) => {
                 if (response.success) {
                     console.log('הגדרות המערכת עודכנו בהצלחה');
-                    // location.reload(); // טעינה מחדש
                 } else {
                     console.error('שגיאה בעדכון הגדרות המערכת:', response.error);
                 }

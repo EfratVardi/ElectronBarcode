@@ -38,12 +38,12 @@ contextBridge.exposeInMainWorld('expose', {
         ipcRenderer.on('receiveUpdateSystemSettings', callback);
     },
 
-    insertData: (fileName, fileData) => {
-        ipcRenderer.send('insertData', { fileName, fileData });
+    insertStudents: (fileData) => {
+        ipcRenderer.send('insertStudents', fileData );
     },
 
-    receiveInsertData: (callback) => {
-        ipcRenderer.on('receiveInsertData', callback);
+    receiveInsertStudents: (callback) => {
+        ipcRenderer.on('receiveInsertStudents', callback);
     },
 
     appClose: () => {
