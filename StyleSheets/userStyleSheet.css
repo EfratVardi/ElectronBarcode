@@ -1,7 +1,7 @@
 ﻿.text {
     position: absolute;
     left: 10%;
-    top: 20%;
+    top: 40%;
     bottom: 20%;
     width: 80%;
     text-align: center;
@@ -34,7 +34,7 @@
   .blink-text {
     font-size: 24px;
     font-weight: bold;
-    color: red;
+    color: #F9B81C;
     animation: blink 1s infinite;
   }
   

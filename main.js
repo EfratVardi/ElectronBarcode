@@ -164,17 +164,106 @@ ipcMain.on('insertTasks', (event, fileData) => {
   });
 });
 
+ipcMain.on('insertProducts', (event, fileData) => {
+  let parsedData = JSON.parse(fileData);
 
-ipcMain.on('updateStudent', (event, { tz, points }) => {
-    db.updateStudent(tz, points, (err, result) => {
-        if (err) {
-            event.reply("updateStudentResponse", { success: false, error: err.message });
-        } else {
-            event.reply("updateStudentResponse", { success: true, updatedId: tz });
-        }
-    });
+  db.insertProducts(parsedData, (err) => {
+    if (err) {
+      event.reply("receiveInsertProducts", { success: false, error: err.message });
+    } else {
+      event.reply("receiveInsertProducts", { success: true });
+    }
+  });
 });
 
+ipcMain.on('updateStudent', (event, { tz, points }) => {
+  db.updateStudent(tz, points, (err, result) => {
+    if (err) {
+      event.reply("updateStudentResponse", { success: false, error: err.message });
+    } else {
+      event.reply("updateStudentResponse", { success: true, updatedId: tz });
+    }
+  });
+});
+
+
+ipcMain.on('getStudentByTz', (event, tz) => {
+  db.getStudentByTz(tz, (err, student) => {
+    if (err) {
+      event.reply("getStudentByTzResponse", { success: false, error: err.message });
+    } else if (!student) {
+      event.reply("getStudentByTzResponse", { success: false, error: "Student not found" });
+    } else {
+      event.reply("getStudentByTzResponse", { success: true, student });
+    }
+  });
+});
+
+ipcMain.on('getTaskByCode', (event, code) => {
+
+  db.getTaskByCode(code, (err, task) => {
+    if (err) {
+      event.reply("getTaskByCodeResponse", { success: false, error: err.message });
+    } else if (!task) {
+      event.reply("getTaskByCodeResponse", { success: false, error: "Task not found" });
+    } else {
+      event.reply("getTaskByCodeResponse", { success: true, task });
+    }
+  });
+});
+
+ipcMain.on('getAllStudents', (event) => {
+  db.getAllStudents((err, students) => {
+    if (err) {
+      event.reply("getAllStudentsResponse", { success: false, error: err.message });
+    } else {
+      event.reply("getAllStudentsResponse", { success: true, students });
+    }
+  });
+});
+
+ipcMain.on('getAllProducts', (event) => {
+  db.getAllProducts((err, products) => {
+    if (err) {
+      event.reply("getAllProductsResponse", { success: false, error: err.message });
+    } else {
+      event.reply("getAllProductsResponse", { success: true, products });
+    }
+  });
+});
+
+
+ipcMain.on('updateBuyStatus', (event, buy) => {
+  db.updateBuyStatus(buy, (err, result) => {
+    if (err) {
+      event.reply("updateBuyStatusResponse", { success: false, error: err.message });
+    } else {
+      event.reply("updateBuyStatusResponse", { success: true });
+    }
+  });
+});
+
+ipcMain.on('insertProduct', (event, { code, name, points, type, multiple }) => {
+  db.insertProduct(code, name, points, type, multiple, (err, result) => {
+    if (err) {
+      event.reply("insertProductResponse", { success: false, error: err.message });
+    } else {
+      event.reply("insertProductResponse", { success: true, insertedId: result.insertedId });
+    }
+  });
+});
+
+ipcMain.on('updateProduct', (event, { code, name, points }) => {
+  console.log("Updating product:", code, name, points);
+
+  db.updateProduct(code, name, points, (err, result) => {
+    if (err) {
+      event.reply("updateProductResponse", { success: false, error: err.message });
+    } else {
+      event.reply("updateProductResponse", { success: true });
+    }
+  });
+});
 
 ipcMain.on('close', () => {
   app.quit()

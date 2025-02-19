@@ -17,6 +17,7 @@
     <div class="text">
       <div id="line1" class="blink-text"></div>
       <div id="line2"></div>
+      <br>
       <div id="line3"></div>
       <br><br>
     </div>
@@ -70,23 +71,6 @@
       })
     });
 
-
-    //   fileName = 'students'
-    //   window.expose.SendExcel("sendReadExcel", fileName);
-    //   window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-    //     if (data != 0) {
-    //       students = JSON.parse(data)
-    //       fileName = 'uniqTasks'
-    //       window.expose.SendExcel("sendReadExcel", fileName);
-    //       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-    //         if (data != 0) {
-    //           uniqTasks = JSON.parse(data)
-    //         }
-    //       })
-    //     };
-    //   });
-    // }
-
     document.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         if (buffer.length > 0) {
@@ -110,32 +94,33 @@
 
     function searchInExcel() {
       step = Steps.step2
-      for (var i = 0; i < students.length; i++) {
-        if (students[i]["tz"] == searchVal) {
-          studentResult = students[i];
-          break;
+
+      window.expose.getStudentByTz(searchVal);
+      window.expose.receiveStudentByTzResponse((response) => {
+        if (response.success) {
+          studentResult = response.student;
+          updateTask()
         }
-      }
-      if (studentResult == "") {
-        showAlert("הברקוד לא מופיע ברשימות. גשו למורה!")
-        return;
-      }
-      updateTask()
+        else {
+          showAlert("הצ'יפ לא קיים. גשו למורה!")
+          return;
+        }
+      })
     }
 
     function updateTask() {
       step = Steps.step3;
-      for (var i = 0; i < uniqTasks.length; i++) {
-        if (uniqTasks[i]["code"] == localStorage.getItem("typeTask")) {
-          result = uniqTasks[i]
-          break;
+      window.expose.getTaskByCode(localStorage.getItem("typeTask"));
+      window.expose.receiveTaskByCodeResponse((response) => {
+        if (response.success) {
+          result = response.task;
+          finishSession()
         }
-      }
-      if (result == "") {
-        showAlert("קוד לא תקין, גשו למורה!")
-        return;
-      }
-      finishSession()
+        else {
+          showAlert("קוד לא תקין, גשו למורה!")
+          return;
+        }
+      })
     }
 
     function finishSession() {
@@ -144,13 +129,10 @@
     }
 
     function saveData() {
-      const tz = studentResult.tz;
-      const points = studentResult.points;
-
-      window.expose.updateStudent(tz, parseInt(points));
+      window.expose.updateStudent(studentResult.tz, studentResult.points);
       window.expose.receiveUpdateStudentResponse((response) => {
         if (response.success) {
-          updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
+          updateLines("כל הכבוד" + " " + studentResult.name, result.name+"!"+" "+"יש בחשבונך"+" "+studentResult.points+" "+"נקודות"+".", "הוצא את הקבלה והכנס לתיבת ההגרלה")
           if (systemConfig.hasPrint == 1)
             setTimeout(function () {
               toPrint();
@@ -159,7 +141,6 @@
             reset(2000);
         }
       });
-
     }
 
     function toPrint() {

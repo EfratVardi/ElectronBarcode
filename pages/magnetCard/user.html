@@ -6,7 +6,7 @@
     <title>צבירת נקודות</title>
 </head>
 
-<body onload="onLoad()">
+<body>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="../../styleSheets/cardUserStyleSheet.css" rel="stylesheet" />
     <link href="../../styleSheets/mainStyleSheet.css" rel="stylesheet" />
@@ -84,62 +84,42 @@
         let correctCount = 0;
         let timer;
 
-        function onLoad() {
+        window.addEventListener('DOMContentLoaded', () => {
             step = Steps.step1;
-            fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                if (data == 0) {
-                    systemConfig = getDefaultConfig()
-                }
-                else {
-                    systemConfig = JSON.parse(data)
-                }
-                document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
-                document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color)
-                document.querySelector(".text").style.color = getTextColor(systemConfig.textColor);
-
-                if (systemConfig.numPosition.length > 0) {
-                    document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
-                }
-                else {
-                    document.getElementById("position").style.display = "none";
-                }
+            window.expose.getSystemSettings();
+            window.expose.receiveSystemSettings((data) => {
+                systemConfig = data;
+                document.getElementById("background").style.backgroundImage = "url('../../resources/barcode/personalBackground.png')"
+                document.getElementById("line1").style.color = '#F9B81C'
+                document.getElementById("line2").style.color = '#214785'
                 if (systemConfig.buy) {
                     updateLines("שלום...!", "יש לבחור מתנה לקנייה")
                 }
                 else {
                     updateLines("שלום...!", "יש לבחור מהרשימה")
                 }
-                fileName = 'students'
-                window.expose.SendExcel("sendReadExcel", fileName);
-                window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                    if (data != 0) {
-                        students = JSON.parse(data)
-                        systemConfig.buy ?
-                            fileName = 'products' : fileName = 'uniqTasks';
-                        window.expose.SendExcel("sendReadExcel", fileName);
-                        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                            if (data != 0) {
-                                actions = JSON.parse(data)
-                                createCards()
-                            }
-                        })
 
-                        if (systemConfig.hasTests == "1") {
-                            fileName = 'tests';
-                            window.expose.SendExcel("sendReadExcel", fileName);
-                            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-                                if (data != 0) {
-                                    tests = JSON.parse(data)
-                                }
-                            })
+                if (systemConfig.buy == 1) {
+                    window.expose.getAllProducts();
+                    window.expose.receiveAllProductsResponse((response) => {
+                        if (response.success) {
+                            actions = response.products
+                            createCards()
                         }
-                    }
-                });
-            })
-        }
+                    })
+                }
+
+                if (systemConfig.hasTests == "1") {
+                    fileName = 'tests';
+                    window.expose.SendExcel("sendReadExcel", fileName);
+                    window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+                        if (data != 0) {
+                            tests = JSON.parse(data)
+                        }
+                    })
+                }
+            });
+        });
 
         document.addEventListener("keypress", function (e) {
             if (isModalOpen) return;
@@ -170,7 +150,7 @@
         function createCards() {
             const cardContainer = document.getElementById("cards");
 
-            actions.filter(item => item.show).forEach(cardData => {
+            actions.forEach(cardData => {
                 const cardColumn = document.createElement("div");
                 cardColumn.classList.add("col");
 
@@ -309,27 +289,21 @@
         function searchInExcel() {
             document.getElementById("cards").style.display = "none"
             step = Steps.step3
-            for (var i = 0; i < students.length; i++) {
-                if (students[i]["tz"] == searchVal) {
-                    studentResult = students[i];
-                    break;
-                }
-            }
-            if (studentResult == "") {
-                showAlert("  קוד לא קיים. גשו למורה!")
-                return;
-            }
 
-            if (!result.multiple && studentResult.tasksNumber.includes(result.code)) {
-                showAlert("הי, בחירה זו כבר קיימת בחשבונך!");
-                return;
-            }
-            finishSession()
+            window.expose.getStudentByTz(searchVal);
+            window.expose.receiveStudentByTzResponse((response) => {
+                if (response.success) {
+                    studentResult = response.student;
+                    finishSession()
+                }
+                else {
+                    showAlert("הצ'יפ לא קיים. גשו למורה!")
+                    return;
+                }
+            })
         }
 
         function finishSession() {
-            studentResult.tasks += result.name + ',';
-            studentResult.tasksNumber += result.code + ',';
             if (systemConfig.buy == 0)
                 studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
             else {
@@ -343,22 +317,17 @@
         }
 
         function saveData() {
-            for (var i = 0; i < students.length; i++) {
-                if (students[i]["tz"] == studentResult.tz) {
-                    students[i] = studentResult;
-                    break;
+            window.expose.updateStudent(studentResult.tz, studentResult.points);
+            window.expose.receiveUpdateStudentResponse((response) => {
+                if (response.success) {
+                    updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+                    if (systemConfig.hasPrint == 1)
+                        setTimeout(function () {
+                            toPrint();
+                        }, 2500);
+                    else
+                        reset(2500);
                 }
-            }
-            fileName = 'students'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
-                if (systemConfig.hasPrint == 1)
-                    setTimeout(function () {
-                        toPrint();
-                    }, 2500);
-                else
-                    reset(2500);
             });
         }
 
@@ -443,10 +412,10 @@
                 $('#modal').modal('show')
             });
             setTimeout(function () {
-            $(document).ready(function () {
-                $('#modal').modal('hide')
-            });
-            reset(0)
+                $(document).ready(function () {
+                    $('#modal').modal('hide')
+                });
+                reset(0)
             }
                 , 2500);
         }

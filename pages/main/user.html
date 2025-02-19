@@ -6,27 +6,29 @@
     <title>צבירת נקודות</title>
 </head>
 
-<body onload="onLoad()">
+<body>
     <script src="../../js/shared.js"></script>
     <script>
         var systemConfig = ""
         var currentDate = getTodayDate();
         var fileName
 
-        function onLoad() {
+        window.addEventListener('DOMContentLoaded', () => {
+            window.expose.getSystemSettings();
+            window.expose.receiveSystemSettings((data) => {
+                systemConfig = data
 
-            systemConfig = getDefaultConfig()
+                if (currentDate > systemConfig.date)
+                    login('expired')
+                else if (systemConfig.device == 2 || systemConfig.device == 4 || systemConfig.device == "1" && systemConfig.buy == 1)
+                    login("../magnetCard/user")
+                else if (systemConfig.device == 1)
+                    login("../barcode/user")
+                else if (systemConfig.device == 3)
+                    login("../digitalCard/user")
 
-            if (currentDate > systemConfig.date)
-                login('expired')
-            else if (systemConfig.device == 2 || systemConfig.device == 4 || systemConfig.device == "1" && systemConfig.buy == 1)
-                login("../magnetCard/user")
-            else if (systemConfig.device == 1)
-                login("../barcode/user")
-            else if (systemConfig.device == 3)
-                login("../digitalCard/user")
-        
-        }
+            })
+        })
     </script>
 
 </html>

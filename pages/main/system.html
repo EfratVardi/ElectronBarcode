@@ -212,6 +212,12 @@
                         location.reload();
                     });
                 }
+                else if (fileName == 'products') {
+                    window.expose.insertProducts(json_object);
+                    window.expose.receiveInsertProducts((data) => {
+                        location.reload();
+                    });
+                }
             };
             reader.readAsArrayBuffer(file);
         };
@@ -418,7 +424,7 @@
         document.getElementById('uploadTest').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadStudents').addEventListener('change', (event) => handleFileSelect(event, "students"), false);
         document.getElementById('uploaduniqTasks').addEventListener('change', (event) => handleFileSelect(event, "tasks"), false);
-        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadProducts').addEventListener('change', (event) => handleFileSelect(event, "products"), false);
     </script>
 </body>
 

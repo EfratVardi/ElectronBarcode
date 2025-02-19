@@ -176,14 +176,14 @@ function insertStudents(data, callback) {
             }
 
             const query = `
-                INSERT INTO students (tz, name, grade, points, position, tasks)
-                VALUES (?, ?, ?, ?, ?,?)
+                INSERT INTO students (tz, name, grade, points, position)
+                VALUES (?, ?, ?, ?, ?)
             `;
 
             const stmt = db.prepare(query);
 
             data.forEach(student => {
-                stmt.run(student.tz, student.name, student.grade, student.points, student.position, student.tasks
+                stmt.run(student.tz, student.name, student.grade, student.points, student.position
                 );
             });
 
@@ -227,6 +227,35 @@ function insertTasks(data, callback) {
     });
 }
 
+function insertProducts(data, callback) {
+    db.serialize(() => {
+        db.run("DELETE FROM products", (err) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const query = `
+                INSERT INTO products (code, name, points, type, multiple)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+
+            const stmt = db.prepare(query);
+
+            data.forEach(pro => {
+                stmt.run(pro.code, pro.name, pro.points, pro.type, pro.multiple);
+            });
+
+            stmt.finalize((err) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null);
+                }
+            });
+        });
+    });
+}
+
 function updateStudent(tz, points, callback) {
     const query = `
         UPDATE students
@@ -243,11 +272,103 @@ function updateStudent(tz, points, callback) {
     });
 }
 
-module.exports = {
-    updateStudent
-};
+function getStudentByTz(tz, callback) {
+    const query = `
+        SELECT * FROM students WHERE tz = ?
+    `;
 
+    db.get(query, [tz], (err, row) => {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, row);
+        }
+    });
+}
 
+function getTaskByCode(code, callback) {
+    const query = `
+        SELECT * FROM tasks WHERE code = ?
+    `;
+
+    db.get(query, [code], (err, row) => {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, row);
+        }
+    });
+}
+
+function getAllStudents(callback) {
+    const query = `SELECT * FROM students`;
+
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, rows);
+        }
+    });
+}
+
+function getAllProducts(callback) {
+    const query = `SELECT * FROM products`;
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, rows);
+        }
+    });
+}
+
+function updateBuyStatus(buy, callback) {
+    const query = `
+        UPDATE system
+        SET buy = ?
+        WHERE id = 1
+    `;
+
+    db.run(query, [buy], function (err) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, { success: true });
+        }
+    });
+}
+
+function insertProduct(code, name, points, type, multiple, callback) {
+    const query = `
+        INSERT INTO products (code, name, points, type, multiple)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
+    db.run(query, [code, name, points, type, multiple], function (err) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, { success: true, insertedId: this.lastID });
+        }
+    });
+}
+
+function updateProduct(code, name, points, callback) {
+    const query = `
+        UPDATE products
+        SET name = ?, points = ?
+        WHERE code = ?
+    `;
+
+    db.run(query, [name, points, code], function (err) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, { success: true });
+        }
+    });
+}
 
 module.exports = {
     getSystemSettings,
@@ -256,5 +377,14 @@ module.exports = {
     updateSystemSettings,
     insertStudents,
     insertTasks,
-    updateStudent
+    updateStudent,
+    getStudentByTz,
+    getTaskByCode,
+    getAllStudents,
+    insertProducts,
+    getAllProducts,
+    updateBuyStatus,
+    insertProduct,
+    updateProduct
+
 };
