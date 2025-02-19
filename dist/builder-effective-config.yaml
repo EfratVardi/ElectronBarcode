@@ -8,4 +8,4 @@ asarUnpack:
   - node_modules/sqlite3
   - node_modules/sqlite3/build/Release
 files: []
-electronVersion: 34.1.0
+electronVersion: 34.2.0

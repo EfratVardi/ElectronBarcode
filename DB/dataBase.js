@@ -7,6 +7,13 @@ const dbPath = path.join(process.env.APPDATA || path.join(process.env.HOME, 'App
 if (!fs.existsSync(path.dirname(dbPath))) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 }
+// const dir = path.join("Z:\\", "accumulatingpoints");
+
+// if (!fs.existsSync(dir)) {
+//   fs.mkdirSync(dir, { recursive: true });
+// }
+
+// const dbPath = path.join("Z:\\", "accumulatingpoints", "database.sqlite");
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {

@@ -46,6 +46,7 @@
     var studentResult = ""
     var result = "";
     var fileName
+    var localSettings = ""
     const Steps = {
       step1: "1",
       step2: "2",
@@ -54,6 +55,19 @@
     window.addEventListener('DOMContentLoaded', () => {
       step = Steps.step1;
       updateLines("!...ברוך הבא", "העבר את הצ'יפ לטעינה")
+      fileName = 'localSettings'
+      window.expose.SendExcel("sendReadExcel", fileName);
+      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+        if (data != 0) {
+          localSettings = JSON.parse(data)
+          if (systemConfig.numPosition.length > 0) {
+            document.getElementById("position").innerHTML += ' ' + localSettings.name
+          }
+          else {
+            document.getElementById("position").style.display = "none";
+          }
+        }
+      });
       window.expose.getSystemSettings();
       window.expose.receiveSystemSettings((data) => {
         systemConfig = data;
@@ -62,12 +76,7 @@
         document.getElementById("line2").style.color = '#214785'
         // document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
         // document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
-        if (systemConfig.numPosition.length > 0) {
-          document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
-        }
-        else {
-          document.getElementById("position").style.display = "none";
-        }
+
       })
     });
 
@@ -110,7 +119,7 @@
 
     function updateTask() {
       step = Steps.step3;
-      window.expose.getTaskByCode(localStorage.getItem("typeTask"));
+      window.expose.getTaskByCode(localSettings.code);
       window.expose.receiveTaskByCodeResponse((response) => {
         if (response.success) {
           result = response.task;
