@@ -132,6 +132,7 @@
       window.expose.updateStudent(studentResult.tz, studentResult.points);
       window.expose.receiveUpdateStudentResponse((response) => {
         if (response.success) {
+          document.getElementById("line1").classList.remove("blink-text");
           updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
           if (systemConfig.hasPrint == 1)
             setTimeout(function () {
