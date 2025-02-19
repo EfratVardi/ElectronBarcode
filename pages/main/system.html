@@ -26,18 +26,6 @@
         var fileName
         var searchVal = ""
 
-        document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploadTasks').addEventListener('change', handleFileSelect, false);
-        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
-
-        function handleExcelFile(fileName, data) {
-            const fileData = XLSX.read(data, { type: 'array' });
-            const sheetName = fileData.SheetNames[0];
-            const sheet = fileData.Sheets[sheetName];
-            const jsonData = XLSX.utils.sheet_to_json(sheet);
-            insertDataFromExcel(fileName, jsonData);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             const device = document.getElementById('device');
             const color = document.getElementById('color');
@@ -62,7 +50,35 @@
             const uploadPollsWrapper = document.getElementById('uploadPollsWrapper');
             const uploadPolls = document.getElementById('uploadPolls');
 
-            window.expose.getSystemSettings(); // שליחה ל-preload.js
+            window.expose.getSystemSettings();
+            window.expose.receiveSystemSettings((data) => {
+                document.getElementById('numPosition').value = data.numPosition;
+                document.getElementById('hasPrint').value = data.hasPrint;
+                document.getElementById('hasBuy').value = data.hasBuy;
+                document.getElementById('device').value = data.device;
+                document.getElementById('color').value = data.color;
+                document.getElementById('type').value = data.type;
+                document.getElementById('hasParents').value = data.hasParents;
+                document.getElementById('hasTests').value = data.hasTests;
+                document.getElementById('timer').value = data.timer;
+                document.getElementById('textColor').value = data.textColor;
+                document.getElementById('date').value = data.date;
+
+                const changeEvent = new Event('change');
+                device.dispatchEvent(changeEvent);
+                hasBuy.dispatchEvent(changeEvent);
+                hasParents.dispatchEvent(changeEvent);
+                hasTests.dispatchEvent(changeEvent);
+                color.dispatchEvent(changeEvent);
+                textColor.dispatchEvent(changeEvent);
+                document.getElementById("background").style.backgroundImage = getBackground("1", "1");
+
+            });
+
+            // במקרה של שגיאה
+            window.expose.receiveSystemSettingsError((error) => {
+                console.error('לא ניתן לטעון את הגדרות המערכת:', error);
+            });
 
             hasParents.addEventListener('change', function () {
                 const selectedOption = hasParents.value;
@@ -147,35 +163,6 @@
             });
         });
 
-        // קבלת ההגדרות מ-`preload.js`
-        window.expose.receiveSystemSettings((data) => {
-            console.log("✅ נתוני המערכת:", data);
-
-            document.getElementById('numPosition').value = data.numPosition;
-            document.getElementById('hasPrint').value = data.hasPrint;
-            document.getElementById('hasBuy').value = data.hasBuy;
-            document.getElementById('device').value = data.device;
-            document.getElementById('color').value = data.color;
-            document.getElementById('type').value = data.type;
-            document.getElementById('hasParents').value = data.hasParents;
-            document.getElementById('hasTests').value = data.hasTests;
-            document.getElementById('timer').value = data.timer;
-            document.getElementById('textColor').value = data.textColor;
-            document.getElementById('date').value = data.date;
-
-            const changeEvent = new Event('change');
-            device.dispatchEvent(changeEvent);
-            hasBuy.dispatchEvent(changeEvent);
-            hasParents.dispatchEvent(changeEvent);
-            hasTests.dispatchEvent(changeEvent);
-            color.dispatchEvent(changeEvent);
-            textColor.dispatchEvent(changeEvent);
-        });
-
-        // במקרה של שגיאה
-        window.expose.receiveSystemSettingsError((error) => {
-            console.error('❌ לא ניתן לטעון את הגדרות המערכת:', error);
-        });
 
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
@@ -195,18 +182,27 @@
         function checkFileName(fileName) {
             for (let i = 0; i < excelFiles.length; i++) { if (fileName.startsWith(excelFiles[i])) { return excelFiles[i]; } }
             return "";
-        } function handleFileSelect(event) {
+        }
+
+        function handleFileSelect(event) {
             var file = event.target.files[0]; var reader = new FileReader();
             reader.onload = function (e) {
-                var data = e.target.result; const workbook = XLSX.read(data, { type: 'array' }); const
-                    sheetName = workbook.SheetNames[0]; const sheet = workbook.Sheets[sheetName]; const name = checkFileName(file.name)
-                let json_object; if (name == "tests") { json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet)); } else {
+                var data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const name = checkFileName(file.name)
+                let json_object;
+                if (name == "tests") {
+                    json_object = convertTestToJSON(XLSX.utils.sheet_to_json(sheet));
+                }
+                else {
                     json_object = JSON.stringify(XLSX.utils.sheet_to_json(sheet));
-                } if (name != "") {
-                    fileName = name;
-                    window.expose.SendExcel("sendWriteExcel", [fileName, json_object]);
-                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                        location.reload()
+                }
+                if (name != "") {
+                    window.expose.insertStudents(json_object);
+                    window.expose.receiveInsertStudents((data) => {
+                            location.reload();
                     });
                 }
             };
@@ -243,27 +239,36 @@
             if (systemConfig.device == 1 || systemConfig.device == 2 || systemConfig.device == 4) {
                 if (students.length > 0 && uniqTasks.length > 0) {
                     for (var i = 0; i < students.length; i++) {
-                        students[i].points = 0 students[i].tasksNumber = ','
+                        students[i].points = 0
+                        students[i].tasksNumber = ','
                         students[i].tasks = ','
-                    } fileName = "students" window.expose.SendExcel("sendWriteExcel", [fileName,
-                        JSON.stringify(students)]); window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                            if (systemConfig.type == 1) {
-                                for (var i = 0; i < uniqTasks.length; i++) { uniqTasks[i].used = 0 } fileName = "uniqTasks"
-                                window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
-                                window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                                    // alert("!הקבצים אופסו בהצלחה")
-                                    location.reload()
-                                });
+                    }
+                    fileName = "students"
+                    window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
+                    window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                        if (systemConfig.type == 1) {
+                            for (var i = 0; i < uniqTasks.length; i++) {
+                                uniqTasks[i].used = 0
                             }
-                            else {
+                            fileName = "uniqTasks"
+                            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(uniqTasks)]);
+                            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+                                // alert("!הקבצים אופסו בהצלחה")
                                 location.reload()
-                            }
+                            });
+                        }
+                        else {
+                            location.reload()
+                        }
 
-                        });
+                    });
                 }
             }
             else {
-                for (var i = 0; i < products.length; i++) { products[i].used = 0 } fileName = "products"
+                for (var i = 0; i < products.length; i++) {
+                    products[i].used = 0
+                }
+                fileName = "products"
                 window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
                 window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
                     // alert("!הקבצים אופסו בהצלחה")
@@ -285,19 +290,16 @@
                 hasParents: document.getElementById('hasParents').value,
                 hasTests: document.getElementById('hasTests').value,
                 timer: document.getElementById('timer').value,
+                buy: 0,
                 textColor: document.getElementById('textColor').value
             };
 
-            // שליחה ל-preload.js
             window.expose.updateSystemSettings(updatedValues);
-
-            // קבלת התשובה אם העדכון הצליח
             window.expose.receiveUpdatedSystemSettings((response) => {
                 if (response.success) {
-                    console.log('✅ הגדרות המערכת עודכנו בהצלחה');
-                    // location.reload(); // טעינה מחדש
+                    console.log('הגדרות המערכת עודכנו בהצלחה');
                 } else {
-                    console.error('❌ שגיאה בעדכון הגדרות המערכת:', response.error);
+                    console.error('שגיאה בעדכון הגדרות המערכת:', response.error);
                 }
             });
         }
@@ -442,6 +444,9 @@
     <script>
         document.getElementById('uploadParents').addEventListener('change', handleFileSelect, false);
         document.getElementById('uploadTest').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadStudents').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploaduniqTasks').addEventListener('change', handleFileSelect, false);
+        document.getElementById('uploadProducts').addEventListener('change', handleFileSelect, false);
     </script>
 </body>
 
