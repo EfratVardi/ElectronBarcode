@@ -167,9 +167,29 @@
         }
 
         function editProduct(params) {
-            fileName = 'products'
-            window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(products)]);
-            window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+            const updatedField = params.colDef.field; // שם השדה שהתעדכן
+            const updatedValue = params.value; // הערך החדש
+            const productCode = params.data.code; // קוד המוצר של השורה
+
+            console.log(`Updating product ${productCode}: ${updatedField} = ${updatedValue}`);
+
+            // יצירת אובייקט נתונים רק עם השדה שעודכן
+            let updatedData = {
+                code: productCode
+            };
+            updatedData[updatedField] = updatedValue;
+
+            // שליחת הנתונים המעודכנים בלבד
+            window.expose.updateProduct(updatedData.code, updatedData.name || params.data.name,
+                updatedData.points || params.data.points, updatedData.type || params.data.type,
+                updatedData.multiple || params.data.multiple);
+
+            window.expose.receiveUpdateProductResponse((response) => {
+                if (response.success) {
+                    console.log("Product updated successfully");
+                } else {
+                    console.error("Error updating product:", response.error);
+                }
             });
         }
 

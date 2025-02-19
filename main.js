@@ -253,17 +253,24 @@ ipcMain.on('insertProduct', (event, { code, name, points, type, multiple }) => {
   });
 });
 
-ipcMain.on('updateProduct', (event, { code, name, points }) => {
-  console.log("Updating product:", code, name, points);
+ipcMain.on('updateProduct', (event, { code, name, points, type, multiple }) => {
 
-  db.updateProduct(code, name, points, (err, result) => {
-    if (err) {
-      event.reply("updateProductResponse", { success: false, error: err.message });
-    } else {
-      event.reply("updateProductResponse", { success: true });
-    }
-  });
+  db.updateProduct(
+      code,
+      name,
+      points,
+      type,
+      multiple,
+      (err) => {
+          if (err) {
+              event.reply("updateProductResponse", { success: false, error: err.message });
+          } else {
+              event.reply("updateProductResponse", { success: true });
+          }
+      }
+  );
 });
+
 
 ipcMain.on('close', () => {
   app.quit()

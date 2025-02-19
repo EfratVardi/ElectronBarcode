@@ -354,17 +354,23 @@ function insertProduct(code, name, points, type, multiple, callback) {
     });
 }
 
-function updateProduct(code, name, points, callback) {
+function updateProduct(code, name, points, type, multiple, callback) {
     const query = `
         UPDATE products
-        SET name = ?, points = ?
+        SET 
+            name = COALESCE(?, name), 
+            points = COALESCE(?, points), 
+            type = COALESCE(?, type), 
+            multiple = COALESCE(?, multiple)
         WHERE code = ?
     `;
 
-    db.run(query, [name, points, code], function (err) {
+    db.run(query, [name, points, type, multiple, code], function (err) {
         if (err) {
+            console.error("Error updating product:", err.message);
             callback(err);
         } else {
+            console.log(`Product ${code} updated successfully.`);
             callback(null, { success: true });
         }
     });
