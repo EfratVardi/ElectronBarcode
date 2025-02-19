@@ -21,7 +21,7 @@
       <div id="line3"></div>
       <br><br>
     </div>
-    <div id="position">עמדה</div>
+    <div id="position"></div>
   </div>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -59,9 +59,9 @@
         systemConfig = data;
         document.getElementById("background").style.backgroundImage = "url('../../resources/barcode/personalBackground.png')"
         document.getElementById("line1").style.color = '#F9B81C'
-        document.getElementById("").style.color = '#214785'
-        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
-        document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
+        document.getElementById("line2").style.color = '#214785'
+        // document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
+        // document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
         if (systemConfig.numPosition.length > 0) {
           document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
         }
