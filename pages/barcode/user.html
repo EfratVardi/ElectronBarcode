@@ -20,6 +20,7 @@
       <div id="line3"></div>
       <br><br>
     </div>
+    <div id="position">עמדה</div>
   </div>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -58,6 +59,14 @@
         document.getElementById("background").style.backgroundImage = "url('../../resources/barcode/personalBackground.png')"
         document.getElementById("line1").style.color = '#F9B81C'
         document.getElementById("line2").style.color = '#214785'
+        document.getElementById("position").style.backgroundColor = getPosition(systemConfig.color)[0]
+        document.getElementById("position").style.color = getPosition(systemConfig.color)[1]
+        if (systemConfig.numPosition.length > 0) {
+          document.getElementById("position").innerHTML += ' ' + systemConfig.numPosition
+        }
+        else {
+          document.getElementById("position").style.display = "none";
+        }
       })
     });
 
@@ -112,7 +121,7 @@
         return;
       }
       updateTask()
-          }
+    }
 
     function updateTask() {
       step = Steps.step3;
@@ -135,24 +144,22 @@
     }
 
     function saveData() {
-      for (var i = 0; i < students.length; i++) {
-        if (students[i]["tz"] == studentResult.tz) {
-          students[i] = studentResult;
-          break;
-        }
-      }
-      fileName = 'students'
-      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
-      window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
+      const tz = studentResult.tz;
+      const points = studentResult.points;
 
-        updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
-        if (systemConfig.hasPrint == 1)
-          setTimeout(function () {
-            toPrint();
-          }, 2000);
-        else
-          reset(2000);
+      window.expose.updateStudent(tz, parseInt(points));
+      window.expose.receiveUpdateStudentResponse((response) => {
+        if (response.success) {
+          updateLines("כל הכבוד" + " " + studentResult.name, result.name, "הוצא את הקבלה והכנס לתיבת ההגרלה")
+          if (systemConfig.hasPrint == 1)
+            setTimeout(function () {
+              toPrint();
+            }, 2000);
+          else
+            reset(2000);
+        }
       });
+
     }
 
     function toPrint() {

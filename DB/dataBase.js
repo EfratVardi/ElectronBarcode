@@ -55,11 +55,10 @@ function initializeDatabase() {
         CREATE TABLE IF NOT EXISTS students (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tz TEXT NOT NULL,
-            name TEXT NOT NULL,
+            name TEXT,
             grade TEXT,
             points INTEGER DEFAULT 0,
-            position INTEGER
-        )
+            position INTEGER        )
     `, (err) => {
         if (err) {
             console.error('Error creating students table:', err.message);
@@ -177,14 +176,15 @@ function insertStudents(data, callback) {
             }
 
             const query = `
-                INSERT INTO students (tz, name, grade, points, position)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO students (tz, name, grade, points, position, tasks)
+                VALUES (?, ?, ?, ?, ?,?)
             `;
 
             const stmt = db.prepare(query);
 
             data.forEach(student => {
-                stmt.run(student.tz, student.name, student.grade, student.points || 0, student.position || null);
+                stmt.run(student.tz, student.name, student.grade, student.points, student.position, student.tasks
+                );
             });
 
             stmt.finalize((err) => {
@@ -227,6 +227,26 @@ function insertTasks(data, callback) {
     });
 }
 
+function updateStudent(tz, points, callback) {
+    const query = `
+        UPDATE students
+        SET points = ?
+        WHERE tz = ?
+    `;
+
+    db.run(query, [points, tz], function (err) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, { success: true, updatedId: tz });
+        }
+    });
+}
+
+module.exports = {
+    updateStudent
+};
+
 
 
 module.exports = {
@@ -235,5 +255,6 @@ module.exports = {
     initializeDatabase,
     updateSystemSettings,
     insertStudents,
-    insertTasks
+    insertTasks,
+    updateStudent
 };

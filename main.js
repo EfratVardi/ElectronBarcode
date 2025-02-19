@@ -164,6 +164,18 @@ ipcMain.on('insertTasks', (event, fileData) => {
   });
 });
 
+
+ipcMain.on('updateStudent', (event, { tz, points }) => {
+    db.updateStudent(tz, points, (err, result) => {
+        if (err) {
+            event.reply("updateStudentResponse", { success: false, error: err.message });
+        } else {
+            event.reply("updateStudentResponse", { success: true, updatedId: tz });
+        }
+    });
+});
+
+
 ipcMain.on('close', () => {
   app.quit()
 })

@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld('expose', {
     },
 
     insertStudents: (fileData) => {
-        ipcRenderer.send('insertStudents', fileData );
+        ipcRenderer.send('insertStudents', fileData);
     },
 
     receiveInsertStudents: (callback) => {
@@ -47,11 +47,19 @@ contextBridge.exposeInMainWorld('expose', {
     },
 
     insertTasks: (fileData) => {
-        ipcRenderer.send('insertTasks', fileData );
+        ipcRenderer.send('insertTasks', fileData);
     },
 
     receiveInsertTasks: (callback) => {
         ipcRenderer.on('receiveInsertTasks', callback);
+    },
+
+    updateStudent: (tz, points) => {
+        ipcRenderer.send('updateStudent', { tz, points });
+    },
+
+    receiveUpdateStudentResponse: (callback) => {
+        ipcRenderer.on('updateStudentResponse', (event, response) => callback(response));
     },
 
     appClose: () => {
