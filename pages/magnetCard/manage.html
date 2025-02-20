@@ -165,32 +165,16 @@
                 editProduct()
             }
         }
-
         function editProduct(params) {
             const updatedField = params.colDef.field; // שם השדה שהתעדכן
             const updatedValue = params.value; // הערך החדש
             const productCode = params.data.code; // קוד המוצר של השורה
 
-            console.log(`Updating product ${productCode}: ${updatedField} = ${updatedValue}`);
-
-            // יצירת אובייקט נתונים רק עם השדה שעודכן
-            let updatedData = {
-                code: productCode
-            };
-            updatedData[updatedField] = updatedValue;
-
-            // שליחת הנתונים המעודכנים בלבד
-            window.expose.updateProduct(updatedData.code, updatedData.name || params.data.name,
-                updatedData.points || params.data.points, updatedData.type || params.data.type,
-                updatedData.multiple || params.data.multiple);
-
-            window.expose.receiveUpdateProductResponse((response) => {
-                if (response.success) {
-                    console.log("Product updated successfully");
-                } else {
-                    console.error("Error updating product:", response.error);
-                }
-            });
+            if (updatedField === "name") {
+                window.expose.updateProductName(productCode, updatedValue);
+            } else if (updatedField === "points") {
+                window.expose.updateProductPoints(productCode, updatedValue);
+            }
         }
 
         function editStudent(params) {
@@ -209,11 +193,11 @@
                 });
             }
         }
-
+        function generateRandomCode() {
+            return Math.floor(100000000 + Math.random() * 900000000); // מספר בן 9 ספרות
+        }
         function newProduct() {
-            const code = products[products.length - 1].code + 1;
-
-            window.expose.insertProduct(code, '------', 0, 1, 1);
+            window.expose.insertProduct(generateRandomCode(), '------', 0, 1, 1);
             window.expose.receiveInsertProductResponse((response) => {
                 if (response.success) {
                     location.reload()

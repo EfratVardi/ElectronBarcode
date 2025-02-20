@@ -115,12 +115,13 @@ contextBridge.exposeInMainWorld('expose', {
     receiveInsertProductResponse: (callback) => {
         ipcRenderer.on('insertProductResponse', (event, response) => callback(response));
     },
-    updateProduct: (code, name, points, type, multiple) => {
-        ipcRenderer.send('updateProduct', { code, name, points, type, multiple });
+
+    updateProductPoints: (productCode, updatedValue) => {
+        ipcRenderer.send('updateProductPoints', productCode, updatedValue);
     },
 
-    receiveUpdateProductResponse: (callback) => {
-        ipcRenderer.on('updateProductResponse', (event, response) => callback(response));
+    updateProductName: (productCode, updatedValue) => {
+        ipcRenderer.send('updateProductName', productCode, updatedValue);
     },
 
     appClose: () => {

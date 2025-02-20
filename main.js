@@ -1,8 +1,15 @@
-const { app, BrowserWindow, ipcMain, session, dialog } = require('electron')
-const fs = require('fs')
-let mainWindow
-const path = require('path');
-const db = require('./DB/dataBase');
+import { app, BrowserWindow, ipcMain, session, dialog } from 'electron';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// import db from './DB/dataBase.js';
+import * as supabaseService from './DB/supabaseService.js';
+
+let mainWindow;
+
 
 function createWindow() {
   let ses = session.defaultSession
@@ -119,156 +126,230 @@ ipcMain.on("sendUploadBackground", (event, args) => {
   });
 });
 
-ipcMain.on('getSystemSettings', (event) => {
-  db.getSystemSettings((err, data) => {
-    if (err) {
-      event.reply('receiveSystemSettingsError', err);
-    } else {
-      event.reply('receiveSystemSettings', data);
-    }
-  });
+// ipcMain.on('getSystemSettings', (event) => {
+//   db.getSystemSettings((err, data) => {
+//     if (err) {
+//       event.reply('receiveSystemSettingsError', err);
+//     } else {
+//       event.reply('receiveSystemSettings', data);
+//     }
+//   });
+// });
+
+// ipcMain.on('updateSystemSettings', (event, updatedValues) => {
+//   db.updateSystemSettings
+//     (updatedValues, (err) => {
+//       if (err) {
+//         event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
+//       } else {
+//         event.reply('receiveUpdateSystemSettings', { success: true });
+//       }
+//     });
+// });
+
+// ipcMain.on('insertStudents', (event, fileData) => {
+//   let parsedData = JSON.parse(fileData);
+
+//   db.insertStudents(parsedData, (err) => {
+//     if (err) {
+//       event.reply("receiveInsertStudents", { success: false, error: err.message });
+//     } else {
+//       event.reply("receiveInsertStudents", { success: true });
+//     }
+//   });
+// });
+
+// ipcMain.on('insertTasks', (event, fileData) => {
+//   let parsedData = JSON.parse(fileData);
+
+//   db.insertTasks(parsedData, (err) => {
+//     if (err) {
+//       event.reply("receiveInsertTasks", { success: false, error: err.message });
+//     } else {
+//       event.reply("receiveInsertTasks", { success: true });
+//     }
+//   });
+// });
+
+// ipcMain.on('insertProducts', (event, fileData) => {
+//   let parsedData = JSON.parse(fileData);
+
+//   db.insertProducts(parsedData, (err) => {
+//     if (err) {
+//       event.reply("receiveInsertProducts", { success: false, error: err.message });
+//     } else {
+//       event.reply("receiveInsertProducts", { success: true });
+//     }
+//   });
+// });
+
+// ipcMain.on('updateStudent', (event, { tz, points }) => {
+//   db.updateStudent(tz, points, (err, result) => {
+//     if (err) {
+//       event.reply("updateStudentResponse", { success: false, error: err.message });
+//     } else {
+//       event.reply("updateStudentResponse", { success: true, updatedId: tz });
+//     }
+//   });
+// });
+
+
+// ipcMain.on('getStudentByTz', (event, tz) => {
+//   db.getStudentByTz(tz, (err, student) => {
+//     if (err) {
+//       event.reply("getStudentByTzResponse", { success: false, error: err.message });
+//     } else if (!student) {
+//       event.reply("getStudentByTzResponse", { success: false, error: "Student not found" });
+//     } else {
+//       event.reply("getStudentByTzResponse", { success: true, student });
+//     }
+//   });
+// });
+
+// ipcMain.on('getTaskByCode', (event, code) => {
+
+//   db.getTaskByCode(code, (err, task) => {
+//     if (err) {
+//       event.reply("getTaskByCodeResponse", { success: false, error: err.message });
+//     } else if (!task) {
+//       event.reply("getTaskByCodeResponse", { success: false, error: "Task not found" });
+//     } else {
+//       event.reply("getTaskByCodeResponse", { success: true, task });
+//     }
+//   });
+// });
+
+// ipcMain.on('getAllStudents', (event) => {
+//   db.getAllStudents((err, students) => {
+//     if (err) {
+//       event.reply("getAllStudentsResponse", { success: false, error: err.message });
+//     } else {
+//       event.reply("getAllStudentsResponse", { success: true, students });
+//     }
+//   });
+// });
+
+// ipcMain.on('getAllProducts', (event) => {
+//   db.getAllProducts((err, products) => {
+//     if (err) {
+//       event.reply("getAllProductsResponse", { success: false, error: err.message });
+//     } else {
+//       event.reply("getAllProductsResponse", { success: true, products });
+//     }
+//   });
+// });
+
+
+// ipcMain.on('updateBuyStatus', (event, buy) => {
+//   db.updateBuyStatus(buy, (err, result) => {
+//     if (err) {
+//       event.reply("updateBuyStatusResponse", { success: false, error: err.message });
+//     } else {
+//       event.reply("updateBuyStatusResponse", { success: true });
+//     }
+//   });
+// });
+
+// ipcMain.on('insertProduct', (event, { code, name, points, type, multiple }) => {
+//   db.insertProduct(code, name, points, type, multiple, (err, result) => {
+//     if (err) {
+//       event.reply("insertProductResponse", { success: false, error: err.message });
+//     } else {
+//       event.reply("insertProductResponse", { success: true, insertedId: result.insertedId });
+//     }
+//   });
+// });
+
+// ipcMain.on('updateProduct', (event, { code, name, points, type, multiple }) => {
+
+//   db.updateProduct(
+//       code,
+//       name,
+//       points,
+//       type,
+//       multiple,
+//       (err) => {
+//           if (err) {
+//               event.reply("updateProductResponse", { success: false, error: err.message });
+//           } else {
+//               event.reply("updateProductResponse", { success: true });
+//           }
+//       }
+//   );
+// });
+
+ipcMain.on('getSystemSettings', async (event) => {
+  const data = await supabaseService.getSystemSettings();
+  event.reply('receiveSystemSettings', data || { error: "Failed to fetch system settings" });
 });
 
-ipcMain.on('updateSystemSettings', (event, updatedValues) => {
-  db.updateSystemSettings
-    (updatedValues, (err) => {
-      if (err) {
-        event.reply('receiveUpdateSystemSettings', { success: false, error: err.message });
-      } else {
-        event.reply('receiveUpdateSystemSettings', { success: true });
-      }
-    });
+ipcMain.on('updateSystemSettings', async (event, updatedValues) => {
+  const success = await supabaseService.updateSystemSettings(updatedValues);
+  event.reply("receiveUpdateSystemSettings", { success });
 });
 
-ipcMain.on('insertStudents', (event, fileData) => {
+ipcMain.on('insertStudents', async (event, fileData) => {
   let parsedData = JSON.parse(fileData);
-
-  db.insertStudents(parsedData, (err) => {
-    if (err) {
-      event.reply("receiveInsertStudents", { success: false, error: err.message });
-    } else {
-      event.reply("receiveInsertStudents", { success: true });
-    }
-  });
+  const success = await supabaseService.insertStudents(parsedData);
+  event.reply("receiveInsertStudents", { success });
 });
 
-ipcMain.on('insertTasks', (event, fileData) => {
+ipcMain.on('getAllStudents', async (event) => {
+  const students = await supabaseService.getAllStudents();
+  event.reply("getAllStudentsResponse", { success: true, students });
+});
+
+ipcMain.on('updateStudent', async (event, { tz, points }) => {
+  const success = await supabaseService.updateStudent(tz, points);
+  event.reply("updateStudentResponse", { success });
+});
+
+ipcMain.on('getStudentByTz', async (event, tz) => {
+  const student = await supabaseService.getStudentByTz(tz);
+  event.reply("getStudentByTzResponse", { success: !!student, student });
+});
+
+ipcMain.on('insertTasks', async (event, fileData) => {
   let parsedData = JSON.parse(fileData);
-
-  db.insertTasks(parsedData, (err) => {
-    if (err) {
-      event.reply("receiveInsertTasks", { success: false, error: err.message });
-    } else {
-      event.reply("receiveInsertTasks", { success: true });
-    }
-  });
+  const success = await supabaseService.insertTasks(parsedData);
+  event.reply("receiveInsertTasks", { success });
 });
 
-ipcMain.on('insertProducts', (event, fileData) => {
+ipcMain.on('getTaskByCode', async (event, code) => {
+  const task = await supabaseService.getTaskByCode(code);
+  event.reply("getTaskByCodeResponse", { success: !!task, task });
+});
+
+ipcMain.on('insertProducts', async (event, fileData) => {
   let parsedData = JSON.parse(fileData);
-
-  db.insertProducts(parsedData, (err) => {
-    if (err) {
-      event.reply("receiveInsertProducts", { success: false, error: err.message });
-    } else {
-      event.reply("receiveInsertProducts", { success: true });
-    }
-  });
+  const success = await supabaseService.insertProducts(parsedData);
+  event.reply("receiveInsertProducts", { success });
 });
 
-ipcMain.on('updateStudent', (event, { tz, points }) => {
-  db.updateStudent(tz, points, (err, result) => {
-    if (err) {
-      event.reply("updateStudentResponse", { success: false, error: err.message });
-    } else {
-      event.reply("updateStudentResponse", { success: true, updatedId: tz });
-    }
-  });
+ipcMain.on('getAllProducts', async (event) => {
+  const products = await supabaseService.getAllProducts();
+  event.reply("getAllProductsResponse", { success: true, products });
 });
 
-
-ipcMain.on('getStudentByTz', (event, tz) => {
-  db.getStudentByTz(tz, (err, student) => {
-    if (err) {
-      event.reply("getStudentByTzResponse", { success: false, error: err.message });
-    } else if (!student) {
-      event.reply("getStudentByTzResponse", { success: false, error: "Student not found" });
-    } else {
-      event.reply("getStudentByTzResponse", { success: true, student });
-    }
-  });
+ipcMain.on('updateBuyStatus', async (event, buy) => {
+  const success = await supabaseService.updateBuyStatus(buy);
+  event.reply("updateBuyStatusResponse", { success });
 });
 
-ipcMain.on('getTaskByCode', (event, code) => {
-
-  db.getTaskByCode(code, (err, task) => {
-    if (err) {
-      event.reply("getTaskByCodeResponse", { success: false, error: err.message });
-    } else if (!task) {
-      event.reply("getTaskByCodeResponse", { success: false, error: "Task not found" });
-    } else {
-      event.reply("getTaskByCodeResponse", { success: true, task });
-    }
-  });
+ipcMain.on('insertProduct', async (event, product) => {
+  const success = await supabaseService.insertProduct(product);
+  event.reply("insertProductResponse", { success });
 });
 
-ipcMain.on('getAllStudents', (event) => {
-  db.getAllStudents((err, students) => {
-    if (err) {
-      event.reply("getAllStudentsResponse", { success: false, error: err.message });
-    } else {
-      event.reply("getAllStudentsResponse", { success: true, students });
-    }
-  });
-});
-
-ipcMain.on('getAllProducts', (event) => {
-  db.getAllProducts((err, products) => {
-    if (err) {
-      event.reply("getAllProductsResponse", { success: false, error: err.message });
-    } else {
-      event.reply("getAllProductsResponse", { success: true, products });
-    }
-  });
+ipcMain.on('updateProductName', async (event, code, newName) => {
+  const success = await supabaseService.updateProductName(code, newName);
+  event.reply("updateProductNameResponse", { success });
 });
 
 
-ipcMain.on('updateBuyStatus', (event, buy) => {
-  db.updateBuyStatus(buy, (err, result) => {
-    if (err) {
-      event.reply("updateBuyStatusResponse", { success: false, error: err.message });
-    } else {
-      event.reply("updateBuyStatusResponse", { success: true });
-    }
-  });
-});
-
-ipcMain.on('insertProduct', (event, { code, name, points, type, multiple }) => {
-  db.insertProduct(code, name, points, type, multiple, (err, result) => {
-    if (err) {
-      event.reply("insertProductResponse", { success: false, error: err.message });
-    } else {
-      event.reply("insertProductResponse", { success: true, insertedId: result.insertedId });
-    }
-  });
-});
-
-ipcMain.on('updateProduct', (event, { code, name, points, type, multiple }) => {
-
-  db.updateProduct(
-      code,
-      name,
-      points,
-      type,
-      multiple,
-      (err) => {
-          if (err) {
-              event.reply("updateProductResponse", { success: false, error: err.message });
-          } else {
-              event.reply("updateProductResponse", { success: true });
-          }
-      }
-  );
+ipcMain.on('updateProductPoints', async (event, code, newPoints) => {
+  const success = await supabaseService.updateProductPoints(code, newPoints);
+  event.reply("updateProductNameResponse", { success });
 });
 
 

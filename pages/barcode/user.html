@@ -54,23 +54,24 @@
     };
     window.addEventListener('DOMContentLoaded', () => {
       step = Steps.step1;
-      updateLines("!...ברוך הבא", "העבר את הצ'יפ לטעינה")
-      fileName = 'localSettings'
-      window.expose.SendExcel("sendReadExcel", fileName);
-      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
-        if (data != 0) {
-          localSettings = JSON.parse(data)
-          if (systemConfig.numPosition.length > 0) {
-            document.getElementById("position").innerHTML += ' ' + localSettings.name
-          }
-          else {
-            document.getElementById("position").style.display = "none";
-          }
-        }
-      });
       window.expose.getSystemSettings();
       window.expose.receiveSystemSettings((data) => {
         systemConfig = data;
+        updateLines("!...ברוך הבא", "העבר את הצ'יפ לטעינה")
+        fileName = 'localSettings'
+        window.expose.SendExcel("sendReadExcel", fileName);
+        window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+          if (data != 0) {
+            localSettings = JSON.parse(data)
+            if (systemConfig.numPosition.length > 0) {
+              document.getElementById("position").innerHTML += ' ' + localSettings.name
+            }
+            else {
+              document.getElementById("position").style.display = "none";
+            }
+          }
+        });
+
         document.getElementById("background").style.backgroundImage = "url('../../resources/barcode/personalBackground.png')"
         document.getElementById("line1").style.color = '#F9B81C'
         document.getElementById("line2").style.color = '#214785'
@@ -146,7 +147,7 @@
           if (systemConfig.hasPrint == 1)
             setTimeout(function () {
               toPrint();
-            }, 2000);
+            }, 1800);
           else
             reset(2000);
         }
