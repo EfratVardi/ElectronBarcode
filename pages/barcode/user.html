@@ -109,7 +109,13 @@
       window.expose.receiveStudentByTzResponse((response) => {
         if (response.success) {
           studentResult = response.student;
-          updateTask()
+          if (studentResult.tasksNumber.includes(localSettings.code)) {
+            showAlert("אין אפשרות לתקף פעמיים ביום");
+            return;
+          }
+          else {
+            updateTask()
+          }
         }
         else {
           showAlert("הצ'יפ לא קיים. גשו למורה!")
@@ -135,11 +141,12 @@
 
     function finishSession() {
       studentResult.points = parseInt(result.points) + parseInt(studentResult.points);
+      studentResult.tasksNumber += studentResult.tasksNumber + localSettings.code + ',';
       saveData();
     }
 
     function saveData() {
-      window.expose.updateStudent(studentResult.tz, studentResult.points);
+      window.expose.updateStudent(studentResult.tz, studentResult.points, studentResult.tasksNumber);
       window.expose.receiveUpdateStudentResponse((response) => {
         if (response.success) {
           document.getElementById("line1").classList.remove("blink-text");

@@ -61,8 +61,8 @@ contextBridge.exposeInMainWorld('expose', {
         ipcRenderer.on('receiveInsertProducts', callback);
     },
 
-    updateStudent: (tz, points) => {
-        ipcRenderer.send('updateStudent', { tz, points });
+    updateStudent: (tz, points, tasksNumber) => {
+        ipcRenderer.send('updateStudent', { tz, points, tasksNumber });
     },
 
     receiveUpdateStudentResponse: (callback) => {

@@ -299,8 +299,8 @@ ipcMain.on('getAllStudents', async (event) => {
   event.reply("getAllStudentsResponse", { success: true, students });
 });
 
-ipcMain.on('updateStudent', async (event, { tz, points }) => {
-  const success = await supabaseService.updateStudent(tz, points);
+ipcMain.on('updateStudent', async (event, { tz, points,tasksNumber }) => {
+  const success = await supabaseService.updateStudent(tz, points,tasksNumber);
   event.reply("updateStudentResponse", { success });
 });
 

@@ -55,10 +55,10 @@ export async function getAllStudents() {
 }
 
 // 🔹 עדכון תלמיד לפי ת"ז
-export async function updateStudent(tz, points) {
+export async function updateStudent(tz, points, tasksNumber) {
     const { error } = await supabase
         .from('students')
-        .update({ points })
+        .update({ points, tasksNumber }) // נוסיף גם את `tasksNumber`
         .eq('tz', tz);
 
     return !error;
