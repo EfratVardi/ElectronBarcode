@@ -19,7 +19,7 @@
         var systemConfig = "";
         var students = "";
         var fileName
-        var searchVal=""
+        var searchVal = ""
         var currentDate = getTodayDate();
         var gridOptions
         var columnDefs = [
@@ -125,6 +125,16 @@
             gridOptions.api.exportDataAsCsv(params);
         }
 
+        function reserPoints() {
+            classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
+            if (classesPoints != null) {
+                classesPoints.forEach(function (element) {
+                    element.points = 0;
+                });
+                localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
+            }
+        }
+
     </script>
     <div class="background" id="background">
         <div class="closeBtn">
@@ -132,11 +142,9 @@
         </div>
         <div class="text">
             <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
-            <div id="line2">כאן אפשר לצפות, לערוך ולהוריד את הנתונים</div>
-            <img style="margin-left: 10px;" onclick="exportToExcel('ניקוד תלמידות')"
-                src="../../resources/barcode/download-simple-light.svg" />
-            <img style="margin-left: 10px;" onclick="newStudent()" src="../../resources/barcode/plus-light.svg" />
-            <div id="studentsGrid" style="width:100%" class="ag-theme-alpine"></div>
+            <br>
+            <br>
+            <button onclick="reserPoints()">איפוס נקודות</button>
         </div>
     </div>
 </body>

@@ -33,10 +33,12 @@
     };
     var classesPoints = ""
     var defaultClassesPoints = [
-      { "code": 100, "name": "כיתה ט", "points": 0 },
-      { "code": 101, "name": "כיתה י", "points": 0 },
-      { "code": 102, "name": "כיתה יא", "points": 0 },
-      { "code": 103, "name": "כיתה יב", "points": 0 }]
+      { "code": 100, "name": "כיתה ט'1", "points": 0 },
+      { "code": 101, "name": "כיתה ט'2", "points": 0 },
+      { "code": 102, "name": "כיתה ט'3", "points": 0 },
+      { "code": 103, "name": "כיתה י'1", "points": 0 },
+      { "code": 104, "name": "כיתה י'2", "points": 0 }
+    ]
 
     function onLoad() {
       classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
@@ -45,7 +47,7 @@
         classesPoints = defaultClassesPoints;
       }
       step = Steps.step1;
-      updateLines("!ברוכות הבאות","?...מי הכיתה המנצחת");
+      updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
       fileName = 'systemConfig';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -108,9 +110,9 @@
       for (var i = 0; i < classesPoints.length; i++) {
         if (classesPoints[i]["code"] == studentResult.class) {
           classesPoints[i]["points"] += 10;
-          updateLines("(:כל הכבוד  " +studentResult.name+" ", "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
+          updateLines("(:כל הכבוד ל" + studentResult.name + " "+"מ"+studentResult.grade, "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
-          renderClassCards(); 
+          renderClassCards();
           break;
         }
       }
@@ -145,13 +147,16 @@
     function renderClassCards() {
       const cardsContainer = document.getElementById('cards-container');
       cardsContainer.innerHTML = ''; // Clear existing cards
+      cardsContainer.className = 'd-flex flex-wrap justify-content-start'; // Ensure flex behavior
+
       classesPoints.forEach(classData => {
         const card = document.createElement('div');
         card.className = 'card m-2';
-        card.style.width = '30rem';
-        card.style.border = "solid"
-        card.style.borderColor = "palevioletred"
-
+        card.style.width = '100%'; // Let flexbox control the width
+        card.style.flex = '0 0 calc(33.333% - 1rem)';
+        card.style.boxSizing = 'border-box';
+        card.style.borderWidth = "5px";
+        card.style.borderColor = "#00a597";
 
         const cardBody = document.createElement('div');
         cardBody.className = 'card-body';
@@ -162,13 +167,10 @@
         cardTitle.style.fontSize = '3vw';
 
         const cardText = document.createElement('p');
-        cardText.className = 'card-text';
-        cardText.className = 'blink-text';
-
+        cardText.className = 'card-text blink-text';
         cardText.textContent = `${classData.points}`;
         cardText.style.fontSize = '4vw';
-        cardText.style.color = "palevioletred"
-
+        cardText.style.color = "#00a597";
 
         cardBody.appendChild(cardTitle);
         cardBody.appendChild(cardText);
@@ -176,6 +178,7 @@
         cardsContainer.appendChild(card);
       });
     }
+
   </script>
 
   <div class="background" id="background">

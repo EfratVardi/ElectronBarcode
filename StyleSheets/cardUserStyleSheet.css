@@ -40,15 +40,7 @@
     margin-left: auto;
 }
 
-.card {
-    --bs-focus-ring-color: black;
-    border-color: black;
-}
 
-#cards {
-    max-height: 30vW;
-    overflow-y: auto;
-}
 
 .answer-button {
     display: block;
@@ -107,3 +99,4 @@
 #triviaModal .modal-content {
     height: 85%; /* התאמה אישית של הגובה */
 }
+
