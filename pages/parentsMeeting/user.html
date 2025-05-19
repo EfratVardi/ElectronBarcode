@@ -126,7 +126,7 @@
 
     function paretntStart() {
       step = Steps.step2;
-      updateLines(""," שלום אמא של " + result.name,"כתבי כאן כמה מילים טובות לביתך")
+      updateLines(""," שלום הורי התלמיד " + result.name,"כתבו כאן כמה מילים טובות לבנכם")
       document.getElementById("line2").style.fontSize = "4.5vw"
       document.getElementById("text").style.top = "15%";
       document.getElementById("content").value = result.text ? result.text : ""
@@ -153,7 +153,6 @@
       window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(parents)]);
       window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
         document.getElementById("form").style.display = "none"
-        document.getElementById("text").style.top = "30%";
         updateLines("","!המכתב נשמר","...תודה רבה על שיתוף הפעולה")
         reset(2000);
       });
@@ -189,12 +188,11 @@
         </style>
       </head>
       <body>
-        <div id="title">פתק מאמא</div>
+        <div id="title">פתק של נחת</div>
         <br>
         <div id="content">
           <div>${result.name}</div>
-          <div>${systemConfig.position}</div>
-          <div>${result.text || "הנחת ממך בוודאי אשמע, את הדש תקבלי בפעם הבאה!"}</div>
+          <div>${result.text || "הנחת ממך בוודאי נשמע, את הדש תקבל בפעם הבאה!"}</div>
         </div>
         <br>
         <div id="footer">להזמנות: אפרת מלכה 0504167969 211efrat@gmail.com</div>
@@ -237,8 +235,8 @@
 
   <div class="background" id="background">
     <div class="text" id="text">
-      <div id="line1">ברוכה הבאה</div>
-      <div id="line2">אסיפת הורים תשפ"ד</div>
+      <div id="line1">ברוכים הבאים</div>
+      <div id="line2">לאסיפת ההורים</div>
       <div id="line3">יש לתקף את הכרטיס האישי בסורק הברקוד</div>
 
       <form id="form" style="display: none;direction: rtl;">
