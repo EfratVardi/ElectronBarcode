@@ -28,5 +28,13 @@
 .rectangle-background2 {
     background-color: #FED140; 
     padding:20px;
-
  }
+
+#corner-logo {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 400px;   /* הגדלה - אפשר לשנות ערך זה לפי הצורך */
+    height: auto;
+    z-index: 1000;
+}
