@@ -27,11 +27,11 @@
         };
         var gridOptions
         var columnDefs = [
-            { headerName: "שם", field: "name", editable: true },
-            { headerName: "קוד", field: "code", editable: true },
-            {
-                headerName: "האם שומש", valueGetter: getV,
-            },
+            { headerName: "שם", field: "name", editable: false },
+            { headerName: "כיתה", field: "grade", editable: false },
+            { headerName: "שם גמד", field: "gamadName", editable: false },
+            { headerName: "כיתה", field: "gamadGrade", editable: false },
+
         ];
 
         function onLoad() {
@@ -44,7 +44,7 @@
                 else {
                     systemConfig = JSON.parse(data)
                 }
-                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color);
+                document.getElementById("background").style.backgroundImage = getBackground(systemConfig.device, systemConfig.color,1);
             });
             fileName = 'products'
             window.expose.SendExcel("sendReadExcel", fileName);
@@ -63,7 +63,7 @@
                             sortable: true,
                         },
                         onFirstDataRendered: onFirstDataRendered,
-                        onCellEditingStopped: onCellEditingStopped
+
                     };
                     var gridDiv = document.querySelector('#productsGrid');
                     new agGrid.Grid(gridDiv, gridOptions);
