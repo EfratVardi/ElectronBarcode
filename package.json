@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
-    "jquery": "^3.6.3"
+    "jquery": "^3.6.3",
+    "sqlite3": "^5.1.7"
   },
   "build": {
     "extraResources": [
