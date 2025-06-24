@@ -32,8 +32,8 @@
       step = Steps.step1;
       updateLines("יש לסרוק את כרטיס ההפתעה", "...אולי הכרטיס שלך יזכה")
       fileName = 'systemConfig'
-      window.expose.SendExcel("sendReadExcel", fileName);
-      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+      window.expose.SendExcel("sendReadSystemConfig");
+      window.expose.ReceiveExcel("receiveReadSystemConfig", (data) => {
         if (data == 0) {
           systemConfig = getDefaultConfig()
         }

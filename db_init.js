@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./efrat.sqlite');
+const { getYesterdayDate } = require('./js/utils');
 
 function ensureTablesAndDefaults(db) {
   db.serialize(() => {
@@ -31,32 +32,21 @@ function ensureTablesAndDefaults(db) {
     )`);
     
     db.run(`CREATE TABLE IF NOT EXISTS systemConfig (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
       numPosition TEXT,
-      hasPrint TEXT,
-      hasBuy TEXT,
-      device TEXT,
-      color TEXT,
-      type TEXT,
-      hasParents TEXT,
-      hasTests TEXT,
-      timer TEXT,
-      buy TEXT,
-      textColor TEXT
+      hasPrint BOOLEAN DEFAULT 1,
+      hasBuy BOOLEAN DEFAULT 0,
+      device INTEGER DEFAULT 0,
+      color INTEGER DEFAULT 0,
+      type INTEGER DEFAULT 0,
+      hasParents BOOLEAN DEFAULT 0,
+      hasTests BOOLEAN DEFAULT 0,
+      timer INTEGER DEFAULT 10,
+      buy BOOLEAN DEFAULT 0,
+      textColor INTEGER DEFAULT 0
     )`);
-    const defaultConfig = {
-      numPosition: "",
-      hasPrint: "1",
-      hasBuy: "0",
-      device: "0",
-      color: "0",
-      type: "0",
-      hasParents: "0",
-      hasTests: "0",
-      timer: "10",
-      buy: "false",
-      textColor: "0"
-    };
-    db.run(`INSERT INTO systemConfig (${Object.keys(defaultConfig).join(",")}) VALUES (${Object.values(defaultConfig).map(() => '?').join(',')})`, Object.values(defaultConfig));
+    db.run(`INSERT INTO systemConfig (date) VALUES (?)`, getYesterdayDate());
   });
 }
 

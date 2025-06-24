@@ -31,9 +31,8 @@
             { headerName: "שמות המשימות", field: "tasks" }];
 
         function onLoad() {
-            fileName = 'systemConfig'
-            window.expose.SendExcel("sendReadExcel", fileName);
-            window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+            window.expose.SendExcel("sendReadSystemConfig");
+            window.expose.ReceiveExcel("receiveReadSystemConfig", (data) => {
                 if (data == 0) {
                     systemConfig = getDefaultConfig()
                 }

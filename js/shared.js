@@ -1,10 +1,4 @@
 
-function getYesterdayDate() {
-    var x = new Date();
-    x.setDate((new Date().getDate() - 1))
-    return x.toISOString().split('T')[0];
-}
-
 function getTodayDate() {
     return new Date().toISOString().split('T')[0];
 }
@@ -23,12 +17,12 @@ function login(page) {
 
 function getBackground(device, color, step = "") {
     switch (device) {
-        case "0": {
+        case 0: {
             return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
         };
-        case "1": {
+        case 1: {
             switch (color) {
-                case "1":
+                case 1:
                     return "url('../../resources/barcode/pinkBackground" + step + ".gif')";
                 case "2":
                     return "url('../../resources/barcode/greenBackground" + step + ".gif')";

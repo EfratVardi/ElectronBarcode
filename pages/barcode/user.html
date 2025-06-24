@@ -34,10 +34,8 @@
 
     function onLoad() {
       step = Steps.step1;
-      updateLines("!...שלום", "יש לתקף את הכרטיס האישי בסורק הברקוד") 
-      fileName = 'systemConfig'
-      window.expose.SendExcel("sendReadExcel", fileName);
-      window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
+      window.expose.SendExcel("sendReadSystemConfig");
+      window.expose.ReceiveExcel("receiveReadSystemConfig", (data) => {
         if (data == 0) {
           systemConfig = getDefaultConfig()
         }
