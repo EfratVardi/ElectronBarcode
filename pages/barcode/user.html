@@ -13,6 +13,8 @@
   <script src="../../js/jquery.min.js"></script>
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../../js/shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   <script>
     var currentDate = getTodayDate();
@@ -33,11 +35,11 @@
     };
     var classesPoints = ""
     var defaultClassesPoints = [
-      { "code": 100, "name": "כיתה ט'1", "points": 0 },
-      { "code": 101, "name": "כיתה ט'2", "points": 0 },
-      { "code": 102, "name": "כיתה ט'3", "points": 0 },
-      { "code": 103, "name": "כיתה י'1", "points": 0 },
-      { "code": 104, "name": "כיתה י'2", "points": 0 }
+      { "code": 100, "name": "כיתה ט'1", "points": 100, "color": "#00a597" },
+      { "code": 101, "name": "כיתה ט'2", "points": 200, "color": "#ff9800" },
+      { "code": 102, "name": "כיתה ט'3", "points": 10, "color": "#e91e63" },
+      { "code": 103, "name": "כיתה י'1", "points": 50, "color": "#4caf50" },
+      { "code": 104, "name": "כיתה י'2", "points": 40, "color": "#3f51b5" }
     ]
 
     function onLoad() {
@@ -110,7 +112,7 @@
       for (var i = 0; i < classesPoints.length; i++) {
         if (classesPoints[i]["code"] == studentResult.class) {
           classesPoints[i]["points"] += 10;
-          updateLines("(:כל הכבוד ל" + studentResult.name + " "+"מ"+studentResult.grade, "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
+          updateLines("(:כל הכבוד ל" + studentResult.name + " " + "מ" + studentResult.grade, "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
           renderClassCards();
           break;
@@ -121,7 +123,8 @@
 
     function reset(time = 0) {
       setTimeout(function () {
-        location.reload();
+        step = Steps.step1;
+        updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
       }, time);
     }
 
@@ -146,36 +149,114 @@
 
     function renderClassCards() {
       const cardsContainer = document.getElementById('cards-container');
-      cardsContainer.innerHTML = ''; // Clear existing cards
-      cardsContainer.className = 'd-flex flex-wrap justify-content-start'; // Ensure flex behavior
-
-      classesPoints.forEach(classData => {
+      cardsContainer.innerHTML = '';
+      cardsContainer.className = 'd-flex flex-column align-items-center';
+      // מיון כל הכיתות מהגבוה לנמוך
+      const sortedClasses = [...classesPoints].sort((a, b) => b.points - a.points);
+      sortedClasses.forEach((classData) => {
         const card = document.createElement('div');
-        card.className = 'card m-2';
-        card.style.width = '100%'; // Let flexbox control the width
-        card.style.flex = '0 0 calc(33.333% - 1rem)';
-        card.style.boxSizing = 'border-box';
-        card.style.borderWidth = "5px";
-        card.style.borderColor = "#00a597";
-
-        const cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
-
-        const cardTitle = document.createElement('h5');
-        cardTitle.className = 'card-title';
+        card.className = 'class-card mb-3';
+        card.style.background = '#f8f9fa';
+        card.style.border = '3px solid ' + (classData.color || '#00a597');
+        card.style.borderRadius = '18px';
+        card.style.margin = '10px 0';
+        card.style.minWidth = '180px';
+        card.style.maxWidth = '240px';
+        card.style.width = '100%';
+        card.style.textAlign = 'center';
+        card.style.boxShadow = '0 2px 8px ' + (classData.color || '#00a597') + '33';
+        card.style.transition = 'transform 0.2s';
+        card.onmouseover = () => card.style.transform = 'scale(1.04)';
+        card.onmouseout = () => card.style.transform = 'scale(1)';
+        const cardTitle = document.createElement('div');
+        cardTitle.className = 'class-title';
         cardTitle.textContent = classData.name;
-        cardTitle.style.fontSize = '3vw';
-
-        const cardText = document.createElement('p');
-        cardText.className = 'card-text blink-text';
-        cardText.textContent = `${classData.points}`;
-        cardText.style.fontSize = '4vw';
-        cardText.style.color = "#00a597";
-
-        cardBody.appendChild(cardTitle);
-        cardBody.appendChild(cardText);
-        card.appendChild(cardBody);
+        cardTitle.style.fontSize = '1.2rem';
+        cardTitle.style.fontWeight = 'bold';
+        cardTitle.style.color = classData.color || '#00a597';
+        cardTitle.style.marginBottom = '0.5rem';
+        const cardPoints = document.createElement('div');
+        cardPoints.className = 'class-points';
+        cardPoints.textContent = classData.points;
+        cardPoints.style.fontSize = '2rem';
+        cardPoints.style.color = classData.color || '#ff9800';
+        cardPoints.style.fontWeight = 'bold';
+        card.appendChild(cardTitle);
+        card.appendChild(cardPoints);
         cardsContainer.appendChild(card);
+      });
+      renderChart();
+    }
+
+    let chartInstance;
+    function renderChart() {
+      const ctx = document.getElementById('pointsChart').getContext('2d');
+      const labels = classesPoints.map(c => c.name);
+      const data = classesPoints.map(c => c.points);
+      const colorMap = {};
+      classesPoints.forEach(c => { colorMap[c.name] = c.color || '#00a597'; });
+      const barColors = classesPoints.map(c => colorMap[c.name]);
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'נקודות',
+              data: data,
+              backgroundColor: barColors,
+              borderWidth: 2,
+              borderRadius: 18,
+              maxBarThickness: 60,
+              datalabels: {
+                anchor: 'end',
+                align: 'end',
+                color: '#333',
+                font: { weight: 'bold', size: 18 },
+                formatter: function (value) { return value; }
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: 'גרף ניקוד כיתות',
+              color: '#00a597',
+              font: { size: 20 }
+            },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function (context) {
+                  return context.label + ': ' + context.parsed.y + ' נקודות';
+                }
+              }
+            },
+            datalabels: {
+              display: true,
+              color: '#333',
+              font: { weight: 'bold', size: 18 },
+              formatter: function (value) { return value; }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#00a597', font: { size: 16 } },
+              grid: { color: '#e0e0e0' }
+            },
+            x: {
+              ticks: { color: '#00a597', font: { size: 14 } },
+              grid: { display: false }
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
       });
     }
 
@@ -187,7 +268,19 @@
       <div id="line2"></div>
       <div id="line3"></div>
       <br>
-      <div id="cards-container" class="d-flex flex-wrap justify-content-center mt-4" style="direction: rtl;"></div>
+      <div class="d-flex flex-row justify-content-center align-items-start" style="direction: rtl;">
+        <div style="min-width:220px; width:260px; margin-left: 5%;">
+          <div id="cards-scroll"
+            style="max-height:480px; overflow-y:auto; overflow-x:hidden; direction:ltr; scrollbar-width:thin;">
+            <div id="cards-container" class="d-flex flex-column align-items-center"></div>
+          </div>
+        </div>
+        <div id="chart-container">
+          <canvas id="pointsChart"
+            style="background:#fff;direction:ltr; display:block; margin:auto; border-radius:18px; box-shadow:0 2px 8px #00a59733; padding:25px; width: 1000px; height: 500px;"
+            ></canvas>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -203,6 +296,26 @@
       </div>
     </div>
   </div>
+  <style>
+    #cards-scroll {
+      direction: rtl;
+      scrollbar-width: thin;
+    }
+
+    #cards-scroll::-webkit-scrollbar {
+      width: 8px;
+      background: #e0e0e0;
+    }
+
+    #cards-scroll::-webkit-scrollbar-thumb {
+      background: #00a597;
+      border-radius: 8px;
+    }
+
+    #cards-scroll {
+      scrollbar-gutter: right;
+    }
+  </style>
 </body>
 
 </html>
