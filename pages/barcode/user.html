@@ -34,20 +34,22 @@
       step3: "3"
     };
     var classesPoints = ""
-    var defaultClassesPoints = [
-      { "code": 100, "name": "כיתה ט'1", "points": 100, "color": "#00a597" },
-      { "code": 101, "name": "כיתה ט'2", "points": 200, "color": "#ff9800" },
-      { "code": 102, "name": "כיתה ט'3", "points": 10, "color": "#e91e63" },
-      { "code": 103, "name": "כיתה י'1", "points": 50, "color": "#4caf50" },
-      { "code": 104, "name": "כיתה י'2", "points": 40, "color": "#3f51b5" }
-    ]
+    // מיפוי צבעים קבוע לפי קוד כיתה
+    const classColors = {
+      100: '#00a597',
+      101: '#ff9800',
+      102: '#e91e63',
+      103: '#4caf50',
+      104: '#3f51b5',
+      105: '#9c27b0',
+      106: '#f44336',
+      107: '#009688',
+      108: '#cddc39',
+      109: '#607d8b'
+    };
+    var defaultClassesPoints = []
 
     function onLoad() {
-      classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
-      if (classesPoints == null) {
-        localStorage.setItem("classesPoints", JSON.stringify(defaultClassesPoints));
-        classesPoints = defaultClassesPoints;
-      }
       step = Steps.step1;
       updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
       fileName = 'systemConfig';
@@ -66,10 +68,29 @@
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
         if (data != 0) {
           students = JSON.parse(data);
+          // בניית רשימת כיתות דינמית מתוך students
+          const classMap = {};
+          students.forEach(stu => {
+            if (stu.class && !classMap[stu.class]) {
+              classMap[stu.class] = {
+                code: Number(stu.class),
+                name: stu.grade,
+                points: 0,
+                color: classColors[stu.class] || '#00a597'
+              };
+            }
+          });
+          defaultClassesPoints = Object.values(classMap);
+          // אם אין localStorage, שמור את הרשימה הדינמית
+          if (!localStorage.getItem("classesPoints")) {
+            localStorage.setItem("classesPoints", JSON.stringify(defaultClassesPoints));
+          }
+          classesPoints = JSON.parse(localStorage.getItem("classesPoints"));
+          renderClassCards(); // Render cards for the classes
+          renderChart();
         }
       });
 
-      renderClassCards(); // Render cards for the classes
     }
 
     document.addEventListener("keypress", function (e) {
@@ -115,6 +136,7 @@
           updateLines("(:כל הכבוד ל" + studentResult.name + " " + "מ" + studentResult.grade, "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
           renderClassCards();
+          renderChart();
           break;
         }
       }
@@ -185,7 +207,6 @@
         card.appendChild(cardPoints);
         cardsContainer.appendChild(card);
       });
-      renderChart();
     }
 
     let chartInstance;
@@ -275,10 +296,11 @@
             <div id="cards-container" class="d-flex flex-column align-items-center"></div>
           </div>
         </div>
-        <div id="chart-container">
-          <canvas id="pointsChart"
-            style="background:#fff;direction:ltr; display:block; margin:auto; border-radius:18px; box-shadow:0 2px 8px #00a59733; padding:25px; width: 1000px; height: 500px;"
-            ></canvas>
+        <div id="chart-container" style="flex:1; min-width:0; max-width:1000px; width:100%; padding:0 10px;">
+          <div style="position:relative; width:100%; aspect-ratio:2/1; min-width:220px;">
+            <canvas id="pointsChart"
+              style="background:#fff;direction:ltr; display:block; margin:auto; border-radius:18px; box-shadow:0 2px 8px #00a59733; padding:25px; width:100%; height:600px; max-width:1000px; max-height:500px;"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -314,6 +336,45 @@
 
     #cards-scroll {
       scrollbar-gutter: right;
+    }
+
+    #chart-container {
+      width: 100%;
+      max-width: 1000px;
+      min-width: 220px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    #chart-container canvas {
+      width: 100% !important;
+      height: 600px !important;
+      max-width: 1000px;
+      max-height: 800px;
+      min-width: 220px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px #00a59733;
+      padding: 25px;
+      display: block;
+      margin: auto;
+    }
+
+    @media (max-width: 700px) {
+      #chart-container {
+        max-width: 98vw;
+        min-width: 0;
+        padding: 0;
+      }
+
+      #chart-container canvas {
+        max-width: 98vw;
+        min-width: 0;
+        padding: 8px;
+      }
     }
   </style>
 </body>
