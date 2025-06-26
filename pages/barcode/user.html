@@ -51,7 +51,7 @@
 
     function onLoad() {
       step = Steps.step1;
-      updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
+      updateLines("???דיין כתה וועט געווינען", "!!!ס'איז אין דיינע הענט");
       fileName = 'systemConfig';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -146,7 +146,7 @@
     function reset(time = 0) {
       setTimeout(function () {
         step = Steps.step1;
-        updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
+      updateLines("???דיין כתה וועט געווינען", "!!!ס'איז אין דיינע הענט");
       }, time);
     }
 
