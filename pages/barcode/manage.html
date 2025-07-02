@@ -132,8 +132,11 @@
                     element.points = 0;
                 });
                 localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
+                alert("הנקודות אופסו בהצלחה!");
             }
         }
+
+       
 
     </script>
     <div class="background" id="background">
@@ -144,7 +147,7 @@
             <div id="line1">ברוכים הבאים הבאה לממשק ניהול</div>
             <br>
             <br>
-            <button onclick="reserPoints()">איפוס נקודות</button>
+            <button onclick="reserPoints()" class="reset-btn">איפוס נקודות</button>
         </div>
     </div>
 </body>

@@ -3,7 +3,8 @@
     src: url("../fonts/FbMagnolia-Regular.otf");
 }
 
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
     user-select: none;
@@ -25,8 +26,7 @@ body, html {
     width: 25vw;
 }
 
-.modal
-{
+.modal {
     direction: rtl;
 }
 
@@ -36,7 +36,25 @@ body, html {
     float: right;
 }
 
+.reset-btn {
+    background: linear-gradient(90deg, #ca6a6a 0%, #ca6a6a 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px #d32f2f33;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin: 0 auto;
+    display: block;
+    letter-spacing: 1px;
+}
 
-
-
-
+.reset-btn:hover,
+.reset-btn:focus {
+    background: linear-gradient(90deg, #ca6a6a 0%, #ca6a6a 100%);
+    transform: scale(1.04);
+    outline: none;
+}

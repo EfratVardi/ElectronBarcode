@@ -125,30 +125,11 @@
       step = Steps.step2;
 
       document.getElementById("line1").innerHTML = result.name + " " + result.grade;
-      document.getElementById("line2").style.fontSize = '6vw'
-      document.getElementById("line2").innerHTML = result.text
+      document.getElementById("line2").style.fontSize = '4vw'
+      document.getElementById("line2").innerHTML = result.text ? result.text : "גם את מיוחדת, אך הפעם נבחרה מישהי אחרת";
       setTimeout(function () {
         toPrint();
       }, 2500);
-    }
-
-    function saveData() {
-      result.text = document.getElementById("content").value;
-      for (var i = 0; i < parents.length; i++) {
-        if (parents[i]["tzParent"] == result.tzParent) {
-          parents[i] = result;
-          break;
-        }
-      }
-      fileName = 'parents'
-      window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(parents)]);
-      window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-        document.getElementById("form").style.display = "none"
-        document.getElementById("text").style.top = "30%";
-        document.getElementById("line2").innerHTML = "!המכתב נשמר";
-        document.getElementById("line3").innerHTML = "...תודה רבה על שיתוף הפעולה";
-        reset(2000);
-      });
     }
 
     function toPrint() {
@@ -229,10 +210,12 @@
   </script>
 
   <div class="background" id="background">
+     <div class="closeBtn">
+      <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
+    </div>
     <div class="text" id="text">
       <div id="line1"> </div>
       <div id="line2"> </div>
-
 
       <div id="line3"> ברוכות הבאות</div>
 
