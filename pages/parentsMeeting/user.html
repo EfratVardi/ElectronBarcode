@@ -79,7 +79,7 @@
         else {
           document.getElementById("position").style.display = "none";
         }
-        fileName = 'parents'
+        fileName = 'students'
         window.expose.SendExcel("sendReadExcel", fileName);
         window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
           if (data != 0) {
@@ -108,7 +108,7 @@
 
     function searchInExcel() {
       for (var i = 0; i < parents.length; i++) {
-        if (parents[i]["tz"] == searchVal || parents[i]["tzParent"] == searchVal) {
+        if (parents[i]["tz"] == searchVal) {
           result = parents[i];
           break;
         }
@@ -118,27 +118,14 @@
         return;
       }
       updateLines("")
-      if (result.tz == searchVal)
-        studentStart()
-      else if (result.tzParent == searchVal)
-        paretntStart()
-    }
-
-    function paretntStart() {
-      step = Steps.step2;
-      document.getElementById("line2").innerHTML = " שלום אמא של " + result.name;
-      document.getElementById("line2").style.fontSize = "4.5vw"
-      document.getElementById("line3").innerHTML = "כתבי כאן כמה מילים טובות לביתך";
-      document.getElementById("text").style.top = "15%";
-      document.getElementById("content").value = result.text ? result.text : ""
-      document.getElementById("form").style.display = "inline"
+      studentStart()
     }
 
     function studentStart() {
       step = Steps.step2;
 
       document.getElementById("line1").innerHTML = result.name + " " + result.grade;
-      document.getElementById("line2").style.fontSize='6vw'
+      document.getElementById("line2").style.fontSize = '6vw'
       document.getElementById("line2").innerHTML = result.text
       setTimeout(function () {
         toPrint();
@@ -243,11 +230,11 @@
 
   <div class="background" id="background">
     <div class="text" id="text">
-      <div id="line1">  </div>
-      <div id="line2">  </div>
-      
+      <div id="line1"> </div>
+      <div id="line2"> </div>
 
-      <div id="line3"> עולות ביוקר</div>
+
+      <div id="line3"> ברוכות הבאות</div>
 
       <form id="form" style="display: none;direction: rtl;">
         <div class="form-group col-md-10" style="padding-left: 16.666%; ">
