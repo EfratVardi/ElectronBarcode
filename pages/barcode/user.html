@@ -51,7 +51,7 @@
 
     function onLoad() {
       step = Steps.step1;
-      updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
+      updateLines("???דיין כתה וועט געווינען", "!!!ס'איז אין דיינע הענט");
       fileName = 'systemConfig';
       window.expose.SendExcel("sendReadExcel", fileName);
       window.expose.ReceiveExcel("receiveReadExcel" + fileName, (data) => {
@@ -133,7 +133,7 @@
       for (var i = 0; i < classesPoints.length; i++) {
         if (classesPoints[i]["code"] == studentResult.class) {
           classesPoints[i]["points"] += 10;
-          updateLines("(:כל הכבוד ל" + studentResult.name + " " + "מ" + studentResult.grade, "!עד כה צברתן " + classesPoints[i]["points"] + " נקודות");
+          updateLines("(:אויסצייכענונג פאר"+ studentResult.name  + " פון " + studentResult.grade, "! ביז יעצט זענט איר אנגעקומען צו " + classesPoints[i]["points"] + " פונקטן");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
           renderClassCards();
           renderChart();
@@ -300,7 +300,7 @@
           </div>
         </div>
       </div>
-      <button onclick="login('../parentsMeeting/user');" class="reset-btn">גרפולוגית</button>
+      <button onclick="login('../parentsMeeting/user');" class="reset-btn">מחמאות</button>
     </div>
   </div>
 
