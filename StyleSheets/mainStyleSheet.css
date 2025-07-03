@@ -47,7 +47,6 @@ html {
     box-shadow: 0 2px 8px #d32f2f33;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
-    margin: 0 auto;
     display: block;
     letter-spacing: 1px;
 }

@@ -133,7 +133,7 @@
       for (var i = 0; i < classesPoints.length; i++) {
         if (classesPoints[i]["code"] == studentResult.class) {
           classesPoints[i]["points"] += 10;
-          updateLines("(:אויסצייכענונג פאר"+ studentResult.name  + " פון " + studentResult.grade, "! ביז יעצט זענט איר אנגעקומען צו " + classesPoints[i]["points"] + " פונקטן");
+          updateLines(" אויסצייכענונג פאר "  + studentResult.name + " פון " + studentResult.grade, "! ביז יעצט זענט איר אנגעקומען צו " + classesPoints[i]["points"] + " פונקטן");
           localStorage.setItem("classesPoints", JSON.stringify(classesPoints));
           renderClassCards();
           renderChart();
@@ -146,7 +146,7 @@
     function reset(time = 0) {
       setTimeout(function () {
         step = Steps.step1;
-        updateLines("!ברוכות הבאות", "?...מי הכיתה המנצחת");
+        updateLines("???דיין כתה וועט געווינען", "!!!ס'איז אין דיינע הענט");
       }, time);
     }
 
@@ -279,8 +279,12 @@
 
   <div class="background" id="background">
     <div class="closeBtn">
+      <button onclick="login('../parentsMeeting/user');" class="reset-btn">מחמאות</button>
+
       <img onclick="expose.appClose()" src="../../resources/barcode/x-light.svg" />
+
     </div>
+
     <div class="text">
       <div id="line1"></div>
       <div id="line2"></div>
@@ -300,7 +304,6 @@
           </div>
         </div>
       </div>
-      <button onclick="login('../parentsMeeting/user');" class="reset-btn">מחמאות</button>
     </div>
   </div>
 
