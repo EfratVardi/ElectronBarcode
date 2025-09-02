@@ -352,11 +352,11 @@
             fileName = 'students'
             window.expose.SendExcel("sendWriteExcel", [fileName, JSON.stringify(students)]);
             window.expose.ReceiveExcel("receiveWriteExcel" + fileName, (data) => {
-                updateLines("תודה רבה " + studentResult.name, " כעת יש בחשבונך " + studentResult.points + " נקודות", "בהצלחה!")
+                updateLines("כל הכבוד, "+studentResult.name,"זכית ללמוד ולקיים באהבה " +" לנצל ימים של קרבה ותשובה!" , " כעת יש בחשבונך " + studentResult.points + " נקודות")
                 if (systemConfig.hasPrint == 1)
                     setTimeout(function () {
                         toPrint();
-                    }, 2500);
+                    }, 3000);
                 else
                     reset(2500);
             });
